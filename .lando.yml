@@ -25,6 +25,8 @@ services:
     overrides:
       environment:
         - XDEBUG_TRIGGER=1
+      volumes:
+        - ../tribe-ai-assistant:/tribe-ai-assistant
   node:
     type: node:22
 
