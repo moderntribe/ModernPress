@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "393fe9bfefdf9f1dff65ad9e7a9aad57",
+    "content-hash": "2c7fed3b4f52bd9dcf7164581537d01f",
     "packages": [
         {
             "name": "block-editor-custom-alignments/block-editor-custom-alignments",
@@ -1823,6 +1823,18 @@
                 "issues": "https://github.com/moderntribe/tribe-glomar/issues"
             },
             "time": "2022-09-19T02:39:23+00:00"
+        },
+        {
+            "name": "moderntribe/tribe_embed",
+            "version": "1.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/moderntribe/tribe-embeds/releases/download/v1.1.0/tribe-embed.1.1.0.zip"
+            },
+            "require": {
+                "ffraenz/private-composer-installer": "^5.0"
+            },
+            "type": "wordpress-plugin"
         },
         {
             "name": "mustache/mustache",
