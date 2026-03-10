@@ -4,6 +4,49 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.02.16]
+- Add support for ACF color picker field. Field integration [details](https://github.com/moderntribe/moose/blob/main/docs/color-picker.md)
+
+## [2026.02]
+- Updated: Expected PHP version to v8.4, Node version to v24 LTS
+- Updated: WordPress to v6.9.1
+- Updated: All plugins, composer dependencies, and npm packages to latest versions.
+- Updated: Consistent theming across all usages.
+- Updated: `npm run create-block` script template files updated.
+- Added: New Accordion block styling
+- Removed: Details block styling
+- Fixed: pre-push git hooks running properly again.
+
+## [2026.01]
+
+- Updated: Interactive card blocks now use the animated underline on the title element on hover. 
+- Fixed: Vertical Tabs block now scrolls the selected tab into view on mobile, respecting reduced motion preferences. [MOOSE-333](https://moderntribe.atlassian.net/browse/MOOSE-333)
+- Fixed: Removed top margin from spacer block
+- Added: Yoast Duplicate Post plugin v4.5 for easier content duplication in the editor.
+- Updated: Dynamic blocks now pass data to PHP controller classes for processing, moving toward a more OOP/MVC approach.
+- Updated: Login logo styling
+- Updated: Typography utility class selectors are now more specific in order to override WP core default paragraphy / heading selectors.
+
+## [2025.12]
+
+- Fixed: Image Card & Image Overlay Card blocks now properly pass animation attributes to the animation helper class.
+- Added: Inline Notice Block
+- Updated: Logo Marquee block now has updated padding between images & contains a range selector to adjust the marquee speed as needed.
+- Added: Caption elements in media blocks (Image, Video, Embed) are now contained to the content width.
+- Updated: Cleaned up core Details block with comments, consistent underline styling, and reordered `theme.json` styles for clarity.
+- Updated: Decorative Heading block now uses `<div>` instead of `<span>` so Headings remain block-level elements without needing extra styling.
+- Added: Cover block & Featured Image block now support the border radius setting.
+- Added: Paragraph block now properly gets it's `wp-block-paragraph` class name. At some point this was removed from core but we rely on it to target some styling for balanced text.
+- Fixed: Masthead Search icon now properly loads across environments.
+- Updated: Terms block shouldn't error when used on a CPT that doesn't contain the `category` taxonomy.
+
+## [2025.11]
+
+- Updated: Masthead is now only sticky on tablet/desktop viewports (> 600px).
+- Updated: Color themes now include a padding spacer `--group-themed-default-padding` to ensure content has default inner spacing. This can be overwritten with the block gap settings. This is contextualized to the main content area.
+- Added: Custom media query `--mq-allow-animations` checks for `no-preference` value for better a11y on animations.
+- Removed: The Page post type no longer has default content loaded into it when creating a new page. Pages should start blank.
+
 ## [2025.08]
 
 - Updated: pre-commit hooks now no longer run if the commit does not include files related to the hook. Pre-commit hooks now also include FE linting.

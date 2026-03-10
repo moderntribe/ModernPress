@@ -9,9 +9,7 @@
 	"description": "A structural block that wraps menu items inside a semantic <nav> tag with no added styles.",
 	"attributes": {
 		"ariaLabel": {
-			"type": "string",
-			"source": "attribute",
-			"attribute": "aria-label"
+			"type": "string"
 		}
 	},
 	"supports": {

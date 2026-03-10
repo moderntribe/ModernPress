@@ -4,48 +4,41 @@
  *
  * ------------------------------------------------------------------------- */
 
-/* @TODO: Add documentation on setting up theming to properly utilize */
-
-:root {
-
-	/* -----------------------------------------------------------------------
-	 * Themed Color Properties
-	 * ----------------------------------------------------------------------- */
-
-	--themed-link-text-color: var(--color-black);
-	--themed-link-hover-text-color: var(--color-blue);
-	--border-primary: var(--color-black);
-
-	/* -----------------------------------------------------------------------
-	 * Focus
-	 * ----------------------------------------------------------------------- */
-
-	--color-focus-contrast-light: var(--color-black); /* outer border */
-	--color-focus-contrast-dark: var(--color-white); /* inner border */
-}
-
-/* -------------------------------------------------------------------------
- *
- * Color Theme: White / Light
- *
- * ------------------------------------------------------------------------- */
-
+:root,
 :--light-themes {
 
 	/* -----------------------------------------------------------------------
 	 * Themed Color Properties
 	 * ----------------------------------------------------------------------- */
 
-	--themed-link-text-color: var(--color-black);
-	--themed-link-hover-text-color: var(--color-blue);
-	--border-primary: var(--color-black);
+	--btn-background-color: var(--color-blue);
+	--btn-color: var(--color-white);
+	--btn-arrow-color: var(--color-white);
+	--btn-hover-background-color: var(--color-black);
+
+	--outlined-btn-background-color: transparent;
+	--outlined-btn-border-color: var(--color-black);
+	--outlined-btn-color: var(--color-black);
+	--outlined-btn-arrow-color: var(--color-black);
+	--outlined-btn-hover-background-color: var(--color-black);
+	--outlined-btn-hover-color: var(--color-white);
+	--outlined-btn-hover-arrow-color: var(--color-white);
+
+	--ghost-btn-color: var(--color-blue);
+	--ghost-btn-arrow-color: var(--color-blue);
+	--ghost-btn-hover-background-color: transparent;
+	--ghost-btn-hover-color: var(--color-black);
+	--ghost-btn-hover-arrow-color: var(--color-black);
+
+	--link-color: var(--color-blue);
+	--link-hover-color: var(--color-black);
 
 	/* -----------------------------------------------------------------------
 	 * Focus
 	 * ----------------------------------------------------------------------- */
 
-	--color-focus-contrast-light: var(--color-black); /* outer border */
-	--color-focus-contrast-dark: var(--color-white); /* inner border */
+	--focus-contrast-light: var(--color-black); /* outer border */
+	--focus-contrast-dark: var(--color-white); /* inner border */
 }
 
 /* -------------------------------------------------------------------------
@@ -54,22 +47,40 @@
  *
  * ------------------------------------------------------------------------- */
 
-:--dark-theme {
+:--dark-themes {
 
 	/* -----------------------------------------------------------------------
 	 * Themed Color Properties
 	 * ----------------------------------------------------------------------- */
 
-	--themed-link-text-color: var(--color-white);
-	--themed-link-hover-text-color: var(--color-neutral-10);
-	--border-primary: var(--color-white);
+	--btn-background-color: var(--color-white);
+	--btn-color: var(--color-black);
+	--btn-arrow-color: var(--color-black);
+	--btn-hover-background-color: var(--color-white);
+
+	--outlined-btn-background-color: transparent;
+	--outlined-btn-border-color: var(--color-white);
+	--outlined-btn-color: var(--color-white);
+	--outlined-btn-arrow-color: var(--color-white);
+	--outlined-btn-hover-background-color: var(--color-white);
+	--outlined-btn-hover-color: var(--color-black);
+	--outlined-btn-hover-arrow-color: var(--color-black);
+
+	--ghost-btn-color: var(--color-white);
+	--ghost-btn-arrow-color: var(--color-white);
+	--ghost-btn-hover-background-color: transparent;
+	--ghost-btn-hover-color: var(--color-white);
+	--ghost-btn-hover-arrow-color: var(--color-white);
+
+	--link-color: var(--color-white);
+	--link-hover-color: var(--color-white);
 
 	/* -----------------------------------------------------------------------
 	 * Focus
 	 * ----------------------------------------------------------------------- */
 
-	--color-focus-contrast-light: var(--color-white); /* outer border */
-	--color-focus-contrast-dark: var(--color-black); /* inner border */
+	--focus-contrast-light: var(--color-white); /* outer border */
+	--focus-contrast-dark: var(--color-black); /* inner border */
 }
 
 /* -------------------------------------------------------------------------
@@ -81,17 +92,9 @@
 :--brand-theme {
 
 	/* -----------------------------------------------------------------------
-	 * Themed Color Properties
-	 * ----------------------------------------------------------------------- */
-
-	--themed-link-text-color: var(--color-white);
-	--themed-link-hover-text-color: var(--color-neutral-10);
-	--border-primary: var(--color-white);
-
-	/* -----------------------------------------------------------------------
 	 * Focus
 	 * ----------------------------------------------------------------------- */
 
-	--color-focus-contrast-light: var(--color-white); /* outer border */
-	--color-focus-contrast-dark: var(--color-blue); /* inner border */
+	--focus-contrast-light: var(--color-white); /* outer border */
+	--focus-contrast-dark: var(--color-blue); /* inner border */
 }

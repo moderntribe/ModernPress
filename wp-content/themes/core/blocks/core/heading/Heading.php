@@ -9,7 +9,7 @@ class Heading extends Block_Base {
 	public function __construct( string $assets_folder = 'dist/assets/' ) {
 		parent::__construct( $assets_folder );
 
-		add_filter( 'render_block', [ $this, 'render_heading_as_span' ], 10, 2 );
+		add_filter( 'render_block', [ $this, 'render_heading_as_div' ], 10, 2 );
 	}
 
 	public function get_block_name(): string {
@@ -24,7 +24,7 @@ class Heading extends Block_Base {
 	 *
 	 * @return string Modified block content.
 	 */
-	public function render_heading_as_span( string $block_content, array $block ): string {
+	public function render_heading_as_div( string $block_content, array $block ): string {
 		// Only process core/heading blocks
 		if ( 'core/heading' !== $block['blockName'] ) {
 			return $block_content;
@@ -37,13 +37,13 @@ class Heading extends Block_Base {
 		}
 
 		// Check if useSpanTag attribute is set to true
-		if ( empty( $attrs['useSpanTag'] ) ) {
+		if ( empty( $attrs['useDivTag'] ) ) {
 			return $block_content;
 		}
 
 		// Replace the heading tag (opening and closing) with span
 		// Matches any h1-h6 level since we transform based on rendered output
-		$result = preg_replace( '/<(\/?)h[1-6]([^>]*)>/', '<$1span$2>', $block_content );
+		$result = preg_replace( '/<(\/?)h[1-6]([^>]*)>/', '<$1div$2>', $block_content );
 
 		// Handle preg_replace returning null on error
 		return $result ?? $block_content;

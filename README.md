@@ -100,8 +100,8 @@ Specific features and functionality may have additional documentation in the [./
 * [PHP Tests](./docs/php-tests.md)
 * [WordPress Multisite](./docs/multisite.md)
 * [Create Block Script Templates](./docs/block-templates.md)
-* [Create WP Controls Script](./docs/wp-controls-templates.md)
-* [Supported Block Features](./docs/block-features.md)
+* [Create WP Controls Script](./docs/create-wp-controls-script.md)
+* [Supported Block Features](./docs/supported-block-features.md)
 
 ## Modern Tribe
 

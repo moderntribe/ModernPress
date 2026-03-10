@@ -1,22 +1,28 @@
 import {
-	useBlockProps,
-	MediaPlaceholder,
 	BlockControls,
+	InspectorControls,
+	MediaPlaceholder,
 	MediaReplaceFlow,
+	useBlockProps,
 } from '@wordpress/block-editor';
-import { Button, ToolbarGroup } from '@wordpress/components';
+import {
+	Button,
+	PanelBody,
+	RangeControl,
+	ToolbarGroup,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { trash } from '@wordpress/icons';
 import './editor.pcss';
 
 import {
-	DndContext,
 	closestCenter,
+	DndContext,
 	PointerSensor,
 	useSensor,
 	useSensors,
 } from '@dnd-kit/core';
-import { SortableContext, useSortable, arrayMove } from '@dnd-kit/sortable';
+import { arrayMove, SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useCallback } from '@wordpress/element';
 
@@ -84,7 +90,7 @@ const SortableImage = ( {
 };
 
 export default function Edit( { attributes, setAttributes, isSelected } ) {
-	const { images } = attributes;
+	const { marqueeSpeed, images } = attributes;
 	const blockProps = useBlockProps();
 
 	// Handle selection of new media items
@@ -134,6 +140,27 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 
 	return (
 		<>
+			{ isSelected && (
+				<InspectorControls>
+					<PanelBody title={ __( 'Block Settings', 'tribe' ) }>
+						<RangeControl
+							__next40pxDefaultSize
+							label={ __( 'Marquee Speed', 'tribe' ) }
+							help={ __(
+								'Adjust the speed of the logo marquee animation.',
+								'tribe'
+							) }
+							min={ 50 }
+							max={ 1000 }
+							step={ 50 }
+							value={ marqueeSpeed }
+							onChange={ ( value ) =>
+								setAttributes( { marqueeSpeed: value } )
+							}
+						/>
+					</PanelBody>
+				</InspectorControls>
+			) }
 			<BlockControls>
 				{ images.length > 0 && (
 					<ToolbarGroup>

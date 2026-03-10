@@ -24,8 +24,8 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"0"}}}} -->
-<div class="wp-block-buttons" style="margin-top:0"><!-- wp:button {"className":"is-style-ghost","hasIcon":true} -->
-<div class="wp-block-button is-style-ghost tribe-button-has-icon"><a class="wp-block-button__link wp-element-button" href="#">Menu Item 1 CTA</a></div>
+<div class="wp-block-buttons" style="margin-top:0"><!-- wp:button {"className":"is-style-ghost"} -->
+<div class="wp-block-button is-style-ghost"><a class="wp-block-button__link wp-element-button" href="#">Menu Item 1 CTA</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:group --></div>

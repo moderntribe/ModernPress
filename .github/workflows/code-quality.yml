@@ -1,4 +1,4 @@
-name: 'Code Quality Checks'
+name: 'Code Quality Checks (CQC)'
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ on:
 
 jobs:
   coding-standards:
-    name: 'Coding Standards'
+    name: 'PHP CodeSniffer (PHPCS)'
     uses: ./.github/workflows/phpcs.yml
     secrets:
       OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
@@ -21,24 +21,14 @@ jobs:
       OP_ITEM: ${{ secrets.OP_ITEM }}
 
   linting:
-    name: 'Linting'
+    name: 'Linting (JS, JSON, PCSS)'
     uses: ./.github/workflows/linting.yml
 
   phpstan:
-    name: 'Static Analysis'
+    name: 'Static Analysis (PHPStan)'
     needs: [coding-standards, linting]
     uses: ./.github/workflows/static-analysis.yml
     secrets:
       OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
       OP_VAULT: ${{ secrets.OP_VAULT }}
       OP_ITEM: ${{ secrets.OP_ITEM }}
-
-# Enable this job if you have PHPUnit tests
-# slic:
-#   name: 'PHP Tests'
-#   needs: [coding-standards, phpstan, linting]
-#   uses: ./.github/workflows/php-tests.yml
-#    secrets:
-#      OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-#      OP_VAULT: ${{ secrets.OP_VAULT }}
-#      OP_ITEM: ${{ secrets.OP_ITEM }}

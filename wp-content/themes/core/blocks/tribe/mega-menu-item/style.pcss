@@ -1,6 +1,9 @@
 /* -------------------------------------------------------------------------
  *
- * Block - Mega Navigation Menu - Styles - FE / Editor
+ * Block - Tribe Mega Menu Item
+ *
+ * Handles styling for mega menu dropdown content and wrapper.
+ * First-level navigation button styles are consolidated in Navigation Wrapper.
  *
  * ------------------------------------------------------------------------- */
 
@@ -23,97 +26,11 @@
 
 			a {
 
-				@mixin inline-text-link;
+				@mixin a-link;
 
 				text-decoration-color: transparent;
-				font-weight: var(--font-weight-normal);
+				font-weight: var(--font-weight-regular);
 			}
-		}
-	}
-}
-
-/* mega menu item button toggle */
-.tribe-mega-menu-item__toggle {
-	background-color: transparent;
-	border: 0;
-	padding: var(--spacer-10) var(--spacer-30) var(--spacer-20) var(--spacer-10);
-	position: relative;
-	color: var(--color-text);
-	transition: var(--transition);
-
-	@media (--mq-navigation-max) {
-		width: 100%;
-		font-size: var(--font-size-40);
-		text-align: left;
-		padding-left: 0;
-	}
-
-	&::before {
-		content: "";
-		width: 0;
-		height: 4px;
-		background-color: var(--masthead-navigation-accent-color);
-		position: absolute;
-		bottom: -4px;
-		left: var(--spacer-10);
-		transition: width 0.15s ease-in-out;
-		z-index: 11;
-
-		@media (--mq-navigation-max) {
-			display: none;
-		}
-	}
-
-	&::after {
-		content: "";
-		background-color: currentcolor;
-		display: block;
-		height: 16px;
-		width: 10px;
-		mask: var(--icon-chevron-right) center no-repeat;
-		mask-size: contain;
-		position: absolute;
-		right: 2px;
-		top: calc(var(--spacer-10) + 5px);
-		transform: rotate(90deg);
-		transition: var(--transition);
-	}
-
-	&:hover,
-	&:active,
-	.menu-item-active & {
-		outline: none;
-		color: var(--masthead-navigation-accent-color);
-
-		&::before {
-			width: calc(100% - var(--spacer-10));
-		}
-
-		@media (--mq-navigation-max) {
-			outline: revert;
-			color: var(--color-text);
-		}
-	}
-
-	&:focus-visible {
-		outline: 2px solid var(--masthead-navigation-accent-color);
-	}
-
-	/*  Hide border on closed menu items, even when hovered or active */
-	:not(.menu-item-active) & {
-
-		@media (--mq-navigation-max) {
-
-			&::before {
-				width: 0;
-			}
-		}
-	}
-
-	.menu-item-active & {
-
-		&::after {
-			transform: rotate(-90deg);
 		}
 	}
 }

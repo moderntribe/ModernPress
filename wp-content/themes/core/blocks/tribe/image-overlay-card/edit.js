@@ -10,14 +10,11 @@ import {
 import {
 	BaseControl,
 	Button,
-	ColorPicker,
 	Flex,
 	FlexItem,
-	Modal,
 	PanelBody,
 	Popover,
 	ResponsiveWrapper,
-	TabPanel,
 	TextControl,
 	ToggleControl,
 	ToolbarButton,
@@ -26,6 +23,8 @@ import {
 import ServerSideRender from '@wordpress/server-side-render';
 import { withSelect } from '@wordpress/data';
 import { useMemo, useState } from '@wordpress/element';
+import DynamicColorPicker from 'components/DynamicColorPicker';
+import blockSettings from './block.json';
 
 import './editor.pcss';
 
@@ -43,9 +42,6 @@ const Edit = ( { attributes, setAttributes, isSelected, media } ) => {
 		linkText,
 		linkA11yLabel,
 	} = attributes;
-
-	const [ isOverlayColorModalOpen, setIsOverlayColorModalOpen ] =
-		useState( false );
 
 	/**
 	 * Use internal state instead of a ref to make sure that the component
@@ -113,7 +109,7 @@ const Edit = ( { attributes, setAttributes, isSelected, media } ) => {
 	const removeMedia = () => {
 		setAttributes( {
 			mediaId: 0,
-			mediaUrl: '',
+			mediaUrl: blockSettings?.attributes?.mediaUrl?.default || '',
 		} );
 	};
 
@@ -152,65 +148,6 @@ const Edit = ( { attributes, setAttributes, isSelected, media } ) => {
 						} }
 					/>
 				</Popover>
-			) }
-			{ isOverlayColorModalOpen && (
-				<Modal
-					title={ __( 'Image Overlay Colors', 'tribe' ) }
-					onRequestClose={ () => setIsOverlayColorModalOpen( false ) }
-					size="small"
-				>
-					<TabPanel
-						tabs={ [
-							{
-								name: 'default',
-								title: __( 'Default', 'tribe' ),
-							},
-							{ name: 'hover', title: __( 'Hover', 'tribe' ) },
-						] }
-					>
-						{ ( tab ) => {
-							if ( tab.name === 'default' ) {
-								return (
-									<div style={ { marginTop: '16px' } }>
-										<ColorPicker
-											color={ overlayColor }
-											copyFormat="hex"
-											defaultValue="#000000a1"
-											enableAlpha={ true }
-											onChange={ ( value ) => {
-												setAttributes( {
-													overlayColor: value,
-												} );
-											} }
-										/>
-									</div>
-								);
-							} else if ( tab.name === 'hover' ) {
-								return (
-									<div style={ { marginTop: '16px' } }>
-										<ColorPicker
-											color={ overlayHoverColor }
-											copyFormat="hex"
-											defaultValue="#000000e0"
-											enableAlpha={ true }
-											onChange={ ( value ) => {
-												setAttributes( {
-													overlayHoverColor: value,
-												} );
-											} }
-										/>
-									</div>
-								);
-							}
-						} }
-					</TabPanel>
-					<Button
-						isPrimary
-						onClick={ () => setIsOverlayColorModalOpen( false ) }
-					>
-						{ __( 'Save & Close', 'tribe' ) }
-					</Button>
-				</Modal>
 			) }
 			{ isSelected && (
 				<InspectorControls>
@@ -309,19 +246,30 @@ const Edit = ( { attributes, setAttributes, isSelected, media } ) => {
 								</Flex>
 							) }
 						</BaseControl>
-						<BaseControl __nextHasNoMarginBottom>
-							<BaseControl.VisualLabel>
-								{ __( 'Image Overlay Colors', 'tribe' ) }
-							</BaseControl.VisualLabel>
-							<Button
-								isPrimary
-								onClick={ () =>
-									setIsOverlayColorModalOpen( true )
-								}
-							>
-								{ __( 'Open Color Picker', 'tribe' ) }
-							</Button>
-						</BaseControl>
+						<DynamicColorPicker
+							controlLabel={ __(
+								'Default Overlay Color',
+								'tribe'
+							) }
+							colorAttribute={ 'overlayColor' }
+							colorValue={ overlayColor }
+							useOpacity={ true }
+							onChange={ ( changed ) =>
+								setAttributes( { ...changed } )
+							}
+						/>
+						<DynamicColorPicker
+							controlLabel={ __(
+								'Hover Overlay Color',
+								'tribe'
+							) }
+							colorAttribute={ 'overlayHoverColor' }
+							colorValue={ overlayHoverColor }
+							useOpacity={ true }
+							onChange={ ( changed ) =>
+								setAttributes( { ...changed } )
+							}
+						/>
 						<ToggleControl
 							__nextHasNoMarginBottom
 							label={ __( 'Use Dark Theme', 'tribe' ) }

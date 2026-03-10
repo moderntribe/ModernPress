@@ -9,7 +9,7 @@ const settings = {
 		useHangingPunctuation: {
 			type: 'boolean',
 		},
-		useSpanTag: {
+		useDivTag: {
 			type: 'boolean',
 		},
 	},
@@ -39,11 +39,11 @@ const settings = {
 		},
 		{
 			applyClass: 'is-decorative-heading',
-			attribute: 'useSpanTag',
+			attribute: 'useDivTag',
 			defaultValue: false,
 			label: __( 'Decorative Heading', 'tribe' ),
 			helpText: __(
-				'Uses <span> instead of heading tags for accessibility.',
+				'Uses <div> instead of heading tags for accessibility.',
 				'tribe'
 			),
 			type: 'toggle',

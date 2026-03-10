@@ -1,8 +1,16 @@
-/* -------------------------------------------------------------------------
+/*
+ * Block - Tribe Navigation Wrapper
  *
- * Block - Tribe Navigation Wrapper - Styles - FE / Editor
+ * Central navigation styling coordinator that handles:
+ * - Semantic <nav> wrapper with ARIA support
+ * - Consolidated toggle button styles (mega menu & standard menu)
+ * - First-level navigation styling with animated underlines
+ * - Context-specific styles for Primary vs Utility menus
+ * - Responsive behavior and mobile adaptations
  *
- * ------------------------------------------------------------------------- */
+ * This block acts as the styling foundation for all navigation components.
+ *
+ */
 
 .wp-block-tribe-navigation-wrapper {
 	align-self: center;
@@ -14,5 +22,201 @@
 			margin-left: auto !important;
 			margin-right: auto !important;
 		}
+	}
+}
+
+/*
+ * TOGGLE BUTTON STYLES
+ *
+ * Consolidated styles for both mega menu and standard menu toggle buttons.
+ * Handles base styling, chevron icons, and responsive behavior.
+ */
+.tribe-standard-menu-item__toggle,
+.tribe-mega-menu-item__toggle {
+	background-color: transparent;
+	border: 0;
+	padding: var(--spacer-10) var(--spacer-20) var(--spacer-10) var(--spacer-10);
+	position: relative;
+	color: var(--color-text);
+	transition: var(--transition);
+	font-size: var(--font-size-20);
+	text-decoration-color: transparent;
+
+	&:is(.tribe-mega-menu-item__toggle) {
+		padding: var(--spacer-10) var(--spacer-30) var(--spacer-20) var(--spacer-10);
+
+		@media (--mq-navigation-max) {
+			font-size: var(--font-size-40);
+		}
+	}
+
+	@media (--mq-navigation-max) {
+		width: 100%;
+		text-align: left;
+		padding-left: 0;
+	}
+
+	&::after {
+		content: "";
+		background-color: currentcolor;
+		display: block;
+		height: 16px;
+		width: 10px;
+		mask: var(--icon-chevron-right) center no-repeat;
+		mask-size: contain;
+		position: absolute;
+		right: 2px;
+		top: calc(var(--spacer-10) + 5px);
+		transform: rotate(90deg);
+		transition: var(--transition);
+	}
+
+	.menu-item-active & {
+
+		&::after {
+			transform: rotate(-90deg);
+		}
+	}
+
+	.site-header__navigation & {
+
+		&:hover,
+		&:active,
+		.menu-item-active & {
+			outline: none;
+			color: var(--masthead-navigation-accent-color);
+
+			@media (--mq-navigation-max) {
+				outline: revert;
+				color: var(--color-text);
+			}
+		}
+
+		&::after {
+			height: 16px;
+			width: 10px;
+		}
+	}
+
+	/* Utility Menu */
+	.site-header__utility-menu & {
+
+		&:hover,
+		&:focus-visible,
+		.menu-item-active & {
+			text-decoration-color: currentcolor;
+			color: currentcolor;
+
+			.tribe-standard-menu-item__toggle-label {
+				border-bottom-color: currentcolor;
+			}
+		}
+
+		&::after {
+			height: 12px;
+			width: 6px;
+
+			@media (--mq-navigation-max) {
+				position: relative;
+				left: auto;
+				top: auto;
+				display: inline-block;
+				margin-left: var(--spacer-20);
+			}
+		}
+	}
+}
+
+/*
+ * PRIMARY NAVIGATION FIRST-LEVEL STYLES
+ *
+ * Unified styling for all first-level navigation items in the primary menu:
+ * - Mega Menu toggles
+ * - Standard Menu toggles
+ * - Navigation Links
+ *
+ * Features animated underlines that expand on hover/active states.
+ */
+.site-header__navigation {
+
+	/* Target first-level navigation items */
+	.tribe-mega-menu-item__toggle,
+	& .wp-block-tribe-standard-menu-item .tribe-standard-menu-item__toggle,
+	& > li > .wp-block-tribe-navigation-link {
+		padding: var(--spacer-10) var(--spacer-30) var(--spacer-20) var(--spacer-10);
+		font-size: var(--font-size-20);
+		text-decoration: none;
+		outline-offset: 0;
+
+		@media (--mq-navigation-max) {
+			font-size: var(--font-size-40);
+			padding-left: 0;
+		}
+
+		/* Animated underline that grows on hover */
+		&::before {
+			content: "";
+			width: 0;
+			height: 4px;
+			background-color: var(--masthead-navigation-accent-color);
+			position: absolute;
+			bottom: -4px;
+			left: var(--spacer-10);
+			transition: width 0.15s ease-in-out;
+			z-index: 11;
+
+			/* Hide underline on mobile */
+			@media (--mq-navigation-max) {
+				display: none;
+			}
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--masthead-navigation-accent-color);
+		}
+
+		/* Expand underline on hover, active state, or when menu item is active */
+		&:hover,
+		&:active,
+		.menu-item-active & {
+
+			&::before {
+				width: calc(100% - var(--spacer-10));
+			}
+		}
+
+		/* Tribe Navigation Links lack chevrons, so center underline with equal padding */
+		&:is(.wp-block-tribe-navigation-link) {
+			padding: var(--spacer-10) var(--spacer-10) var(--spacer-20)
+				var(--spacer-10);
+
+			@media (--mq-navigation-max) {
+				font-size: var(--font-size-40);
+				padding-left: 0;
+			}
+
+			&:hover,
+			&:active,
+			.menu-item-active & {
+
+				&::before {
+					width: calc(100% - (2 * var(--spacer-10)));
+				}
+			}
+		}
+	}
+}
+
+/*
+ * UTILITY MENU STYLES
+ *
+ * Specific styling overrides for utility menu navigation items.
+ * Generally smaller and simpler than primary navigation.
+ */
+.site-header__utility-menu {
+
+	& .wp-block-tribe-standard-menu-item .tribe-standard-menu-item__toggle,
+	& > li .wp-block-tribe-navigation-link {
+		font-size: 14px;
 	}
 }

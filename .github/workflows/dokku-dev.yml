@@ -1,5 +1,4 @@
-
-name: Dokku Deploy Dev
+name: 'Dokku Deploy: Moose Dev'
 
 on:
   workflow_dispatch:

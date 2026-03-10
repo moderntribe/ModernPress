@@ -1,5 +1,5 @@
 import { ready } from 'utils/events';
-import { Navigation, A11y, Pagination } from 'swiper/modules';
+import { A11y, Autoplay, Navigation, Pagination } from 'swiper/modules';
 import Swiper from 'swiper';
 
 const el = {
@@ -11,11 +11,13 @@ const bindEvents = () => {
 		const args = JSON.parse(
 			swiper.getAttribute( 'data-swiper-settings' )
 		);
+		const modules = [ A11y ];
 		const prevButton = swiper.querySelector( '.swiper-button-prev' );
 		const nextButton = swiper.querySelector( '.swiper-button-next' );
 		const pagination = swiper.querySelector( '.swiper-pagination' );
 
 		if ( prevButton || nextButton ) {
+			modules.push( Navigation );
 			args.navigation = {
 				nextEl: nextButton,
 				prevEl: prevButton,
@@ -23,6 +25,7 @@ const bindEvents = () => {
 		}
 
 		if ( pagination ) {
+			modules.push( Pagination );
 			args.pagination = {
 				el: pagination,
 				clickable:
@@ -30,9 +33,15 @@ const bindEvents = () => {
 			};
 		}
 
+		if ( args?.autoplay ) {
+			modules.push( Autoplay );
+		}
+
+		console.log( 'Initializing Swiper with args:', args );
+
 		new Swiper( swiper, {
 			...args,
-			modules: [ Navigation, A11y, Pagination ],
+			modules,
 		} );
 	} );
 };

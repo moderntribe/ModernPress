@@ -11,7 +11,7 @@
  */
 ?>
 <!-- wp:group {"metadata":{"name":"Post Header"},"align":"wide","className":"alignwide","style":{"spacing":{"padding":{"top":"var:preset|spacing|50"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignwide" style="padding-top:var(--wp--preset--spacing--50)"><!-- wp:tribe/terms {"onlyPrimaryTerm":true,"hasLinks":true,"align":"center","className":"aligncenter"} /-->
+<div class="wp-block-group alignwide" style="padding-top:var(--wp--preset--spacing--50)"><!-- wp:tribe/terms {"taxonomyToUse":"category","onlyPrimaryTerm":true,"hasLinks":true,"align":"center","className":"aligncenter"} /-->
 
 	<!-- wp:post-title {"textAlign":"center","level":1,"align":"wide","style":{"spacing":{"margin":{"top":"var:preset|spacing|10","bottom":"var:preset|spacing|30"}}}} /-->
 

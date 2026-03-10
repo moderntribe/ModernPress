@@ -19,7 +19,7 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:buttons {"style":{"spacing":{"margin":{"top":"0"}}}} -->
-<div class="wp-block-buttons" style="margin-top:0"><!-- wp:button {"className":"is-style-default","hasIcon":false} -->
+<div class="wp-block-buttons" style="margin-top:0"><!-- wp:button {"className":"is-style-default"} -->
 <div class="wp-block-button is-style-default"><a class="wp-block-button__link wp-element-button" href="#">some button</a></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>

@@ -18,7 +18,7 @@ import {
 } from '@wordpress/components';
 import ServerSideRender from '@wordpress/server-side-render';
 import { useMemo, useState } from '@wordpress/element';
-import IconPicker from 'blocks/tribe/icon-picker/IconPicker';
+import IconPicker from 'components/IconPicker';
 import { formatIconName } from 'blocks/tribe/icon-picker/utils';
 import { ICONS_LIST } from 'blocks/tribe/icon-picker/icons/icons-list';
 

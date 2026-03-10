@@ -1,25 +1,29 @@
 /* -------------------------------------------------------------------------
  *
- * Block - Tribe Navigation Link - Styles - FE / Editor
+ * Block - Tribe Navigation Link
+ *
+ * Handles individual link styling with base behavior:
+ * - Base link styles (underline, transitions, focus states)
+ * - Consistent styling across all navigation contexts
+ *
+ * Context-specific enhancements are handled in Navigation Wrapper.
  *
  * ------------------------------------------------------------------------- */
 
 .wp-block-tribe-navigation-link {
+	text-decoration: underline 1px;
 	text-decoration-color: transparent;
 	transition: var(--transition);
 	color: var(--color-text);
 	display: block;
 
 	&:hover,
+	&:active,
 	&:focus {
 		text-decoration-color: currentcolor;
 	}
 
 	&:focus-visible {
 		outline: 2px solid var(--masthead-navigation-accent-color);
-	}
-
-	.site-header__utility-menu & {
-		font-size: 14px;
 	}
 }

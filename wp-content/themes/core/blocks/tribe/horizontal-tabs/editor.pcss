@@ -6,19 +6,14 @@
 
 .wp-block-tribe-horizontal-tabs__tabs {
 	gap: 0 !important;
-	border: 1px solid var(--color-black);
-
-	/* CASE: Dark Themes */
-	:--dark-themes & {
-		border-color: var(--color-white);
-	}
+	border: 1px solid var(--horizontal-tabs-editor-border-color);
 }
 
 .wp-block-tribe-horizontal-tabs__tab {
 	position: relative;
 	padding: var(--spacer-20);
 	cursor: pointer;
-	border-right: 1px solid var(--color-black);
+	border-right: 1px solid var(--horizontal-tabs-editor-border-color);
 
 	&.active-tab {
 		position: relative;
@@ -31,32 +26,7 @@
 			position: absolute;
 			bottom: -1px;
 			left: 0;
-			background-color: var(--color-white);
-		}
-	}
-
-	/* CASE: Light style */
-	:--light-theme & {
-
-		&.active-tab::after {
-			background-color: var(--color-neutral-10);
-		}
-	}
-
-	/* CASE: Dark and Brand styles */
-	:--dark-themes & {
-		border-right-color: var(--color-white);
-
-		&.active-tab::after {
-			background-color: var(--color-black);
-		}
-	}
-
-	/* CASE: Dark style */
-	:--brand-theme & {
-
-		&.active-tab::after {
-			background-color: var(--color-blue);
+			background-color: var(--horizontal-tabs-editor-border-cutout);
 		}
 	}
 }
@@ -67,21 +37,11 @@
 
 .wp-block-tribe-horizontal-tabs__tab-delete {
 	padding: 0 !important;
-	color: var(--color-black) !important;
+	color: var(--horizontal-tabs-editor-delete-color) !important;
 
 	&:hover,
 	&:focus {
-		color: var(--color-blue) !important;
-	}
-
-	/* CASE: Dark and Brand styles */
-	:--dark-themes & {
-		color: var(--color-white) !important;
-
-		&:hover,
-		&:focus {
-			color: var(--color-neutral-10) !important;
-		}
+		color: var(--horizontal-tabs-editor-delete-hover-color) !important;
 	}
 }
 
@@ -90,12 +50,7 @@
 }
 
 .wp-block-tribe-horizontal-tabs__tab-content {
-	border: 1px solid var(--color-black);
+	border: 1px solid var(--horizontal-tabs-editor-border-color);
 	border-top: 0;
 	padding: var(--spacer-20);
-
-	/* CASE: Dark and Brand styles */
-	:--dark-themes & {
-		border-color: var(--color-white);
-	}
 }

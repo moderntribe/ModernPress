@@ -1,4 +1,4 @@
-name: Reusable Workflow - Deploy Dokku
+name: 'Reusable Workflow: Dokku Deploy'
 on:
   workflow_call:
     inputs:

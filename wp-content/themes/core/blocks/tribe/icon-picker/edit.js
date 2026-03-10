@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { PanelRow } from '@wordpress/components';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { formatIconName } from './utils';
-import IconPicker from './IconPicker';
+import IconPicker from 'components/IconPicker';
 import { ICONS_LIST } from './icons/icons-list';
 
 import './editor.pcss';

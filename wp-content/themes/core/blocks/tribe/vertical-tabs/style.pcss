@@ -41,6 +41,11 @@
 	border-left: 3px solid var(--vertical-tabs-border-color);
 	transition: var(--transition);
 
+	/* Account for sticky header when scrolling tab into view on mobile */
+	@media (--mq-wp-small-max) {
+		scroll-margin-top: calc(var(--masthead-mobile-height) + var(--spacer-20));
+	}
+
 	&[aria-selected="true"],
   	&.editor-is-selected {
 		pointer-events: none;

@@ -1,9 +1,9 @@
 // import dependencies
 import { createBlock } from '@wordpress/blocks';
 import {
+	InspectorControls,
 	useBlockProps,
 	useInnerBlocksProps,
-	InspectorControls,
 } from '@wordpress/block-editor';
 import {
 	Button,
@@ -18,7 +18,7 @@ import { useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 // import swiper
-import { Navigation, A11y, Pagination } from 'swiper/modules';
+import { A11y, Navigation, Pagination } from 'swiper/modules';
 import Swiper from 'swiper';
 
 const TEMPLATE = [
@@ -359,23 +359,29 @@ export default function Edit( props ) {
 
 			<div ref={ block } className="swiper">
 				<div className="swiper-wrapper">{ children }</div>
-				{ navigation ? (
+				{ navigation || pagination ? (
 					<div className="swiper-navigation">
-						<button
-							type="button"
-							className="swiper-button-prev"
-							title={ __( 'Previous Slide', 'tribe' ) }
-						></button>
-						<button
-							type="button"
-							className="swiper-button-next"
-							title={ __( 'Next Slide', 'tribe' ) }
-						></button>
+						{ navigation && (
+							<div className="swiper-navigation__buttons">
+								<button
+									type="button"
+									className="swiper-button-prev"
+									title={ __( 'Previous Slide', 'tribe' ) }
+								></button>
+								<button
+									type="button"
+									className="swiper-button-next"
+									title={ __( 'Next Slide', 'tribe' ) }
+								></button>
+							</div>
+						) }
+						{ pagination && (
+							<div className="swiper-pagination"></div>
+						) }
 					</div>
 				) : (
 					''
 				) }
-				{ pagination ? <div className="swiper-pagination"></div> : '' }
 			</div>
 			<Flex align="center" justify="flex-start">
 				<FlexItem>

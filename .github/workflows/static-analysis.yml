@@ -1,15 +1,17 @@
-name: Static Analysis
+name: 'CQC: Static Analysis (PHPStan)'
 
 on:
   workflow_call:
     secrets:
       OP_SERVICE_ACCOUNT_TOKEN:
-        required: true
         description: '1Password Service Account Token to use for populating composer auth.json'
+        required: true
       OP_VAULT:
         description: '1Password vault to use for populating composer auth.json'
+        required: false
       OP_ITEM:
         description: '1Password item to use for populating composer auth.json'
+        required: false
 
 jobs:
   phpstsan:

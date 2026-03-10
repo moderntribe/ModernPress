@@ -8,28 +8,16 @@
  * ------------------------------------------------------------------------- */
 
 @define-mixin icon-card-hover-focus {
-	background-color: var(--color-neutral-10);
+	background-color: var(--icon-card-hover-background-color);
 
 	.b-icon-card__title {
-		text-decoration-color: currentcolor;
+
+		@mixin t-animated-underline-hover;
 	}
 
-	.b-icon-card__buttons {
+	.a-btn-ghost {
 
-		.wp-block-button__link {
-
-			.is-style-ghost & {
-				color: var(--color-dark-blue);
-
-				&::after {
-					transform: translateX(8px);
-				}
-			}
-		}
-	}
-
-	/* CASE: Dark Mode */
-	.is-style-dark & {
-		background-color: var(--color-neutral-80);
+		@mixin a-btn-hover-focus;
+		@mixin a-btn-ghost-hover-focus;
 	}
 }

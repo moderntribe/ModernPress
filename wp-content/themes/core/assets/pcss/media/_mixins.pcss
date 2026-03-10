@@ -15,13 +15,17 @@
 			max-width: 220px;
 		}
 
-		/* Ensure media can only obtain a max-width of 100% of the container */
+		/**
+		 * Ensure media can only obtain a max-width of 100% of the container
+		 */
 		@media (--mq-large) {
 			max-width: 100%;
 		}
 	}
 
-	/* Stack media aligned left on small screens */
+	/**
+	 * Stack media aligned left on small screens
+	 */
 	:is(body .is-layout-constrained) &.alignleft {
 
 		@media (--mq-wp-small-max) {
@@ -30,7 +34,9 @@
 		}
 	}
 
-	/* Stack media aligned right on small screens */
+	/**
+	 * Stack media aligned right on small screens
+	 */
 	:is(body .is-layout-constrained) &.alignright {
 
 		@media (--mq-wp-small-max) {
@@ -39,12 +45,43 @@
 		}
 	}
 
-	/* Fix layout issue with resizable container in editor with grid alignment */
+	/**
+	 * Fix layout issue with resizable container in editor with grid alignment
+	 */
 	:is(body.editor-styles-wrapper) &.aligngrid {
 
 		> .components-resizable-box__container {
 			max-width: 100% !important;
 			max-height: unset !important;
+		}
+	}
+
+	/**
+	 * Limit caption width to content width
+	 */
+	&.alignfull {
+
+		/**
+		 * alignfull alignment requires extra gutter padding for captions
+		 */
+		figcaption.wp-element-caption {
+			max-width: calc(var(--grid-content-width) + var(--grid-gutter) * 2);
+			margin-left: auto;
+			margin-right: auto;
+			padding-left: var(--grid-gutter);
+			padding-right: var(--grid-gutter);
+		}
+	}
+
+	&.alignwide {
+
+		/**
+		 * alignwide alignment just needs to limit caption width to content width
+		 */
+		figcaption.wp-element-caption {
+			max-width: var(--grid-content-width);
+			margin-left: auto;
+			margin-right: auto;
 		}
 	}
 }

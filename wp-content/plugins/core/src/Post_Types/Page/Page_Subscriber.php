@@ -7,14 +7,7 @@ use Tribe\Plugin\Core\Abstract_Subscriber;
 class Page_Subscriber extends Abstract_Subscriber {
 
 	public function register(): void {
-		$this->block_templates();
 		$this->query_loop_block_filter();
-	}
-
-	public function block_templates(): void {
-		add_action( 'init', function (): void {
-			$this->container->get( Config::class )->register_block_template();
-		} );
 	}
 
 	public function query_loop_block_filter(): void {

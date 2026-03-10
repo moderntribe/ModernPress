@@ -12,6 +12,15 @@
 			}
 		],
 		"_experimentalLayoutSorting": true,
+		"animationExcludes": [
+			"core/accordion",
+			"core/accordion-heading",
+			"core/accordion-panel",
+			"tribe/carousel-slide",
+			"tribe/horizontal-tab",
+			"tribe/logo-marquee",
+			"tribe/vertical-tab"
+		],
 		"blocks": {
 			"core/buttons": {
 				"spacing": {
@@ -25,6 +34,9 @@
 					"style": false,
 					"width": false
 				},
+				"spacing": {
+					"padding": false
+				},
 				"typography": {
 					"fontFamilies": [],
 					"fontSizes": [],
@@ -34,6 +46,11 @@
 			"core/columns": {
 				"spacing": {
 					"blockGap": true
+				}
+			},
+			"core/cover": {
+				"border": {
+					"radius": true
 				}
 			},
 			"core/details": {
@@ -94,6 +111,11 @@
 				"typography": {
 					"fontFamilies": [],
 					"fontSizes": []
+				}
+			},
+			"core/post-featured-image": {
+				"border": {
+					"radius": true
 				}
 			},
 			"core/post-template": {
@@ -394,6 +416,39 @@
 			"background": "var(--wp--preset--color--base-white)"
 		},
 		"blocks": {
+			"core/accordion-heading": {
+				"typography": {
+					"fontFamily": "var(--wp--preset--font-family--inter)",
+					"fontSize": "var(--wp--preset--font-size--30)",
+					"lineHeight": "1.4",
+					"fontWeight": "var(--wp--custom--font-weight--bold)"
+				}
+			},
+			"core/accordion-item": {
+				"border": {
+					"top": {
+						"color": "var(--color-border-secondary)",
+						"style": "solid",
+						"width": "1px"
+					},
+					"bottom": {
+						"color": "var(--color-border-secondary)",
+						"style": "solid",
+						"width": "1px"
+					}
+				}
+			},
+			"core/accordion-panel": {
+				"spacing": {
+					"margin": {
+						"top": "0",
+						"bottom": "0"
+					},
+					"padding": {
+						"bottom": "var(--wp--preset--spacing--40)"
+					}
+				}
+			},
 			"core/buttons": {
 				"spacing": {
 					"blockGap": "var(--wp--preset--spacing--30)"
@@ -404,32 +459,6 @@
 					"padding": {
 						"left": "var(--wp--style--root--padding-left)",
 						"right": "var(--wp--style--root--padding-right)"
-					}
-				}
-			},
-			"core/details": {
-				"typography": {
-					"fontFamily": "var(--wp--preset--font-family--inter)",
-					"fontSize": "var(--wp--preset--font-size--30)",
-					"lineHeight": "1.4",
-					"fontWeight": "var(--wp--custom--font-weight--bold)"
-				},
-				"spacing": {
-					"padding": {
-						"top": "0",
-						"bottom": "0"
-					}
-				},
-				"border": {
-					"top": {
-						"color": "var(--wp--preset--color--base-black)",
-						"style": "solid",
-						"width": "1px"
-					},
-					"bottom": {
-						"color": "var(--wp--preset--color--base-black)",
-						"style": "solid",
-						"width": "1px"
 					}
 				}
 			},
@@ -616,6 +645,14 @@
 					}
 				}
 			},
+			"core/spacer": {
+				"spacing": {
+					"margin": {
+						"top": "0",
+						"bottom": "0"
+					}
+				}
+			},
 			"core/table": {
 				"spacing": {
 					"margin": {
@@ -749,44 +786,6 @@
 					"fontSize": "var(--wp--preset--font-size--20)",
 					"fontWeight": "var(--wp--custom--font-weight--regular)",
 					"lineHeight": "1.5"
-				}
-			},
-			"button": {
-				"border": {
-					"width": "1px",
-					"style": "solid",
-					"color": "transparent",
-					"radius": "var(--border-radius-full)"
-				},
-				"color": {
-					"background": "var(--wp--preset--color--blue)",
-					"text": "var(--wp--preset--color--base-white)"
-				},
-				"spacing": {
-					"padding": {
-						"top": "var(--wp--preset--spacing--20)",
-						"right": "var(--wp--preset--spacing--30)",
-						"bottom": "var(--wp--preset--spacing--20)",
-						"left": "var(--wp--preset--spacing--30)"
-					}
-				},
-				"typography": {
-					"fontSize": "var(--wp--preset--font-size--20)",
-					"fontWeight": "var(--wp--custom--font-weight--bold)",
-					"lineHeight": "1",
-					"textAlign": "left"
-				},
-				":hover": {
-					"color": {
-						"background": "var(--color-dark-blue)",
-						"text": "var(--wp--preset--color--base-white)"
-					}
-				},
-				":focus": {
-					"color": {
-						"background": "var(--color-dark-blue)",
-						"text": "var(--wp--preset--color--base-white)"
-					}
 				}
 			}
 		},

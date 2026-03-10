@@ -1,4 +1,4 @@
-name: Coding Standards
+name: 'CQC: PHP CodeSniffer (PHPCS)'
 
 on:
   workflow_call:

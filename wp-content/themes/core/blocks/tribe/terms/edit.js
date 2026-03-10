@@ -1,47 +1,34 @@
-/**
- * React hook that is used to mark the block wrapper element.
- * It provides all the necessary props like the class name.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
- */
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { PanelBody, SelectControl, ToggleControl } from '@wordpress/components';
+import { withSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { useSelect } from '@wordpress/data';
-
-/**
- * Server-side rendering of the block in the editor view
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-server-side-render/
- */
 import ServerSideRender from '@wordpress/server-side-render';
 
-/**
- * The edit function describes the structure of your block in the context of the
- * editor. This represents what the editor will render when the block is used.
- *
- * @ignore
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
- *
- * @return {Element} Element to render.
- */
-export default function Edit( {
-	attributes,
-	setAttributes,
-	context,
-	isSelected,
-} ) {
+function Edit( { props, taxonomies } ) {
 	const blockProps = useBlockProps();
+	const { attributes, isSelected, setAttributes } = props;
 	const { taxonomyToUse, onlyPrimaryTerm, hasLinks } = attributes;
-	const { postType } = context;
 
-	const taxonomies = useSelect( ( select ) =>
-		select( 'core' ).getTaxonomies( {
-			type: postType,
-			per_page: -1,
-		} )
-	);
+	/**
+	 * Prepare taxonomies provided by the `withSelect` function for
+	 * taxonomyToUse SelectControl options.
+	 *
+	 * We also add a default empty option to prompt the user to
+	 * select a taxonomy.
+	 *
+	 * Because we are using an onChange handler in the SelectControl below,
+	 * the user must make a selection for the attribute to be set. If there was
+	 * only one option, it would be impossible to set the attribute as
+	 * no change would occur.
+	 */
+	const listTaxonomies = taxonomies
+		? taxonomies.map( ( taxonomy ) => {
+				return {
+					label: taxonomy.name,
+					value: taxonomy.slug,
+				};
+		  } )
+		: [];
 
 	return (
 		<div { ...blockProps }>
@@ -63,16 +50,14 @@ export default function Edit( {
 									taxonomyToUse: newValue,
 								} );
 							} }
-							options={
-								taxonomies
-									? taxonomies.map( ( taxonomy ) => {
-											return {
-												label: taxonomy.name,
-												value: taxonomy.slug,
-											};
-									  } )
-									: []
-							}
+							options={ [
+								{
+									disabled: true,
+									label: 'Select a Taxonomy',
+									value: '',
+								},
+								...listTaxonomies,
+							] }
 						/>
 						<ToggleControl
 							__nextHasNoMarginBottom
@@ -114,3 +99,17 @@ export default function Edit( {
 		</div>
 	);
 }
+
+export default withSelect( ( select, ownProps ) => {
+	const { postType } = ownProps.context;
+
+	const taxonomies = select( 'core' ).getTaxonomies( {
+		type: postType,
+		per_page: -1,
+	} );
+
+	return {
+		props: ownProps,
+		taxonomies,
+	};
+} )( Edit );

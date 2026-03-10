@@ -1,4 +1,4 @@
-name: Linting
+name: 'CQC: Linting (JS, JSON, PCSS)'
 
 on:
   workflow_call:

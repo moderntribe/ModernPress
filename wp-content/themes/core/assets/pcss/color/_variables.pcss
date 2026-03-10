@@ -45,19 +45,6 @@
 	--color-black-20: #0003;
 
 	/* -----------------------------------------------------------------------
-	 * Text
-	 * ----------------------------------------------------------------------- */
-
-	--color-text: var(--color-black);
-	--color-text-secondary: var(--color-neutral-50);
-
-	/* -----------------------------------------------------------------------
-	 * Borders
-	 * ----------------------------------------------------------------------- */
-
-	--color-border: var(--color-neutral-40);
-
-	/* -----------------------------------------------------------------------
 	 * Selection Highlight Color
 	 * Use https://www.fffuel.co/cccolor/ to generate a hexa value based on
 	 * the RGBA value from Figma
@@ -71,6 +58,7 @@
 
 	--color-alert-success: #84bd00;
 	--color-alert-error: #df3a3a;
+	--color-alert-error-dark: #d51c1c;
 	--color-alert-warning: #f1c400;
 
 	/* -----------------------------------------------------------------------
@@ -83,4 +71,39 @@
 	--box-shadow-40: var(--wp--preset--shadow--40);
 	--box-shadow-50: var(--wp--preset--shadow--50);
 	--box-shadow-60: var(--wp--preset--shadow--60);
+}
+
+:root,
+:--light-themes {
+
+	/* -----------------------------------------------------------------------
+	 * Text
+	 * ----------------------------------------------------------------------- */
+
+	--color-text: var(--color-black);
+	--color-text-secondary: var(--color-neutral-50);
+
+	/* -----------------------------------------------------------------------
+	 * Borders
+	 * ----------------------------------------------------------------------- */
+
+	--color-border: var(--color-black);
+	--color-border-secondary: var(--color-neutral-30);
+}
+
+:--dark-themes {
+
+	/* -----------------------------------------------------------------------
+	 * Text
+	 * ----------------------------------------------------------------------- */
+
+	--color-text: var(--color-white);
+	--color-text-secondary: var(--color-neutral-20);
+
+	/* -----------------------------------------------------------------------
+	 * Borders
+	 * ----------------------------------------------------------------------- */
+
+	--color-border: var(--color-white);
+	--color-border-secondary: var(--color-neutral-20);
 }

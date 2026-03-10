@@ -10,4 +10,11 @@ class Button extends Block_Base {
 		return 'core/button';
 	}
 
+	public function get_block_styles(): array {
+		return [
+			'outlined' => 'Outlined',
+			'ghost'    => 'Ghost',
+		];
+	}
+
 }

@@ -1,0 +1,120 @@
+/* -----------------------------------------------------------------------
+ *
+ * Accordion Block
+ *
+ * ----------------------------------------------------------------------- */
+
+.wp-block-accordion-item {
+
+	& + .wp-block-accordion-item {
+		margin-top: 0;
+		border-top: none;
+	}
+}
+
+/* -----------------------------------------------------------------------
+ * Accordion Block - Toggle
+ * ----------------------------------------------------------------------- */
+
+.wp-block-accordion-heading__toggle {
+	align-items: flex-start;
+	gap: var(--spacer-40);
+	padding-top: var(--spacer-40);
+	padding-bottom: var(--spacer-40);
+
+	&:focus:not(:focus-visible) {
+
+		@mixin accordion-hover-focus;
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+
+	@media (--has-hover) {
+
+		&:hover {
+
+			@mixin accordion-hover-focus;
+		}
+	}
+}
+
+/* -----------------------------------------------------------------------
+ * Accordion Block - Toggle Title
+ * ----------------------------------------------------------------------- */
+
+.wp-block-accordion-heading__toggle-title {
+
+	@mixin t-transparent-underline;
+}
+
+/* -----------------------------------------------------------------------
+ * Accordion Block - Toggle Icon
+ * ----------------------------------------------------------------------- */
+
+.wp-block-accordion-heading__toggle-icon {
+
+	/* static icon size */
+	--accordion-icon-size: 16px;
+	--accordion-icon-offset: calc(var(--accordion-icon-size) / 2);
+
+	/* font size = 1em * 1.4 (line height) / 2 (to get half line height)
+	 * note: if the line height for this block changes, it will need to be
+	 * changed here as well, or the icon position won't look right */
+	--accordion-font-offset: calc(1em * 1.4 / 2);
+
+	/* translation offset = font offset - half icon size */
+	--accordion-translation-offset: calc(var(--accordion-font-offset) - var(--accordion-icon-offset));
+	display: block;
+	width: var(--accordion-icon-size);
+	height: var(--accordion-icon-size);
+	transform: translateY(var(--accordion-translation-offset)) rotate(90deg) !important; /* override WP default rotation */
+	mask: var(--icon-chevron-right) center no-repeat;
+	mask-size: contain;
+	background-color: currentcolor;
+	transition: var(--transition);
+
+	/**
+	 * Handle rotating the icon when the accordion is open
+	 */
+	.is-open & {
+		transform: translateY(var(--accordion-translation-offset)) rotate(-90deg) !important;
+	}
+}
+
+/* -----------------------------------------------------------------------
+ * Accordion Block - Content Panel
+ * ----------------------------------------------------------------------- */
+
+.wp-block-accordion-panel {
+
+	/**
+	 * Add animation to any top level content elements inside the
+	 * panel when opened
+	 */
+	.is-open & > * {
+
+		@media (--mq-allow-animations) {
+			animation: sweep 0.3s ease-in-out;
+		}
+	}
+}
+
+/* -----------------------------------------------------------------------
+ * Accordion Block - Animation Definition
+ * ----------------------------------------------------------------------- */
+
+@keyframes sweep {
+
+	0% {
+		opacity: 0;
+		transform: translateX(-10px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}

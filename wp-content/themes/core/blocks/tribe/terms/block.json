@@ -17,7 +17,7 @@
 	"attributes": {
 		"taxonomyToUse": {
 			"type": "string",
-			"default": "category"
+			"default": ""
 		},
 		"onlyPrimaryTerm": {
 			"type": "boolean",

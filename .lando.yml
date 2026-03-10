@@ -2,7 +2,7 @@ name: moose
 recipe: wordpress
 
 config:
-  php: '8.3'
+  php: '8.4'
   database: mariadb:11.4
   composer_version: 2-latest
   via: nginx
@@ -26,7 +26,7 @@ services:
       environment:
         - XDEBUG_TRIGGER=1
   node:
-    type: node:22
+    type: node:24
 
 # Enabling MailHog will cause an error on start: `/bin/sh: 1: curl: not found`.
 # Related GH Issue: https://github.com/lando/mailhog/issues/35

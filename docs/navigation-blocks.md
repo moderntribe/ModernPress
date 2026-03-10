@@ -8,12 +8,29 @@ The site navigation system is built using a collection of custom WordPress block
 
 ### Block Hierarchy
 
-The navigation system consists of four main blocks that work together:
+The navigation system consists of four main blocks that work together with a centralized styling approach:
 
-1. **Navigation Wrapper** (`tribe/navigation-wrapper`) - Structural container
+1. **Navigation Wrapper** (`tribe/navigation-wrapper`) - Central styling coordinator and structural container
 2. **Mega Menu Item** (`tribe/mega-menu-item`) - Complex dropdown menus
 3. **Standard Menu Item** (`tribe/standard-menu-item`) - Simple menu items with optional dropdowns
 4. **Navigation Link** (`tribe/navigation-link`) - Individual link items
+
+### CSS Architecture
+
+The styling architecture follows a centralized coordinator pattern:
+
+**Navigation Wrapper** acts as the central styling coordinator that handles:
+- Consolidated toggle button styles (shared between mega and standard menu items)
+- First-level navigation styling with animated underlines
+- Context-specific behavior for Primary vs Utility menus
+- Responsive adaptations and mobile behavior
+
+**Individual Blocks** handle only their specific content:
+- **Navigation Link**: Base link styling only
+- **Mega Menu Item**: Dropdown container and content styling
+- **Standard Menu Item**: Basic positioning and submenu wrapper styling
+
+This architecture eliminates code duplication and creates a single source of truth for navigation styling.
 
 
 ## HTML Structure & Implementation
@@ -102,16 +119,24 @@ The navigation system consists of four main blocks that work together:
 
 ### 1. Navigation Wrapper (`tribe/navigation-wrapper`)
 
-**Purpose**: A structural block that wraps menu items in a semantic `<nav>` tag with no added styles.
+**Purpose**: Central styling coordinator that provides semantic structure and handles all first-level navigation styling.
 
 **Location**: `wp-content/themes/core/blocks/tribe/navigation-wrapper/`
 
 **Features**:
 - Provides semantic HTML structure with `<nav>` element
 - Supports `aria-label` attribute for accessibility
-- No visual styling (purely structural)
-- Supports inner blocks and alignment
-- Acts as a container for menu items
+- **Consolidated toggle button styling** for both mega and standard menu items
+- **Unified first-level navigation styling** with animated underlines
+- **Context-aware styling** for Primary vs Utility menu placement
+- Responsive behavior and mobile adaptations
+- Acts as the styling foundation for all navigation components
+
+**Styling Responsibilities**:
+- Toggle button styles (chevrons, padding, hover states)
+- First-level navigation item styling (fonts, colors, underlines)
+- Context-specific overrides for different menu types
+- Mobile responsive adaptations
 
 **Attributes**:
 - `ariaLabel` (string) - Accessible label for the navigation
@@ -125,7 +150,7 @@ The navigation system consists of four main blocks that work together:
 
 ### 2. Mega Menu Item (`tribe/mega-menu-item`)
 
-**Purpose**: Enhanced dropdown menus with rich content capabilities for complex navigation structures.
+**Purpose**: Handles mega menu dropdown content and container functionality.
 
 **Location**: `wp-content/themes/core/blocks/tribe/mega-menu-item/`
 
@@ -133,9 +158,14 @@ The navigation system consists of four main blocks that work together:
 - Configurable menu toggle label
 - Uses pattern template (`patterns/mega-dropdown`) for consistent content structure
 - Supports complex layouts and rich content within dropdowns
+- **Container queries** for responsive dropdown layouts
 - JavaScript interactions for opening/closing mega menus
 - Event-driven architecture with custom events
-- Full width layouts and grid alignment support
+
+**Styling Scope**:
+- **Dropdown content styling only** (first-level button styling handled by Navigation Wrapper)
+- Container queries for responsive layouts
+- Mega menu wrapper positioning and background
 
 **Attributes**:
 - `menuToggleLabel` (string) - Text label for the top-level navigation button
@@ -152,7 +182,7 @@ The navigation system consists of four main blocks that work together:
 
 ### 3. Standard Menu Item (`tribe/standard-menu-item`)
 
-**Purpose**: Simple menu items with optional dropdown functionality for basic navigation needs.
+**Purpose**: Handles basic menu item positioning and submenu wrapper functionality.
 
 **Location**: `wp-content/themes/core/blocks/tribe/standard-menu-item/`
 
@@ -160,8 +190,13 @@ The navigation system consists of four main blocks that work together:
 - Toggle for enabling simple dropdown submenus
 - Only allows `tribe/navigation-link` as child blocks
 - Configurable menu toggle label when used as dropdown
-- Lightweight alternative to mega menu items
+- **Lightweight positioning and layout** (first-level styling handled by Navigation Wrapper)
 - Perfect for simple link lists
+
+**Styling Scope**:
+- **Basic positioning and layout only** (first-level button styling handled by Navigation Wrapper)
+- Toggle label styling (underline on hover)
+- Submenu wrapper positioning and behavior
 
 **Attributes**:
 - `hasSubMenu` (boolean) - Enables dropdown functionality
@@ -176,7 +211,7 @@ The navigation system consists of four main blocks that work together:
 
 ### 4. Navigation Link (`tribe/navigation-link`)
 
-**Purpose**: Individual link items within menu structures.
+**Purpose**: Provides base link styling with consistent behavior across all navigation contexts.
 
 **Location**: `wp-content/themes/core/blocks/tribe/navigation-link/`
 
@@ -184,8 +219,12 @@ The navigation system consists of four main blocks that work together:
 - Rich text editing for link text
 - URL configuration with WordPress LinkControl component
 - Target/new window option
-- Can only be used as child of `tribe/standard-menu-item`
-- Proper link management with unlink functionality
+- **Base link styling only** (context-specific enhancements handled by Navigation Wrapper)
+- Consistent foundation across all menu types
+
+**Styling Scope**:
+- **Base link styles only**: underline, transitions, focus states
+- Context-specific styling (Primary vs Utility menu) handled by Navigation Wrapper
 
 **Attributes**:
 - `text` (string) - Link text content
@@ -199,6 +238,46 @@ The navigation system consists of four main blocks that work together:
 - Inline text editing
 - Link control popover for URL management
 - Toolbar controls for link/unlink actions
+
+## Styling Architecture
+
+### Centralized Coordinator Pattern
+
+The navigation system uses a **centralized coordinator pattern** where the Navigation Wrapper acts as the central styling authority:
+
+```
+Navigation Wrapper (Coordinator)
+├── Toggle Button Styles (shared by mega & standard menu items)
+├── First-Level Navigation Styling (animated underlines, hover states)
+├── Context-Specific Overrides (Primary vs Utility menu)
+└── Responsive Adaptations (mobile behavior)
+
+Individual Blocks (Content-Specific)
+├── Navigation Link: Base link styles only
+├── Mega Menu Item: Dropdown container & content
+└── Standard Menu Item: Basic positioning & submenu wrapper
+```
+
+### Key Benefits
+
+**Eliminates Code Duplication**: Shared styles are defined once in Navigation Wrapper
+**Single Source of Truth**: Navigation behavior modifications happen in one place
+**Clear Separation**: Each block has a specific, well-defined styling responsibility
+**Easy Maintenance**: Changes to navigation styling require updates to only one file
+**Consistent Experience**: Unified first-level navigation behavior across all menu types
+
+### CSS File Organization
+
+**Navigation Wrapper** (`navigation-wrapper/style.pcss`):
+- Toggle button styles (consolidated)
+- Primary navigation first-level styles
+- Utility menu style overrides
+- Responsive behavior
+
+**Individual Block Files**:
+- **Navigation Link**: Base link foundation only
+- **Mega Menu Item**: Dropdown content and container queries
+- **Standard Menu Item**: Simple positioning and submenu wrapper
 
 ## JavaScript Architecture
 
@@ -258,6 +337,30 @@ The navigation system integrates with:
 - Escape key closes all open menus
 - Focus management for dropdown interactions
 - Screen reader friendly markup
+
+## Development Guidelines
+
+### Working with the Centralized Architecture
+
+#### **Making Navigation Styling Changes**
+
+**For First-Level Navigation Changes**: Edit `navigation-wrapper/style.pcss`
+- Toggle button styling (padding, colors, hover states)
+- Animated underlines and transitions
+- Font sizes and spacing
+- Context-specific behavior (Primary vs Utility)
+
+**For Individual Block Content**: Edit respective block files
+- `navigation-link/style.pcss`: Base link foundation only
+- `mega-menu-item/style.pcss`: Dropdown content and container queries
+- `standard-menu-item/style.pcss`: Basic positioning and submenu wrapper
+
+### Customization Points
+
+- **Navigation Wrapper**: Central coordinator for all first-level styling
+- **Patterns**: Modify `patterns/mega-dropdown` for mega menu layouts
+- **Individual Blocks**: Content-specific styling only
+- **Context Selectors**: Use `.site-header__navigation` and `.site-header__utility-menu` for targeting
 
 ## File Structure
 

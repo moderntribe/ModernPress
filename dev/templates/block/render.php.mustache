@@ -1,12 +1,17 @@
 {{#isDynamicVariant}}
 <?php declare(strict_types=1);
 
-$example_text_control = $attributes['exampleTextControl']; // @phpstan-ignore-line
+/**
+ * @var array $attributes
+ */
+
+$c = Block_Controller::factory( [
+	'attributes'    => $attributes,
+	'block_classes' => 'b-{{slug}}',
+] );
 ?>
-<section <?php echo get_block_wrapper_attributes(); ?>>
+<section <?php echo get_block_wrapper_attributes( [ 'class' => esc_attr( $c->get_block_classes() ), 'style' => $c->get_block_styles() ] ); ?>>
 	<p><?php esc_html_e( '{{title}} – hello from a dynamic block!', '{{namespace}}' ); ?></p>
-	<?php if ( $example_text_control ) : ?>
-		<p><?php echo esc_html( $example_text_control ); ?></p>
-	<?php endif; ?>
+	<p><?php echo esc_html( $c->get_example_text_control() ); ?></p>
 </section>
 {{/isDynamicVariant}}

@@ -16,7 +16,7 @@
 		"not op_mini all"
 	],
 	"engines": {
-		"node": ">=22.14",
+		"node": ">=24.0",
 		"npm": ">=11.6"
 	},
 	"config": {
@@ -30,25 +30,25 @@
 		"@dnd-kit/sortable": "^10.0.0",
 		"@dnd-kit/utilities": "^3.2.2",
 		"@svgr/cli": "^8.1",
-		"@wordpress/icons": "^10.32.0",
+		"@wordpress/icons": "^11.6",
 		"delegate": "^3.2.0",
 		"imagesloaded": "^5.0.0",
 		"swiper": "^12.0"
 	},
 	"devDependencies": {
-		"@csstools/postcss-global-data": "^3.0.0",
+		"@csstools/postcss-global-data": "^4.0",
 		"@wordpress/create-block": "^4.75.0",
-		"@wordpress/eslint-plugin": "^22.18.0",
-		"@wordpress/scripts": "^30.25.0",
+		"@wordpress/eslint-plugin": "^22.1",
+		"@wordpress/scripts": "^31.4",
 		"browser-sync": "^3.0.4",
 		"browser-sync-v3-webpack-plugin": "^0.1.0",
 		"cssnano": "^7.0.6",
 		"fast-glob": "^3.3.3",
-		"lefthook": "^1.13.6",
+		"lefthook": "^2.1",
 		"postcss-import": "^16.1.0",
 		"postcss-inline-svg": "^6.0.0",
 		"postcss-mixins": "^12.1",
-		"postcss-preset-env": "^10.1.5",
+		"postcss-preset-env": "^11.1",
 		"prettier": "npm:wp-prettier@^3.0.3",
 		"webpack-remove-empty-scripts": "^1.0.4"
 	},

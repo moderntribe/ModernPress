@@ -47,6 +47,9 @@
 					}
 				}
 			}
+		},
+		"spacing": {
+			"padding": "var(--group-themed-default-padding)"
 		}
 	}
 }

@@ -5,10 +5,10 @@
  * ------------------------------------------------------------------------- */
 
 :root {
-	--grid-margin: var(--wp--custom--spacing--grid-margin);
-	--grid-gutter: var(--wp--custom--spacing--grid-gutter);
-	--grid-content-width: var(--wp--style--global--content-size);
-	--grid-wide-width: var(--wp--style--global--wide-size);
+	--grid-margin: var(--wp--custom--spacing--grid-margin, clamp(1rem, -0.3rem + 6.5vw, 7.5rem));
+	--grid-gutter: var(--wp--custom--spacing--grid-gutter, clamp(1.5rem, 1.2rem + 1.5vw, 3rem));
+	--grid-content-width: var(--wp--style--global--content-size, 840px);
+	--grid-wide-width: var(--wp--style--global--wide-size, 1136px);
 
 	/* this should match the "Grid" size defined in the
 	   `_experimentalLayout` setting within theme.json */

@@ -1,6 +1,10 @@
-/**
- * Styles specific to this block
- */
+/* -------------------------------------------------------------------------
+ *
+ * Block - Table - FE / Editor Styles
+ *
+ * ------------------------------------------------------------------------- */
+
+@import "./_variables.pcss";
 
 .wp-block-table {
 
@@ -40,6 +44,22 @@
 
 		&:last-child {
 			padding-right: 0;
+		}
+	}
+
+	/* CASE: Stripes Style */
+	&.is-style-stripes {
+		border-bottom: 0;
+
+		& th,
+		& td {
+			padding-left: var(--spacer-10);
+			padding-right: var(--spacer-10);
+		}
+
+		tbody tr:nth-child(odd) {
+			background-color: var(--table-stripe-background-color);
+			color: var(--table-stripe-color);
 		}
 	}
 }

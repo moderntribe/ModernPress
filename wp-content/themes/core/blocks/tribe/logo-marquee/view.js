@@ -23,9 +23,20 @@ const state = {
  * @param {*} marquee
  */
 const setAnimationProperties = ( marquee ) => {
+	// get width of wrapper
 	const wrapperWidth = marquee.offsetWidth;
+
+	// get rate from data attribute if it exists
+	const marqueeRate = marquee.getAttribute( 'data-marquee-speed' );
+
+	if ( marqueeRate ) {
+		state.rate = parseInt( marqueeRate );
+	}
+
+	// calulate duration based on width and rate
 	const duration = wrapperWidth / state.rate;
 
+	// set animation properties
 	marquee.style.setProperty( '--animation-duration', `${ duration }s` );
 	marquee.style.setProperty(
 		'animation',

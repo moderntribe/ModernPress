@@ -53,21 +53,17 @@
 	<hr class="wp-block-separator has-alpha-channel-opacity alignfull"/>
 	<!-- /wp:separator -->
 
-	<!-- wp:buttons {"style":{"spacing":{"margin":{"top":"0"}}}} -->
-	<div class="wp-block-buttons" style="margin-top:0"><!-- wp:button -->
-		<div class="wp-block-button"><a class="wp-block-button__link wp-element-button">Default Button</a></div>
+	<!-- wp:buttons -->
+	<div class="wp-block-buttons"><!-- wp:button -->
+		<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="#">Default Button</a></div>
 		<!-- /wp:button -->
 
-		<!-- wp:button {"className":"is-style-primary"} -->
-		<div class="wp-block-button is-style-primary"><a class="wp-block-button__link wp-element-button">Primary Button</a></div>
-		<!-- /wp:button -->
-
-		<!-- wp:button {"className":"is-style-secondary"} -->
-		<div class="wp-block-button is-style-secondary"><a class="wp-block-button__link wp-element-button">Secondary Button</a></div>
+		<!-- wp:button {"className":"is-style-outlined"} -->
+		<div class="wp-block-button is-style-outlined"><a class="wp-block-button__link wp-element-button" href="#">Outlined Button</a></div>
 		<!-- /wp:button -->
 
 		<!-- wp:button {"className":"is-style-ghost"} -->
-		<div class="wp-block-button is-style-ghost"><a class="wp-block-button__link wp-element-button">Ghost Button</a></div>
+		<div class="wp-block-button is-style-ghost"><a class="wp-block-button__link wp-element-button" href="#">Ghost Button</a></div>
 		<!-- /wp:button --></div>
 	<!-- /wp:buttons -->
 
@@ -178,7 +174,7 @@
 	<!-- /wp:separator -->
 
 	<!-- wp:image {"sizeSlug":"large"} -->
-	<figure class="wp-block-image size-large"><img src="https://picsum.photos/640/380" alt=""/><figcaption class="wp-element-caption">Caption lorem ipsum fusce fringilla luctus suscipit. Vivamus elit enim, dapibus sed mollis nec, cursus nec ante. Aliquam erat volutpat.</figcaption></figure>
+	<figure class="wp-block-image size-large"><img src="https://placehold.co/1200x800" alt=""/><figcaption class="wp-element-caption">Caption lorem ipsum fusce fringilla luctus suscipit. Vivamus elit enim, dapibus sed mollis nec, cursus nec ante. Aliquam erat volutpat.</figcaption></figure>
 	<!-- /wp:image -->
 
 	<!-- wp:separator {"align":"full","className":"alignfull"} -->

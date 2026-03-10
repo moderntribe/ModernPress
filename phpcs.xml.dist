@@ -8,12 +8,12 @@
 	<arg name="colors" />
 
 	<!--  Update to the PHP version your production/local docker container runs on -->
-	<config name="testVersion" value="8.3" />
+	<config name="testVersion" value="8.4" />
 	<!-- php -r 'echo PHP_VERSION_ID;' -->
-	<config name="php_version" value="80315" />
+	<config name="php_version" value="80415" />
 
 	<!-- Fix WordPress's terrible typing breaking PHPCS -->
-	<config name="minimum_supported_wp_version" value="6.8" />
+	<config name="minimum_supported_wp_version" value="6.9" />
 
 	<!-- Ignore warnings, show progress of the run and show sniff names -->
 	<arg value="nps" />

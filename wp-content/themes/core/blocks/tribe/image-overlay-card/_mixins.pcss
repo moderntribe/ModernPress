@@ -11,30 +11,13 @@
 	}
 
 	.b-image-overlay-card__title {
-		text-decoration-color: currentcolor;
+
+		@mixin t-animated-underline-hover;
 	}
 
-	.b-image-overlay-card__buttons {
+	.a-btn-ghost {
 
-		.wp-block-button__link {
-
-			.wp-block-button.is-style-ghost & {
-				color: var(--color-dark-blue) !important;
-
-				&::after {
-					transform: translateX(8px);
-				}
-			}
-		}
-
-		.b-image-overlay-card--dark-theme & {
-
-			.wp-block-button__link {
-
-				.wp-block-button.is-style-ghost & {
-					color: var(--color-white) !important;
-				}
-			}
-		}
+		@mixin a-btn-hover-focus;
+		@mixin a-btn-ghost-hover-focus;
 	}
 }

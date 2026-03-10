@@ -70,15 +70,7 @@ class Admin_Assets_Enqueuer extends Assets_Enqueuer {
 		echo sprintf(
 			'<style>
 				body.login #login h1 a {
-					width: 200px;
-					height: 44px;
-					margin: 0 auto 45px auto;
-					background: url(%s) no-repeat center top transparent;
-					background-size: contain;
-				}
-
-				body.login #login {
-					padding-top: 86px;
+					background-image: url(%s);
 				}
 			</style>',
 			esc_url( $login_logo )

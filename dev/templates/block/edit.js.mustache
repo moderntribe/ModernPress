@@ -15,7 +15,10 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 	return (
 		<div { ...blockProps }>
 			{{#isDynamicVariant}}
-			<ServerSideRender block="{{namespace}}/{{slug}}" attributes={ attributes } />
+			<ServerSideRender
+				block="tribe/test-dynamic"
+				attributes={ attributes }
+			/>
 			{{/isDynamicVariant}}
 			{{#isStaticVariant}}
 			<p>{ __( '{{title}} – hello from the editor!', '{{namespace}}' ) }</p>

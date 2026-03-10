@@ -17,11 +17,11 @@
 
 .site-header {
 	z-index: 10;
+	border-bottom: 1px solid var(--masthead-navigation-border-color);
 
-	@media (--mq-navigation-max) {
+	@media (--mq-wp-small) {
 		position: sticky;
-		top: 0;
-		border-bottom: 1px solid var(--masthead-navigation-border-color);
+		top: var(--spacer-wpadmin);
 	}
 
 	.mobile-menu-shown & {

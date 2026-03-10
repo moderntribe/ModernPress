@@ -93,10 +93,6 @@
 
 .b-image-overlay-card__title {
 	margin-top: 0;
-	text-decoration-thickness: auto;
-	text-decoration-color: transparent;
-	text-decoration-line: underline;
-	transition: var(--transition);
 }
 
 /* -------------------------------------------------------------------------
@@ -104,26 +100,22 @@
  * ------------------------------------------------------------------------- */
 
 .b-image-overlay-card__buttons {
-
-	.wp-block-button__link {
-
-		.wp-block-button.is-style-ghost & {
-			color: var(--color-blue) !important;
-		}
-	}
+	--ghost-btn-color: var(--color-blue);
+	--ghost-btn-arrow-color: var(--color-blue);
+	--ghost-btn-hover-background-color: transparent;
+	--ghost-btn-hover-color: var(--color-black);
+	--ghost-btn-hover-arrow-color: var(--color-black);
 
 	/**
 	 * CASE: Card Dark Mode
 	 * Regardless of outer themes, the cards have their own themes and inner elements must respect this.
 	 */
 	.b-image-overlay-card--dark-theme & {
-
-		.wp-block-button__link {
-
-			.wp-block-button.is-style-ghost & {
-				color: var(--color-white) !important;
-			}
-		}
+		--ghost-btn-color: var(--color-white);
+		--ghost-btn-arrow-color: var(--color-white);
+		--ghost-btn-hover-background-color: transparent;
+		--ghost-btn-hover-color: var(--color-white);
+		--ghost-btn-hover-arrow-color: var(--color-white);
 	}
 }
 

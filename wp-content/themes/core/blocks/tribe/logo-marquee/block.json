@@ -8,6 +8,10 @@
 	"description": "Creates side-scrolling gallery of logos.",
 	"icon": "slides",
 	"attributes": {
+		"marqueeSpeed": {
+			"type": "number",
+			"default": 150
+		},
 		"images": {
 			"type": "array",
 			"default": [],
