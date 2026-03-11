@@ -8,7 +8,7 @@ import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 
 const shadowLabel = 'Shadow';
-const borderAndShadowLabel = __('Border & Shadow', 'tribe');
+const borderAndShadowLabel = __( 'Border & Shadow', 'tribe' );
 
 const relabelShadowLabel = ( translation, text ) => {
 	if ( text !== shadowLabel ) {
