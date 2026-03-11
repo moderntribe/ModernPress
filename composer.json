@@ -75,6 +75,21 @@
 					"ffraenz/private-composer-installer": "^5.0"
 				}
 			}
+		},
+		"5": {
+			"type": "package",
+			"package": {
+				"name": "moderntribe/tribe_embed",
+				"version": "1.1.0",
+				"type": "wordpress-plugin",
+				"dist": {
+					"type": "zip",
+					"url": "https://github.com/moderntribe/tribe-embeds/releases/download/v1.1.0/tribe-embed.1.1.0.zip"
+				},
+				"require": {
+					"ffraenz/private-composer-installer": "^5.0"
+				}
+			}
 		}
 	},
 	"require-dev": {
@@ -104,6 +119,7 @@
 		"gravity/gravityforms": "^2.9",
 		"johnbillion/extended-cpts": "^5.0",
 		"moderntribe/tribe-glomar": "dev-main",
+		"moderntribe/tribe_embed": "^1.1",
 		"php-di/php-di": "^7.1",
 		"vinkla/extended-acf": "^14.6",
 		"vlucas/phpdotenv": "^5.5",

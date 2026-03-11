@@ -5,6 +5,7 @@ on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entr
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.02]
+- Added: `moderntribe/tribe_embed` composer package v1.1.0.
 - Updated: Renamed "Moose" to "ModernPress" across the project (excluding Lando configs and deployment pipelines).
 - Updated: Expected PHP version to v8.4, Node version to v24 LTS
 - Updated: WordPress to v6.9.1
