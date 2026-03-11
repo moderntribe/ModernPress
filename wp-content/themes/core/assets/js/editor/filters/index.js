@@ -1,32 +1,35 @@
 /**
  * @module editor-filters
  *
- * @description Registers editor-level filters.
+ * @description Registers editor-level UI workarounds.
  */
 
-import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 
-const shadowLabel = 'Shadow';
-const borderAndShadowLabel = __( 'Border & Shadow', 'tribe' );
+const panelHeadingSelector = 'h2.components-heading';
+const shadowHeading = 'Shadow';
+const borderAndShadowHeading = __( 'Border & Shadow', 'tribe' );
 
-const relabelShadowLabel = ( translation, text ) => {
-	if ( text !== shadowLabel ) {
-		return translation;
-	}
+const relabelShadowPanelHeading = () => {
+	const headings = document.querySelectorAll( panelHeadingSelector );
 
-	return borderAndShadowLabel;
+	headings.forEach( ( heading ) => {
+		if ( heading.textContent?.trim() !== shadowHeading ) {
+			return;
+		}
+
+		heading.textContent = borderAndShadowHeading;
+	} );
 };
 
 const init = () => {
-	// TODO: As of WP 6.9.4, this workaround is needed for a Gutenberg [label bug](https://github.com/WordPress/gutenberg/issues/60192).
-	// The bug is not directly related to the issue in that report, but rather the fact that enabling border or shadow via theme.json breaks that label logic.
+	// TODO: As of WP 6.9.4, this workaround is needed for a Gutenberg label bug.
+	// Ref: https://github.com/WordPress/gutenberg/issues/60192
 	// Revisit and remove if core fixes it or if this causes editor interference.
-	addFilter(
-		'i18n.gettext',
-		'tribe/relabel-shadow-label',
-		relabelShadowLabel
-	);
+	relabelShadowPanelHeading();
+
+	const observer = new MutationObserver( relabelShadowPanelHeading );
+	observer.observe( document.body, { childList: true, subtree: true } );
 };
 
 export default init;
