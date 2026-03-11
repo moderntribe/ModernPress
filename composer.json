@@ -80,7 +80,7 @@
 			"type": "package",
 			"package": {
 				"name": "moderntribe/tribe_embed",
-				"version": "1.1",
+				"version": "1.1.0",
 				"type": "wordpress-plugin",
 				"dist": {
 					"type": "zip",
