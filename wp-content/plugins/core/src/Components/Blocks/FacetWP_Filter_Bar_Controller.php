@@ -6,13 +6,24 @@ use Tribe\Plugin\Components\Abstracts\Abstract_Block_Controller;
 
 class FacetWP_Filter_Bar_Controller extends Abstract_Block_Controller {
 
+	/**
+	 * @var array <mixed>
+	 */
 	protected array $facets;
 	protected string $filter_bar_position;
 
-	// Facet types that are not wrapped in accordions when filter bar position is sidebar.
+	/**
+	 * Facet types that are not wrapped in accordions when filter bar position is sidebar.
+	 *
+	 * @var array <string>
+	 */
 	protected array $accordion_excluded_types = [ 'search', 'reset' ];
 
-	// Facet types that should not have a label displayed.
+	/**
+	 * Facet types that should not have a label displayed.
+	 *
+	 * @var array <string>
+	 */
 	protected array $no_label_types = [ 'reset' ];
 
 	public function __construct( array $args = [] ) {
@@ -24,20 +35,17 @@ class FacetWP_Filter_Bar_Controller extends Abstract_Block_Controller {
 
 	/**
 	 * Get the facets array with display labels.
-	 *
-	 * @return array
 	 */
 	public function get_facets(): array {
-		return array_map( function ( array $facet ): array {
+		return array_map( static function ( array $facet ): array {
 			$facet['display_label'] = $facet['displayLabel'] ?? $facet['label'];
+
 			return $facet;
 		}, $this->facets );
 	}
 
 	/**
 	 * Get the filter bar position.
-	 *
-	 * @return string
 	 */
 	public function get_filter_bar_position(): string {
 		return $this->filter_bar_position;
@@ -46,9 +54,7 @@ class FacetWP_Filter_Bar_Controller extends Abstract_Block_Controller {
 	/**
 	 * Whether this facet should have a label displayed.
 	 *
-	 * @param  array $facet
-	 *
-	 * @return bool
+	 * @param array $facet
 	 */
 	public function should_hide_facet_label( array $facet ): bool {
 		$type = strtolower( $facet['type'] ?? '' );
@@ -59,9 +65,7 @@ class FacetWP_Filter_Bar_Controller extends Abstract_Block_Controller {
 	/**
 	 * Whether this facet should be wrapped in a details/summary accordion (sidebar, excluding $accordion_excluded_types).
 	 *
-	 * @param  array $facet
-	 *
-	 * @return bool
+	 * @param array $facet
 	 */
 	public function should_wrap_facet_in_accordion( array $facet ): bool {
 		if ( $this->get_filter_bar_position() !== 'sidebar' ) {
@@ -77,9 +81,7 @@ class FacetWP_Filter_Bar_Controller extends Abstract_Block_Controller {
 	 * Grid slot for top filter bar layout: facet-1, facet-2, facet-3, search, or reset.
 	 * Based on facet type and order in the facets list (not DOM order).
 	 *
-	 * @param  array $facet
-	 *
-	 * @return ?string
+	 * @param array $current_facet
 	 */
 	public function get_grid_slot( array $current_facet ): ?string {
 		$current_facet_type = strtolower( $current_facet['type'] ?? '' );
@@ -125,9 +127,7 @@ class FacetWP_Filter_Bar_Controller extends Abstract_Block_Controller {
 	/**
 	 * HTML attributes string for a facet wrapper (class and optional data-grid-slot).
 	 *
-	 * @param  array $facet
-	 *
-	 * @return string
+	 * @param array $facet
 	 */
 	public function get_facet_wrapper_attributes( array $facet ): string {
 		$classes = [ 'b-facetwp-filter-bar__facet' ];
@@ -150,4 +150,5 @@ class FacetWP_Filter_Bar_Controller extends Abstract_Block_Controller {
 			$attrs
 		) );
 	}
+
 }

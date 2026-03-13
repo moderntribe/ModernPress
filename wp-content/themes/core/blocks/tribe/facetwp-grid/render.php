@@ -31,7 +31,9 @@ if ( ! $query->have_posts() ) {
 		$pagination_facet = $c->get_pagination_facet();
 		?>
 		<div class="b-facetwp-grid__pagination">
-			<?php echo facetwp_display( 'facet', $pagination_facet['name'] ?? '' ); ?>
+			<?php if ( function_exists( 'facetwp_display' ) ) : ?>
+				<?php echo facetwp_display( 'facet', $pagination_facet['name'] ?? '' ); ?>
+			<?php endif; ?>
 		</div>
 	<?php endif; ?>
 </div>

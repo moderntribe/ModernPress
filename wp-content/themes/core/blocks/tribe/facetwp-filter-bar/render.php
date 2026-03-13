@@ -15,8 +15,8 @@ $c = FacetWP_Filter_Bar_Controller::factory( [
 
 $is_sidebar    = $c->get_filter_bar_position() === 'sidebar';
 $wrapper_attrs = [
-	'class'                    => esc_attr( $c->get_block_classes() ),
-	'style'                    => $c->get_block_styles(),
+	'class' => esc_attr( $c->get_block_classes() ),
+	'style' => $c->get_block_styles(),
 ];
 
 if ( $is_sidebar ) {
@@ -73,7 +73,9 @@ if ( $is_sidebar ) {
 								<details <?php echo $c->get_facet_wrapper_attributes( $facet ); ?>>
 									<summary class="b-facetwp-filter-bar__facet-summary"><?php echo esc_html( $facet['display_label'] ); ?></summary>
 									<div class="b-facetwp-filter-bar__facet-content">
-										<?php echo facetwp_display( 'facet', $facet['slug'] ); ?>
+										<?php if ( function_exists( 'facetwp_display' ) ) : ?>
+											<?php echo facetwp_display( 'facet', $facet['slug'] ); ?>
+										<?php endif; ?>
 									</div>
 								</details>
 							<?php else : ?>
@@ -81,7 +83,9 @@ if ( $is_sidebar ) {
 									<?php if ( ! $c->should_hide_facet_label( $facet ) ) : ?>
 										<label for="facet-<?php echo esc_attr( $facet['slug'] ); ?>" class="b-facetwp-filter-bar__facet-label"><?php echo esc_html( $facet['display_label'] ); ?></label>
 									<?php endif; ?>
-									<?php echo facetwp_display( 'facet', $facet['slug'] ); ?>
+									<?php if ( function_exists( 'facetwp_display' ) ) : ?>
+										<?php echo facetwp_display( 'facet', $facet['slug'] ); ?>
+									<?php endif; ?>
 								</div>
 							<?php endif; ?>
 						<?php endforeach; ?>
@@ -99,7 +103,9 @@ if ( $is_sidebar ) {
 					<details <?php echo $c->get_facet_wrapper_attributes( $facet ); ?>>
 						<summary class="b-facetwp-filter-bar__facet-summary"><?php echo esc_html( $facet['display_label'] ); ?></summary>
 						<div class="b-facetwp-filter-bar__facet-content">
-							<?php echo facetwp_display( 'facet', $facet['slug'] ); ?>
+							<?php if ( function_exists( 'facetwp_display' ) ) : ?>
+								<?php echo facetwp_display( 'facet', $facet['slug'] ); ?>
+							<?php endif; ?>
 						</div>
 					</details>
 				<?php else : ?>
@@ -107,7 +113,9 @@ if ( $is_sidebar ) {
 						<?php if ( ! $c->should_hide_facet_label( $facet ) ) : ?>
 							<label for="facet-<?php echo esc_attr( $facet['slug'] ); ?>" class="b-facetwp-filter-bar__facet-label"><?php echo esc_html( $facet['display_label'] ); ?></label>
 						<?php endif; ?>
-						<?php echo facetwp_display( 'facet', $facet['slug'] ); ?>
+						<?php if ( function_exists( 'facetwp_display' ) ) : ?>
+							<?php echo facetwp_display( 'facet', $facet['slug'] ); ?>
+						<?php endif; ?>
 					</div>
 				<?php endif; ?>
 			<?php endforeach; ?>

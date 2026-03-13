@@ -3,7 +3,6 @@
 namespace Tribe\Plugin\Components\Blocks;
 
 use Tribe\Plugin\Components\Abstracts\Abstract_Block_Controller;
-use Tribe\Plugin\Integrations\FacetWP;
 
 class FacetWP_Grid_Controller extends Abstract_Block_Controller {
 
@@ -37,7 +36,7 @@ class FacetWP_Grid_Controller extends Abstract_Block_Controller {
 
 		$facets = FWP()->helper->get_facets();
 
-		$pagination_facet = array_values( array_filter( $facets, function ( $facet ) {
+		$pagination_facet = array_values( array_filter( $facets, static function ( array $facet ): bool {
 			return $facet['type'] === 'pager' && $facet['pager_type'] === 'numbers';
 		} ) );
 

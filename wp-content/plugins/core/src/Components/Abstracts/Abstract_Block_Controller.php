@@ -10,7 +10,12 @@ abstract class Abstract_Block_Controller extends Abstract_Controller {
 	 * @var array <mixed>
 	 */
 	protected array $attributes;
+
+	/**
+	 * @var array <mixed>
+	 */
 	protected array $context;
+
 	protected string $block_classes;
 	protected string $block_styles;
 	private Block_Animation_Attributes|false $block_animation_attributes;

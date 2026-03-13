@@ -15,4 +15,5 @@ class FacetWP_Archive_Controller extends Abstract_Block_Controller {
 
 		$this->block_classes .= " b-facetwp-archive--filter-bar-{$this->filter_bar_position}";
 	}
+
 }

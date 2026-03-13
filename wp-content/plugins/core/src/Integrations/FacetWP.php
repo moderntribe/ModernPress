@@ -17,6 +17,7 @@ class FacetWP {
 	 *
 	 * @param string $output Facet HTML.
 	 * @param array  $params Facet params; $params['facet']['name'] is the facet slug.
+	 *
 	 * @return string Modified HTML.
 	 */
 	public function add_facet_control_id( string $output, array $params ): string {
@@ -42,7 +43,6 @@ class FacetWP {
 		$remove_from_types = [ 'checkboxes', 'radio', 'hierarchy', 'range_list', 'time_since' ];
 
 		if ( ! in_array( $params['facet']['type'], $remove_from_types, true ) ) {
-
 			return $output;
 		}
 
@@ -52,47 +52,47 @@ class FacetWP {
 	public function register_custom_facets( array $facets ): array {
 		// Pagination facet
 		$facets[] = [
-            'name' => 'pagination',
-            'label' => 'Pagination',
-            'type' => 'pager',
-            'pager_type' => 'numbers',
-            'inner_size' => '1',
-            'dots_label' => '…',
-            'prev_label' => '<span>Previous page</span>',
-            'next_label' => '<span>Next page</span>',
-            'count_text_plural' => '[lower] - [upper] of [total] results',
-            'count_text_singular' => '1 result',
-            'count_text_none' => 'No results',
-            'scroll_target' => '.facetwp-template',
-            'scroll_offset' => '-150',
-            'load_more_text' => 'Load more',
-            'loading_text' => 'Loading...',
-            'default_label' => 'Per page',
-            'per_page_options' => '10, 25, 50, 100'
-        ];
+			'name'                => 'pagination',
+			'label'               => 'Pagination',
+			'type'                => 'pager',
+			'pager_type'          => 'numbers',
+			'inner_size'          => '1',
+			'dots_label'          => '…',
+			'prev_label'          => '<span>Previous page</span>',
+			'next_label'          => '<span>Next page</span>',
+			'count_text_plural'   => '[lower] - [upper] of [total] results',
+			'count_text_singular' => '1 result',
+			'count_text_none'     => 'No results',
+			'scroll_target'       => '.facetwp-template',
+			'scroll_offset'       => '-150',
+			'load_more_text'      => 'Load more',
+			'loading_text'        => 'Loading...',
+			'default_label'       => 'Per page',
+			'per_page_options'    => '10, 25, 50, 100',
+		];
 
 		// Search facet
 		$facets[] = [
-            'enable_relevance' => 'yes',
-            'name' => 'search',
-            'label' => 'Search',
-            'type' => 'search',
-            'search_engine' => '',
-            'placeholder' => 'Enter keyword',
-            'auto_refresh' => 'yes'
-        ];
+			'enable_relevance' => 'yes',
+			'name'             => 'search',
+			'label'            => 'Search',
+			'type'             => 'search',
+			'search_engine'    => '',
+			'placeholder'      => 'Enter keyword',
+			'auto_refresh'     => 'yes',
+		];
 
 		// Reset facet
 		$facets[] = [
-            'name' => 'reset_filters',
-            'label' => 'Reset Filters',
-            'type' => 'reset',
-            'reset_facets' => [],
-            'reset_ui' => 'button',
-            'reset_text' => 'Clear all',
-            'reset_mode' => 'off',
-            'auto_hide' => 'no'
-        ];
+			'name'         => 'reset_filters',
+			'label'        => 'Reset Filters',
+			'type'         => 'reset',
+			'reset_facets' => [],
+			'reset_ui'     => 'button',
+			'reset_text'   => 'Clear all',
+			'reset_mode'   => 'off',
+			'auto_hide'    => 'no',
+		];
 
 		return $facets;
 	}
