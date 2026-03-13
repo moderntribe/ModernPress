@@ -1,0 +1,38 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "tribe/facetwp-filter-bar",
+	"version": "0.1.0",
+	"title": "FacetWP Filter Bar",
+	"category": "theme",
+	"icon": "admin-settings",
+	"description": "A filter bar powered by FacetWP",
+	"attributes": {
+		"facets": {
+			"type": "array",
+			"default": []
+		}
+	},
+	"usesContext": [
+		"tribe/facetwp-archive/filterBarPosition"
+	],
+	"supports": {
+		"html": false,
+		"align": [
+			"wide",
+			"grid",
+			"full"
+		],
+		"inserter": false,
+		"spacing": {
+			"margin": false,
+			"padding": false
+		}
+	},
+	"textdomain": "tribe",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScript": "file:./view.js"
+}

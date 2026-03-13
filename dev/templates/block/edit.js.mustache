@@ -2,7 +2,8 @@ import { __ } from '@wordpress/i18n';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, TextControl } from '@wordpress/components';
 {{#isDynamicVariant}}
-import ServerSideRender from '@wordpress/server-side-render';
+import { ServerSideRender } from '@wordpress/server-side-render';
+import metadata from './block.json';
 {{/isDynamicVariant}}
 
 import './editor.pcss';
@@ -16,7 +17,7 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 		<div { ...blockProps }>
 			{{#isDynamicVariant}}
 			<ServerSideRender
-				block="tribe/test-dynamic"
+				block={ metadata.name }
 				attributes={ attributes }
 			/>
 			{{/isDynamicVariant}}

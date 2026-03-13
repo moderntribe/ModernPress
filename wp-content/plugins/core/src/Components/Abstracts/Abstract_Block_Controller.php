@@ -10,6 +10,7 @@ abstract class Abstract_Block_Controller extends Abstract_Controller {
 	 * @var array <mixed>
 	 */
 	protected array $attributes;
+	protected array $context;
 	protected string $block_classes;
 	protected string $block_styles;
 	private Block_Animation_Attributes|false $block_animation_attributes;
@@ -18,6 +19,7 @@ abstract class Abstract_Block_Controller extends Abstract_Controller {
 
 	public function __construct( array $args = [] ) {
 		$this->attributes                 = $args['attributes'] ?? [];
+		$this->context                    = $args['context'] ?? [];
 		$this->block_classes              = $args['block_classes'] ?? '';
 		$this->block_styles               = $args['block_styles'] ?? '';
 		$this->block_animation_attributes = $this->attributes ? new Block_Animation_Attributes( $this->attributes ) : false;
