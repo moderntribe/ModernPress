@@ -49,7 +49,10 @@
 			}
 		},
 		"spacing": {
-			"padding": "var(--group-themed-default-padding)"
+			"padding": {
+				"top": "var(--group-themed-default-padding)",
+				"bottom": "var(--group-themed-default-padding)"
+			}
 		}
 	}
 }
