@@ -65,15 +65,12 @@ abstract class Block_Base {
 	 * Enqueue core block styles
 	 *
 	 * Adds the core block styles to both the public site and to the editor.
-	 * On the public site, styles are inlined into the document inside a `<style>` element.
 	 * Styles are added as a `<link>` for both block & site editor regardless of if it is inline or iframed.
-	 * Additionally, the selectors are prefixed with `.editor-styles-wrapper` in the editors.
 	 */
 	public function enqueue_core_block_public_styles(): void {
-		$handle   = $this->get_block_style_handle();
+		$block    = $this->get_block_handle();
 		$path     = $this->get_block_path();
-		$args     = $this->get_asset_file_args( get_theme_file_path( "dist/blocks/$path/index.asset.php" ) );
-		$version  = $args['version'] ?? false;
+		$args     = $this->get_asset_file_args( get_theme_file_path( "dist/blocks/$path/editor.asset.php" ) );
 		$src_path = get_theme_file_path( "dist/blocks/$path/style-index.css" );
 		$src      = get_theme_file_uri( "dist/blocks/$path/style-index.css" );
 
@@ -81,12 +78,13 @@ abstract class Block_Base {
 			return;
 		}
 
-		if ( ! empty( $version ) ) {
-			$src = $src . '?ver=' . $version;
-		}
-
-		wp_add_inline_style( $handle, file_get_contents( $src_path ) );
-		add_editor_style( $src );
+		wp_enqueue_style(
+			"tribe-$block",
+			$src,
+			[],
+			$args['version'] ?? false,
+			'all'
+		);
 	}
 
 	/**
@@ -94,27 +92,36 @@ abstract class Block_Base {
 	 *
 	 * These are the editor specific style overrides for the block.
 	 * Styles are added as a `<link>` file for both block & site editor regardless of if it is inline or iframed.
-	 * Additionally, the selectors are prefixed with `.editor-styles-wrapper` in the editors.
 	 */
 	public function enqueue_core_block_editor_styles(): void {
-		$path            = $this->get_block_path();
-		$args            = $this->get_asset_file_args( get_theme_file_path( "dist/blocks/$path/editor.asset.php" ) );
-		$version         = $args['version'] ?? false;
-		$editor_src_path = get_theme_file_path( "dist/blocks/$path/editor.css" );
-		$editor_src      = get_theme_file_uri( "dist/blocks/$path/editor.css" );
-
-		if ( ! file_exists( $editor_src_path ) ) {
+		if ( ! is_admin() ) {
 			return;
 		}
 
-		if ( ! empty( $version ) ) {
-			$editor_src = $editor_src . '?ver=' . $version;
+		$block    = $this->get_block_handle();
+		$path     = $this->get_block_path();
+		$args     = $this->get_asset_file_args( get_theme_file_path( "dist/blocks/$path/editor.asset.php" ) );
+		$src_path = get_theme_file_path( "dist/blocks/$path/editor.css" );
+		$src      = get_theme_file_uri( "dist/blocks/$path/editor.css" );
+
+		if ( ! file_exists( $src_path ) ) {
+			return;
 		}
 
-		add_editor_style( $editor_src );
+		wp_enqueue_style(
+			"tribe-editor-$block",
+			$src,
+			[],
+			$args['version'] ?? false,
+			'all'
+		);
 	}
 
 	public function enqueue_core_block_editor_scripts(): void {
+		if ( ! is_admin() ) {
+			return;
+		}
+
 		$block    = $this->get_block_handle();
 		$path     = $this->get_block_path();
 		$args     = $this->get_asset_file_args( get_theme_file_path( "dist/blocks/$path/editor.asset.php" ) );
@@ -126,7 +133,7 @@ abstract class Block_Base {
 		}
 
 		wp_enqueue_script(
-			"admin-$block-scripts",
+			"tribe-editor-$block",
 			$src,
 			$args['dependencies'] ?? [],
 			$args['version'] ?? false,
