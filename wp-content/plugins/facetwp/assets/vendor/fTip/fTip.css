@@ -1,0 +1,19 @@
+.ftip-wrap {
+    position: absolute;
+    display: none;
+    max-width: 400px;
+    padding: 6px 8px;
+    background-color: #222;
+    border-radius: 6px;
+    opacity: 0;
+    color: #fff;
+    cursor: default;
+    transition: height 0s, opacity 1s;
+    z-index: 100;
+}
+
+.ftip-wrap.active {
+    height: auto;
+    display: inline-block;
+    opacity: 0.9;
+}
