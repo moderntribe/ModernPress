@@ -1,0 +1,226 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: FacetWP (front)\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-02-21 14:01+0000\n"
+"PO-Revision-Date: 2025-04-18 10:22+0000\n"
+"Last-Translator: \n"
+"Language-Team: Dutch\n"
+"Language: nl-NL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.7.1; wp-6.7.1\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#: includes/facets/rating.php:165
+msgid "& up"
+msgstr "& hoger"
+
+#. Description of the plugin
+#: index.php
+msgid "Advanced Filtering for WordPress"
+msgstr ""
+
+#: includes/facets/dropdown.php:35 includes/facets/fselect.php:37
+#: includes/facets/fselect.php:80 includes/facets/hierarchy.php:26
+msgid "Any"
+msgstr "Alle"
+
+#: includes/facets/date_range.php:300
+msgid "Clear"
+msgstr "Wissen"
+
+#: includes/facets/proximity.php:243
+msgid "Clear location"
+msgstr "Verwijder locatie"
+
+#: includes/facets/date_range.php:21
+msgid "Date"
+msgstr "Datum"
+
+#: includes/facets/sort.php:180
+msgid "Date (Newest)"
+msgstr "Datum (nieuwste)"
+
+#: includes/facets/sort.php:187
+msgid "Date (Oldest)"
+msgstr "Datum (oudste)"
+
+#: includes/facets/proximity.php:357
+msgid "Distance"
+msgstr "Afstand"
+
+#: includes/facets/map.php:397
+msgid "Enable map filtering"
+msgstr "Filter met kaart"
+
+#: includes/facets/date_range.php:23
+msgid "End date"
+msgstr "Einddatum"
+
+#: includes/facets/search.php:23
+msgid "Enter keywords"
+msgstr "Voer zoektermen in"
+
+#: includes/facets/proximity.php:52
+msgid "Enter location"
+msgstr "Vul locatie in"
+
+#: includes/facets/autocomplete.php:165
+msgid "Enter {n} or more characters"
+msgstr "Vul {n} of meer letters in"
+
+#. Plugin Name of the plugin
+#: index.php
+msgid "FacetWP"
+msgstr ""
+
+#. Author of the plugin
+#: index.php
+msgid "FacetWP, LLC"
+msgstr ""
+
+#: includes/integrations/woocommerce/woocommerce.php:532
+msgid "Featured"
+msgstr ""
+
+#: includes/facets/autocomplete.php:66 includes/facets/number_range.php:32
+msgid "Go"
+msgstr "Ga"
+
+#: includes/class-display.php:208
+msgid "Go to next page"
+msgstr "Naar volgende pagina"
+
+#: includes/class-display.php:207
+msgid "Go to page"
+msgstr "Naar pagina"
+
+#: includes/class-display.php:209
+msgid "Go to previous page"
+msgstr "Naar vorige pagina"
+
+#. Author URI of the plugin
+#: index.php
+msgid "https://facetwp.com/"
+msgstr ""
+
+#: includes/integrations/woocommerce/woocommerce.php:522
+msgid "In Stock"
+msgstr "Op voorraad"
+
+#: includes/facets/proximity.php:51
+msgid "km"
+msgstr "km"
+
+#: includes/facets/autocomplete.php:164
+msgid "Loading"
+msgstr "Laden"
+
+#: includes/facets/number_range.php:29
+msgid "Max"
+msgstr "Max"
+
+#: includes/facets/proximity.php:51
+msgid "mi"
+msgstr "mi"
+
+#: includes/facets/number_range.php:26
+msgid "Min"
+msgstr "Min"
+
+#: includes/integrations/acf/acf.php:325
+msgid "No"
+msgstr "Nee"
+
+#: includes/facets/date_range.php:25
+msgid "No dates"
+msgstr "Geen data"
+
+#: includes/facets/date_range.php:27
+msgid "No end dates"
+msgstr "Geen einddata"
+
+#: includes/facets/autocomplete.php:99 includes/facets/autocomplete.php:166
+msgid "No results"
+msgstr "Niets gevonden"
+
+#: includes/class-display.php:227 includes/facets/fselect.php:87
+msgid "No results found"
+msgstr "Niets gevonden"
+
+#: includes/facets/date_range.php:26
+msgid "No start dates"
+msgstr "Geen start data"
+
+#: includes/facets/number_range.php:23
+msgid "Number"
+msgstr "Nummer"
+
+#: includes/class-renderer.php:535
+msgid "of"
+msgstr "van"
+
+#: includes/integrations/woocommerce/woocommerce.php:529
+msgid "On Sale"
+msgstr "Aanbieding"
+
+#: includes/integrations/woocommerce/woocommerce.php:525
+msgid "Out of Stock"
+msgstr "Niet op voorraad"
+
+#: includes/class-renderer.php:592
+msgid "Per page"
+msgstr "Per pagina"
+
+#: includes/facets/map.php:400 includes/facets/reset.php:15
+#: includes/facets/slider.php:20
+msgid "Reset"
+msgstr "Reset"
+
+#: includes/facets/fselect.php:86
+msgid "Search"
+msgstr "Zoeken"
+
+#: includes/facets/checkboxes.php:134 includes/facets/hierarchy.php:164
+msgid "See less"
+msgstr "Toon minder"
+
+#: includes/facets/checkboxes.php:133 includes/facets/hierarchy.php:163
+msgid "See {num} more"
+msgstr "Toon {num} meer"
+
+#: includes/facets/sort.php:162
+msgid "Sort by"
+msgstr "Sorteer op"
+
+#: includes/facets/date_range.php:22
+msgid "Start date"
+msgstr "Start datum"
+
+#: includes/facets/autocomplete.php:63
+msgid "Start typing"
+msgstr "Start met typen"
+
+#: includes/facets/sort.php:166
+msgid "Title (A-Z)"
+msgstr "Titel (A-Z)"
+
+#: includes/facets/sort.php:173
+msgid "Title (Z-A)"
+msgstr "Titel (Z-A)"
+
+#: includes/facets/rating.php:166
+msgid "Undo"
+msgstr "Undo"
+
+#: includes/integrations/acf/acf.php:325
+msgid "Yes"
+msgstr "Ja"
+
+#: includes/facets/fselect.php:85
+msgid "{n} selected"
+msgstr "{n} geselecteerd"
