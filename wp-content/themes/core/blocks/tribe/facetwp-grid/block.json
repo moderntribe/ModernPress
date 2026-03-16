@@ -12,10 +12,6 @@
 			"type": "string",
 			"default": "post"
 		},
-		"showAllPosts": {
-			"type": "boolean",
-			"default": false
-		},
 		"postsPerPage": {
 			"type": "number",
 			"default": 12

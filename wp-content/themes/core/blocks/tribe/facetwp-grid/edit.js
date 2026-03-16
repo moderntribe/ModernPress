@@ -13,7 +13,7 @@ import metadata from './block.json';
 function Edit( { attributes, setAttributes, isSelected, postTypes } ) {
 	const blockProps = useBlockProps();
 
-	const { postType, postsPerPage, showAllPosts, showPagination } = attributes;
+	const { postType, postsPerPage, showPagination } = attributes;
 
 	const filteredPostTypes = postTypes?.filter(
 		( type ) => type.visibility.show_in_nav_menus === true
@@ -45,33 +45,18 @@ function Edit( { attributes, setAttributes, isSelected, postTypes } ) {
 								setAttributes( { postType: value } )
 							}
 						/>
-						<ToggleControl
+						<RangeControl
 							__next40pxDefaultSize
 							__nextHasNoMarginBottom
-							label={ __( 'Show All Posts', 'tribe' ) }
-							help={ __(
-								'If checked, all posts will be displayed in the grid. If unchecked, the number of posts displayed will be limited to the number set in the "Posts Per Page" setting.',
-								'tribe'
-							) }
-							checked={ showAllPosts }
+							label={ __( 'Posts Per Page', 'tribe' ) }
+							min={ 1 }
+							max={ 99 }
+							step={ 1 }
+							value={ postsPerPage }
 							onChange={ ( value ) =>
-								setAttributes( { showAllPosts: value } )
+								setAttributes( { postsPerPage: value } )
 							}
 						/>
-						{ ! showAllPosts && (
-							<RangeControl
-								__next40pxDefaultSize
-								__nextHasNoMarginBottom
-								label={ __( 'Posts Per Page', 'tribe' ) }
-								min={ 1 }
-								max={ 24 }
-								step={ 1 }
-								value={ postsPerPage }
-								onChange={ ( value ) =>
-									setAttributes( { postsPerPage: value } )
-								}
-							/>
-						) }
 						<ToggleControl
 							__next40pxDefaultSize
 							__nextHasNoMarginBottom

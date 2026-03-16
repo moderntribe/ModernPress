@@ -8,7 +8,6 @@ class FacetWP_Grid_Controller extends Abstract_Block_Controller {
 
 	protected \WP_Query $query;
 	protected string $post_type;
-	protected bool $show_all_posts;
 	protected int $posts_per_page;
 	protected bool $show_pagination;
 
@@ -18,7 +17,6 @@ class FacetWP_Grid_Controller extends Abstract_Block_Controller {
 		$this->block_classes .= ' facetwp-template';
 
 		$this->post_type       = $this->attributes['postType'] ?? 'post';
-		$this->show_all_posts  = $this->attributes['showAllPosts'] ?? false;
 		$this->posts_per_page  = absint( $this->attributes['postsPerPage'] ?? 12 );
 		$this->show_pagination = $this->attributes['showPagination'] ?? false;
 
@@ -56,7 +54,7 @@ class FacetWP_Grid_Controller extends Abstract_Block_Controller {
 		$this->query = new \WP_Query( [
 			'post_type'      => $this->post_type,
 			'post_status'    => 'publish',
-			'posts_per_page' => $this->show_all_posts ? -1 : $this->posts_per_page,
+			'posts_per_page' => $this->posts_per_page,
 			'facetwp'        => true,
 		] );
 	}

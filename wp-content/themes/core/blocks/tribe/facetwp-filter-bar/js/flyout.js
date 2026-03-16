@@ -89,6 +89,7 @@ const openFlyout = ( block ) => {
 
 	trigger.setAttribute( 'aria-expanded', 'true' );
 	flyout.setAttribute( 'aria-hidden', 'false' );
+	flyout.classList.add( 'is-style-white' );
 	flyout.classList.add( 'is-open' );
 	bodyLock( true );
 	closeBtn.focus();
@@ -114,6 +115,7 @@ const closeFlyout = ( block ) => {
 	trigger.setAttribute( 'aria-expanded', 'false' );
 	flyout.setAttribute( 'aria-hidden', 'true' );
 	flyout.classList.remove( 'is-open' );
+	flyout.classList.remove( 'is-style-white' );
 	bodyLock( false );
 	trigger.focus();
 	flyout.removeEventListener( 'keydown', flyoutKeydown );

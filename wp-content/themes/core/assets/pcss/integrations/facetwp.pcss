@@ -140,6 +140,7 @@
 
 			.fs-option {
 				--checkbox-size: 24px;
+				position: relative;
 
 				/* top and bottom padding = half of the spacer-30 (helps each item have a larger click target)
 				   left padding = spacer-20 + checkbox size + spacer-10 [label displays here] */
@@ -170,6 +171,7 @@
 				}
 
 				&.selected {
+					background-color: transparent;
 
 					.fs-checkbox {
 						border-color: var(--color-black);
