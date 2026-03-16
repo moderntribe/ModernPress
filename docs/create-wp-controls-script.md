@@ -78,7 +78,8 @@ controls: [
 
 :bulb: Lastly, we're defining the controls array that will be used to define what controls we want to create for the block we've defined. In this case we're defining a `number` control with a default value of `0`. The `applyClass` property tells the create control script that when the value is changed from the default, we should apply the `tribe-has-stacking-order` class. The `applyStyleProperty` property tells the create control script that the `--tribe-stacking-order` style property should be set to the value of the control when the default is changed.
 
-> :memo: **Note:** You do not always have to set both the `applyClass` and `applyStyleProperty` properties. You can use one or the other separately. Using them together though can be a powerful tool in order to only apply the style property if the class is applied.
+> [!NOTE]
+> You do not always have to set both the `applyClass` and `applyStyleProperty` properties. You can use one or the other separately. Using them together though can be a powerful tool in order to only apply the style property if the class is applied.
 
 ### Class application for all control types
 
