@@ -5,7 +5,7 @@ The "Create WP Controls" script is used to quickly and easily add custom, core W
 ## Supported Control Types
 
 - [ToggleControl](https://wordpress.github.io/gutenberg/?path=/docs/components-togglecontrol--docs) / `toggle`: A true/false field that can be used to assign a class or property when the control is toggled.
-- [InputControl](https://developer.wordpress.org/block-editor/reference-guides/components/input-control/) (experimental, `type="number"`) / `number`: A number input used to set a numeric property. Uses the InputControl that will supersede NumberControl.
+- [InputControl](https://wordpress.github.io/gutenberg/?path=/docs/components-inputcontrol--docs) (experimental, `type="number"`) / `number`: A number input used to set a numeric property. Uses the InputControl that will supersede NumberControl.
 - [SelectControl](https://wordpress.github.io/gutenberg/?path=/docs/components-selectcontrol--docs) / `select`: A normal select box field that can be used to give the user options and assign a property based on the value selected.
 
 ## Usage
