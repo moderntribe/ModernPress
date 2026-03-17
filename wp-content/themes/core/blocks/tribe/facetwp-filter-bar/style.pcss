@@ -1,0 +1,401 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - FacetWP Filter Bar - Styles - FE / Editor
+ *
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar {
+	container: facetwp-filter-bar / inline-size;
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Grid
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar__grid {
+
+	.b-facetwp-archive--filter-bar-top & {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacer-20);
+
+		@container facetwp-filter-bar (min-width: 992px) {
+			display: grid;
+			grid-template-areas:
+				"facet-1 facet-2 facet-3 search"
+				"reset reset reset reset";
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: var(--spacer-30) var(--grid-gutter);
+
+			/* Grid placement by identity (data-grid-slot from PHP), not DOM order */
+			.b-facetwp-filter-bar__facet[data-grid-slot="facet-1"] {
+				grid-area: facet-1;
+			}
+
+			.b-facetwp-filter-bar__facet[data-grid-slot="facet-2"] {
+				grid-area: facet-2;
+			}
+
+			.b-facetwp-filter-bar__facet[data-grid-slot="facet-3"] {
+				grid-area: facet-3;
+			}
+
+			.b-facetwp-filter-bar__facet[data-grid-slot="search"] {
+				grid-area: search;
+			}
+
+			.b-facetwp-filter-bar__facet[data-grid-slot="reset"] {
+				grid-area: reset;
+			}
+		}
+	}
+}
+
+ /* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Sidebar - Facets
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-archive--filter-bar-sidebar .b-facetwp-filter-bar__facet {
+	padding: var(--spacer-40) var(--grid-margin);
+	border-top: 1px solid var(--color-border-secondary);
+
+	&:first-child {
+		border-top: 0;
+	}
+
+	@container facetwp-archive (min-width: 992px) {
+		padding: var(--spacer-40) 0;
+
+		&:first-child {
+			padding-top: 0;
+			border-top: 0;
+		}
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Facet - Label
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar__facet-label {
+
+	@mixin t-body;
+	display: block;
+	margin-bottom: var(--spacer-10);
+	font-weight: var(--font-weight-bold)
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Accordion - Summary
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar__facet-summary {
+
+	@mixin t-transparent-underline;
+	@mixin t-display-xx-small;
+	--accordion-icon-size: 16px;
+	width: 100%;
+	position: relative;
+	padding: 0 calc(var(--spacer-20) + var(--accordion-icon-size)) 0 0;
+	margin: 0;
+	list-style: none;
+	cursor: pointer;
+	user-select: none;
+
+	@media (--has-hover) {
+
+		&:hover {
+
+			@mixin t-transparent-underline-hover;
+		}
+	}
+
+	&:focus:not(:focus-visible) {
+
+		@mixin t-transparent-underline-hover;
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Accordion - Summary - Chevron
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar__facet-summary::-webkit-details-marker,
+.b-facetwp-filter-bar__facet-summary::marker {
+	display: none;
+}
+
+.b-facetwp-filter-bar__facet-summary::after {
+	content: "";
+	display: block;
+	width: var(--accordion-icon-size);
+	height: var(--accordion-icon-size);
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%) rotate(90deg) !important; /* override WP default rotation */
+	mask: var(--icon-chevron-right) center no-repeat;
+	mask-size: contain;
+	background-color: currentcolor;
+	transition: var(--transition);
+}
+
+.b-facetwp-filter-bar__facet--accordion[open] .b-facetwp-filter-bar__facet-summary::after {
+	transform: translateY(-50%) rotate(-90deg) !important;
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Accordion - Content
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar__facet-content {
+	padding-top: var(--spacer-40);
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Sidebar Mobile - Trigger Bar + Flyout
+ * ------------------------------------------------------------------------- */
+
+/* Mobile trigger bar (sidebar layout only, visible below desktop breakpoint) */
+.b-facetwp-filter-bar[data-filter-bar-position="sidebar"] .b-facetwp-filter-bar__mobile-trigger {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--spacer-20);
+
+	@container facetwp-archive (min-width: 992px) {
+		display: none;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Sidebar Mobile - Trigger Button
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar__trigger-btn {
+	--trigger-icon-size: 24px;
+	display: inline-flex;
+	align-items: center;
+	gap: var(--spacer-10);
+	padding: 0;
+	border: 0;
+	background: none;
+	cursor: pointer;
+	color: var(--color-text);
+
+	@media (--has-hover) {
+
+		&:hover {
+
+			@mixin facetwp-filter-bar-flyout-toggle-hover-focus;
+		}
+	}
+
+	&:focus:not(:focus-visible) {
+
+		@mixin facetwp-filter-bar-flyout-toggle-hover-focus;
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+}
+
+.b-facetwp-filter-bar__trigger-icon {
+	display: block;
+	width: var(--trigger-icon-size);
+	height: var(--trigger-icon-size);
+	flex-shrink: 0;
+	background-color: currentcolor;
+	mask: var(--icon-filter) center no-repeat;
+	mask-size: contain;
+}
+
+.b-facetwp-filter-bar__trigger-text {
+
+	@mixin t-animated-underline;
+	@mixin t-body;
+	font-weight: var(--font-weight-bold);
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Sidebar Mobile - Clear All Button
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar__clear-wrap {
+	display: inline-block;
+
+	&[hidden] {
+		display: none;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Sidebar Mobile - Flyout
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar[data-filter-bar-position="sidebar"] .b-facetwp-filter-bar__flyout {
+	position: fixed;
+	inset: calc(var(--spacer-wpadmin) + var(--spacer-40)) 0 0 0;
+	z-index: 1000;
+	display: flex;
+	flex-direction: column;
+	background-color: var(--color-white);
+	box-shadow: var(--box-shadow-negative-top);
+	border-top-left-radius: var(--border-radius-l);
+	border-top-right-radius: var(--border-radius-l);
+	overflow: auto;
+	visibility: hidden;
+	opacity: 0;
+	color: var(--color-black);
+	transition: visibility 0.2s, opacity 0.2s;
+
+	&[aria-hidden="false"].is-open {
+		visibility: visible;
+		opacity: 1;
+	}
+
+	@container facetwp-archive (min-width: 992px) {
+		position: static;
+		z-index: auto;
+		visibility: visible;
+		opacity: 1;
+		overflow: visible;
+		background-color: transparent;
+		box-shadow: none;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+		color: var(--color-text);
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Sidebar Mobile - Flyout - Inner
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar__flyout-inner {
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+	flex: 1;
+
+	@container facetwp-archive (min-width: 992px) {
+		min-height: 0;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Sidebar Mobile - Flyout - Header
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar__flyout-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--spacer-20);
+	flex-shrink: 0;
+	padding: var(--spacer-30) var(--grid-margin);
+	border-bottom: 1px solid var(--color-border-secondary);
+
+	@container facetwp-archive (min-width: 992px) {
+		display: none;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Sidebar Mobile - Flyout - Title
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar__flyout-title {
+	margin-top: 0;
+	font-weight: var(--font-weight-bold);
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Sidebar Mobile - Flyout - Close Button
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar__flyout-close {
+	--close-icon-size: 24px;
+	display: inline-flex;
+	align-items: center;
+	gap: var(--spacer-10);
+	padding: 0;
+	border: 0;
+	background: none;
+	cursor: pointer;
+	color: var(--color-black);
+
+	@media (--has-hover) {
+
+		&:hover {
+
+			@mixin facetwp-filter-bar-flyout-close-hover-focus;
+		}
+	}
+
+	&:focus:not(:focus-visible) {
+
+		@mixin facetwp-filter-bar-flyout-close-hover-focus;
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+}
+
+.b-facetwp-filter-bar__flyout-close-icon {
+	display: block;
+	width: var(--close-icon-size);
+	height: var(--close-icon-size);
+	flex-shrink: 0;
+	background-color: currentcolor;
+	mask: var(--icon-dismiss) center no-repeat;
+	mask-size: contain;
+}
+
+.b-facetwp-filter-bar__flyout-close-text {
+
+	@mixin t-animated-underline;
+	@mixin t-body;
+	font-weight: var(--font-weight-bold);
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Sidebar Mobile - Flyout - Body
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar__flyout-body {
+	flex: 1;
+	overflow: auto;
+	scrollbar-color: var(--color-neutral-50) var(--color-neutral-30);
+	scrollbar-width: thin;
+
+	@container facetwp-archive (min-width: 992px) {;
+		overflow: visible;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Filter Bar - Sidebar Mobile - Flyout Footer
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-filter-bar__flyout-footer {
+	flex-shrink: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: var(--spacer-30) var(--grid-margin);
+	border-top: 1px solid var(--color-border-secondary);
+
+	@container facetwp-archive (min-width: 992px) {
+		display: none;
+	}
+}

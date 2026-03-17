@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "tribe/facetwp-grid",
+	"version": "0.1.0",
+	"title": "FacetWP Grid",
+	"category": "theme",
+	"icon": "archive",
+	"description": "A post grid powered by FacetWP",
+	"attributes": {
+		"postType": {
+			"type": "string",
+			"default": "post"
+		},
+		"postsPerPage": {
+			"type": "number",
+			"default": 12
+		},
+		"showPagination": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [
+			"wide",
+			"grid",
+			"full"
+		],
+		"inserter": false,
+		"spacing": {
+			"margin": false,
+			"padding": false
+		}
+	},
+	"textdomain": "tribe",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

@@ -1,0 +1,23 @@
+/* -------------------------------------------------------------------------
+ *
+ * Mixins: FacetWP Filter Bar
+ *
+ * Limit mixins as much as possible to reduce global CSS size.
+ *
+ * ------------------------------------------------------------------------- */
+
+@define-mixin facetwp-filter-bar-flyout-toggle-hover-focus {
+
+	.b-facetwp-filter-bar__trigger-text {
+
+		@mixin t-animated-underline-hover;
+	}
+}
+
+@define-mixin facetwp-filter-bar-flyout-close-hover-focus {
+
+	.b-facetwp-filter-bar__flyout-close-text {
+
+		@mixin t-animated-underline-hover;
+	}
+}

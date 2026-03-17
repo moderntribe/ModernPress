@@ -1,0 +1,44 @@
+/* -------------------------------------------------------------------------
+ *
+ * Mixins: Integrations
+ *
+ * Limit mixins as much as possible to reduce global CSS size.
+ *
+ * ------------------------------------------------------------------------- */
+
+@define-mixin int-facetwp-checkbox-hover-focus {
+
+	&::before {
+		border-color: var(--fwp-checkbox-hover-border-color);
+	}
+
+	.facetwp-display-value {
+
+		@mixin t-animated-underline-hover;
+	}
+}
+
+@define-mixin int-facetwp-fselect-hover-focus {
+
+	.fs-checkbox {
+		border-color: var(--color-border);
+	}
+
+	.fs-option-label {
+
+		@mixin t-animated-underline-hover;
+	}
+}
+
+@define-mixin int-facetwp-pager-prev-next-hover-focus {
+
+	span {
+
+		@mixin t-animated-underline-hover;
+	}
+}
+
+@define-mixin int-facetwp-pager-page-hover-focus {
+	background-color: var(--fwp-pagination-numbers-hover-background-color);
+	color: var(--fwp-pagination-numbers-hover-color);
+}

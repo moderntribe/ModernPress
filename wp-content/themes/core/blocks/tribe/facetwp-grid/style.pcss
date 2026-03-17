@@ -1,0 +1,44 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - FacetWP Grid - Styles - FE / Editor
+ *
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-grid {
+	container: facetwp-grid / inline-size;
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Grid - Grid
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-grid__grid {
+	--post-template-grid-template-columns: 1fr;
+	display: grid;
+	gap: var(--spacer-50) var(--grid-gutter);
+	grid-template-columns: var(--post-template-grid-template-columns);
+
+	@container facetwp-grid (min-width: 768px) {
+		--post-template-grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	@container facetwp-grid (min-width: 992px) {
+		--post-template-grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	@container facetwp-grid (min-width: 1275px) {
+		--post-template-grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * FacetWP Grid - Pagination
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-grid__pagination {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--spacer-20);
+	margin-top: var(--spacer-50);
+}

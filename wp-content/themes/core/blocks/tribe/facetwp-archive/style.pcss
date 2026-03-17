@@ -1,0 +1,41 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - FacetWP Archive - Styles - FE / Editor
+ *
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-archive {
+	container: facetwp-archive / inline-size;
+}
+
+/* -------------------------------------------------------------------------
+ *
+ * FacetWP Archive - Inner Block Wrapper
+ *
+ * ------------------------------------------------------------------------- */
+
+.b-facetwp-archive__inner {
+	display: flex;
+	flex-direction: column;
+	gap: var(--grid-gutter);
+
+	@container facetwp-archive (min-width: 992px) {
+
+		.b-facetwp-archive--filter-bar-sidebar & {
+			flex-direction: row;
+
+			/* .b-facetwp-filter-bar */
+			& > :first-child {
+				flex: 0 0 384px;
+				max-width: 384px;
+				width: 100%;
+			}
+
+			/* .b-facetwp-grid */
+			& > :last-child {
+				flex: 1;
+				width: 100%;
+			}
+		}
+	}
+}
