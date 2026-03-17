@@ -17,6 +17,9 @@
 			"core/accordion-heading",
 			"core/accordion-panel",
 			"tribe/carousel-slide",
+			"tribe/facetwp-archive",
+			"tribe/facetwp-filter-bar",
+			"tribe/facetwp-grid",
 			"tribe/horizontal-tab",
 			"tribe/logo-marquee",
 			"tribe/vertical-tab"
