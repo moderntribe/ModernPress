@@ -31,6 +31,7 @@ registerBlockType( metadata.name, {
 
 	/**
 	 * Saves only inner blocks so order is persisted. Front-end markup is from render.php.
+	 * @param {Object} props
 	 */
 	save: ( props ) => <InnerBlocks.Content { ...props } />,
 } );
