@@ -24,7 +24,7 @@ $wrapper_attrs = get_block_wrapper_attributes(
 	]
 );
 ?>
-<section <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+<div <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="wp-block-tribe-horizontal-tabs__tab-nav">
 		<div class="wp-block-tribe-horizontal-tabs__tab-list" role="tablist">
 			<?php foreach ( $c->get_tabs() as $index => $tab ) : ?>
@@ -46,4 +46,4 @@ $wrapper_attrs = get_block_wrapper_attributes(
 	<div class="tab-content">
 		<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</div>
-</section>
+</div>
