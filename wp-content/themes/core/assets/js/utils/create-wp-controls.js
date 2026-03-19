@@ -1,7 +1,8 @@
 /**
- * @module create-wp-controls
+ * Create WP Controls — add custom controls to core blocks.
  *
- * @description handles creating WP controls given an object of settings
+ * Handles toggle, number, and select controls; class application for all types;
+ * and conditional visibility (showWhen).
  *
  * @see https://github.com/moderntribe/modernpress/tree/main/docs/create-wp-controls-script.md
  */
@@ -11,7 +12,7 @@ import {
 	PanelBody,
 	SelectControl,
 	ToggleControl,
-	__experimentalNumberControl as NumberControl, // eslint-disable-line
+	__experimentalInputControl as InputControl, // eslint-disable-line
 } from '@wordpress/components';
 import { createHigherOrderComponent } from '@wordpress/compose';
 import { Fragment } from '@wordpress/element';
@@ -22,210 +23,454 @@ const state = {
 	settings: {},
 };
 
+/** Default panel title when control has no panel (used for default and styles groups). */
+const DEFAULT_PANEL_TITLE = __( 'Custom Block Settings', 'tribe' );
+
+/** Groups that render controls inside a PanelBody; all others render controls directly. */
+const GROUPS_WITH_PANEL = [ 'default', 'styles' ];
+
 /**
- * @function applyBlockProps
+ * Slugifies a string for safe use in class names (e.g. "Full Width" → "full-width").
  *
- * @description applys additional conditional props to core blocks
+ * @param {string} value - Raw value to slugify.
+ * @return {string} Slugified string.
+ */
+const slugify = ( value ) => {
+	if ( typeof value !== 'string' ) {
+		return String( value );
+	}
+	return value
+		.trim()
+		.toLowerCase()
+		.replace( /\s+/g, '-' )
+		.replace( /[^a-z0-9-]/g, '' );
+};
+
+/**
+ * Whether the control's current value should apply its class/style ("active").
  *
- * @param {*} props
- * @param {*} block
- * @param {*} attributes
+ * @param {Object} control - Control config.
+ * @param {*}      value   - Current attribute value.
+ * @return {boolean} True if the control value is active.
+ */
+const isControlValueActive = ( control, value ) => {
+	if ( value === undefined ) {
+		return false;
+	}
+	const defaultValue = control.defaultValue;
+	switch ( control.type ) {
+		case 'toggle':
+			return value === true;
+		case 'number':
+			return value !== defaultValue && value !== '' && value !== null;
+		case 'select':
+			return (
+				value !== '' &&
+				value !== null &&
+				value !== undefined &&
+				value !== defaultValue
+			);
+		default:
+			return value !== defaultValue;
+	}
+};
+
+/**
+ * Class name(s) this control contributes when its value is active.
  *
- * @return {*} return original or updated props
+ * @param {Object} control - Control config.
+ * @param {*}      value   - Current attribute value.
+ * @return {string[]} Class names to apply.
+ */
+const getClassesForControl = ( control, value ) => {
+	if ( ! control.applyClass || ! isControlValueActive( control, value ) ) {
+		return [];
+	}
+	switch ( control.type ) {
+		case 'toggle':
+		case 'number':
+			return [ control.applyClass ];
+		case 'select':
+			return [
+				`${ control.applyClass }-${ slugify( String( value ) ) }`,
+			];
+		default:
+			return [ control.applyClass ];
+	}
+};
+
+/**
+ * All managed class names that should be present for the current attributes.
+ *
+ * @param {Object[]} controls   - Control configs.
+ * @param {Object}   attributes - Block attributes.
+ * @return {string[]} Class names to apply.
+ */
+const getManagedClasses = ( controls, attributes ) => {
+	return controls.reduce( ( acc, control ) => {
+		if ( ! control.applyClass ) {
+			return acc;
+		}
+
+		const value = attributes[ control.attribute ];
+
+		return acc.concat( getClassesForControl( control, value ) );
+	}, [] );
+};
+
+/**
+ * Whether a class name is managed by any control (for stripping before re-adding).
+ *
+ * @param {string}   className - Single class name.
+ * @param {Object[]} controls  - Control configs.
+ * @return {boolean} True if this class is managed by a control.
+ */
+const isManagedClass = ( className, controls ) => {
+	return controls.some( ( control ) => {
+		if ( ! control.applyClass ) {
+			return false;
+		}
+
+		if ( control.type === 'select' ) {
+			return className.startsWith( control.applyClass + '-' );
+		}
+
+		return className === control.applyClass;
+	} );
+};
+
+/**
+ * Removes managed classes from a class string.
+ *
+ * @param {string}   className - Full class string.
+ * @param {Object[]} controls  - Control configs.
+ * @return {string} Class string with managed classes removed.
+ */
+const stripManagedClasses = ( className, controls ) => {
+	if ( ! className || ! className.trim() ) {
+		return '';
+	}
+
+	const kept = className
+		.split( /\s+/ )
+		.filter( ( name ) => name && ! isManagedClass( name, controls ) );
+
+	return kept.join( ' ' ).trim();
+};
+
+/**
+ * Builds final className: base with managed classes stripped, then current managed classes.
+ *
+ * @param {string}   baseClassName - Existing class string.
+ * @param {Object[]} controls      - Control configs.
+ * @param {Object}   attributes    - Block attributes.
+ * @return {string} Final class string or empty.
+ */
+const buildClassName = ( baseClassName, controls, attributes ) => {
+	const withoutManaged = stripManagedClasses( baseClassName, controls );
+	const managed = getManagedClasses( controls, attributes );
+	const combined = [ withoutManaged, ...managed ].filter( Boolean );
+
+	return combined.join( ' ' ).trim() || undefined;
+};
+
+/**
+ * Applies conditional props (classes, styles) to core blocks on save.
+ *
+ * @param {Object} props      Block wrapper props.
+ * @param {Object} block      Block definition (with name).
+ * @param {Object} attributes Block attributes.
+ * @return {Object} Original or updated props.
  */
 const applyBlockProps = ( props, block, attributes ) => {
-	// return default props if block isn't in the includes array
 	if ( ! state.settings.blocks.includes( block.name ) ) {
 		return props;
 	}
 
-	state.settings.controls.forEach( ( control ) => {
-		if ( attributes[ control.attribute ] === undefined ) {
-			return props;
+	const controls = state.settings.controls;
+
+	// Replace managed classes so add/remove stays consistent.
+	if ( props.className !== undefined ) {
+		props.className = buildClassName(
+			props.className,
+			controls,
+			attributes
+		);
+	}
+
+	// Add styles only when the control value is active.
+	controls.forEach( ( control ) => {
+		if ( ! control.applyStyleProperty ) {
+			return;
 		}
 
-		// determine if we should add a class name to the block
-		if (
-			Object.keys( control ).includes( 'applyClass' ) &&
-			props.className !== undefined &&
-			! props.className.includes( control.applyClass ) &&
-			attributes[ control.attribute ] !== undefined &&
-			( ( control.type === 'toggle' &&
-				attributes[ control.attribute ] ) ||
-				control.type !== 'toggle' )
-		) {
-			props.className = `${ props.className } ${ control.applyClass }`;
+		const value = attributes[ control.attribute ];
+
+		if ( ! isControlValueActive( control, value ) ) {
+			return;
 		}
 
-		// determine if we should add style properties to the block
-		// assumes we only have one style property to add and assigns it to the value of the control created
-		if (
-			Object.keys( control ).includes( 'applyStyleProperty' ) &&
-			attributes[ control.attribute ] !== undefined &&
-			( ( control.type === 'toggle' &&
-				attributes[ control.attribute ] ) ||
-				control.type !== 'toggle' )
-		) {
-			props.style = {
-				...props.style,
-				[ control.applyStyleProperty ]: attributes[ control.attribute ],
-			};
-		}
+		props.style = {
+			...props.style,
+			[ control.applyStyleProperty ]: value,
+		};
 	} );
 
 	return props;
 };
 
 /**
- * @function applyEditorBlockProps
- *
- * @description assigns new props / classes to the block
+ * HOC (Higher Order Component) that assigns props/classes to the block in the editor (BlockListBlock).
  */
 const applyEditorBlockProps = createHigherOrderComponent(
 	( BlockListBlock ) => {
 		return ( props ) => {
 			const { name, attributes } = props;
-			const classes = attributes.classes
-				? attributes.classes.split( ' ' )
-				: [];
-			const styles = { style: {} };
+			const controls = state.settings.controls;
 
-			// return default BlockListBlock if we're dealing with an unsupported block
 			if ( ! state.settings.blocks.includes( name ) ) {
 				return <BlockListBlock { ...props } />;
 			}
 
-			// loop through controls to assign classes & styles if necessary
-			state.settings.controls.forEach( ( control ) => {
-				if (
-					Object.keys( control ).includes( 'applyClass' ) &&
-					! classes.includes( control.applyClass ) &&
-					attributes[ control.attribute ] !== undefined &&
-					( ( control.type === 'toggle' &&
-						attributes[ control.attribute ] ) ||
-						control.type !== 'toggle' )
-				) {
-					classes.push( control.applyClass );
+			const baseClasses = attributes.classes
+				? attributes.classes.split( ' ' ).filter( Boolean )
+				: [];
+			const baseClassName = baseClasses.join( ' ' );
+			const className = buildClassName(
+				baseClassName,
+				controls,
+				attributes
+			);
+
+			const styles = { style: {} };
+			controls.forEach( ( control ) => {
+				if ( ! control.applyStyleProperty ) {
+					return;
 				}
 
-				// styles get added to the `wrapperProps` attribute on the BlockListBlock
-				if (
-					Object.keys( control ).includes( 'applyStyleProperty' ) &&
-					attributes[ control.attribute ] !== undefined &&
-					( ( control.type === 'toggle' &&
-						attributes[ control.attribute ] ) ||
-						control.type !== 'toggle' )
-				) {
-					styles.style = {
-						[ control.applyStyleProperty ]:
-							attributes[ control.attribute ],
-					};
+				const value = attributes[ control.attribute ];
+
+				if ( ! isControlValueActive( control, value ) ) {
+					return;
 				}
+
+				styles.style[ control.applyStyleProperty ] = value;
 			} );
 
 			return (
 				<BlockListBlock
 					{ ...props }
-					className={ classes }
+					className={ className ? className.split( ' ' ) : [] }
 					wrapperProps={ styles }
 				/>
 			);
 		};
-	}
+	},
+	'applyEditorBlockProps'
 );
 
 /**
- * @function determineControlToRender
+ * Renders the appropriate WP control (Toggle, Number, Select) from config.
  *
- * @description based on provided settings, choose a type of WP control to render; currently supports ToggleControl & NumberControl.
- *
- * @param {*} control
- * @param {*} attributes
- * @param {*} setAttributes
- *
- * @return {*} returns WP React control component
+ * @param {Object}   control       - Control config.
+ * @param {Object}   attributes    - Block attributes.
+ * @param {Function} setAttributes - Block setAttributes.
+ * @return {*} Control component or null.
  */
 const determineControlToRender = ( control, attributes, setAttributes ) => {
-	if ( control.type === 'toggle' ) {
-		return (
-			<ToggleControl
-				__nextHasNoMarginBottom={ true }
-				key={ control.attribute }
-				label={ control.label }
-				checked={ attributes[ control.attribute ] }
-				help={ control.helpText }
-				onChange={ () => {
-					setAttributes( {
-						[ control.attribute ]:
-							! attributes[ control.attribute ],
-					} );
-				} }
-			/>
-		);
-	} else if ( control.type === 'number' ) {
-		return (
-			<NumberControl
-				key={ control.attribute }
-				label={ control.label }
-				value={ attributes[ control.attribute ] }
-				help={ control.helpText }
-				onChange={ ( value ) => {
-					setAttributes( {
-						[ control.attribute ]: value,
-					} );
-				} }
-				min={ 0 }
-				isShiftStepEnabled={ false }
-			/>
-		);
-	} else if ( control.type === 'select' ) {
-		return (
-			<SelectControl
-				key={ control.attribute }
-				label={ control.label }
-				value={ attributes[ control.attribute ] }
-				help={ control.helpText }
-				options={ control.selectOptions }
-				onChange={ ( value ) => {
-					setAttributes( {
-						[ control.attribute ]: value,
-					} );
-				} }
-			/>
-		);
+	switch ( control.type ) {
+		case 'toggle':
+			return (
+				<ToggleControl
+					__nextHasNoMarginBottom={ true }
+					key={ control.attribute }
+					label={ control.label }
+					checked={ attributes[ control.attribute ] }
+					help={ control.helpText }
+					onChange={ () => {
+						setAttributes( {
+							[ control.attribute ]:
+								! attributes[ control.attribute ],
+						} );
+					} }
+				/>
+			);
+		case 'number': {
+			const numValue = attributes[ control.attribute ];
+			return (
+				<InputControl
+					__next40pxDefaultSize
+					key={ control.attribute }
+					label={ control.label }
+					help={ control.helpText }
+					type="number"
+					min={ 0 }
+					value={
+						numValue === undefined || numValue === null
+							? ''
+							: String( numValue )
+					}
+					onChange={ ( nextValue ) => {
+						const parsed =
+							nextValue === '' || nextValue === undefined
+								? control.defaultValue
+								: Number( nextValue );
+						setAttributes( {
+							[ control.attribute ]: parsed,
+						} );
+					} }
+				/>
+			);
+		}
+		case 'select':
+			return (
+				<SelectControl
+					key={ control.attribute }
+					label={ control.label }
+					value={ attributes[ control.attribute ] }
+					help={ control.helpText }
+					options={ control.selectOptions }
+					onChange={ ( value ) => {
+						setAttributes( {
+							[ control.attribute ]: value,
+						} );
+					} }
+				/>
+			);
+		default:
+			return null;
 	}
 };
 
 /**
- * @function addBlockControls
+ * Whether the control should be visible (honors showWhen when defined).
  *
- * @description based on provided settings, adds new controls to existing blocks
+ * @param {Object} control    - Control config.
+ * @param {Object} attributes - Block attributes.
+ * @return {boolean} True if the control should be shown.
+ */
+const isControlVisible = ( control, attributes ) => {
+	if ( typeof control.showWhen !== 'function' ) {
+		return true;
+	}
+
+	return Boolean( control.showWhen( attributes ) );
+};
+
+/**
+ * Controls that are visible for the current attributes.
+ *
+ * @param {Object[]} controls   - Control configs.
+ * @param {Object}   attributes - Block attributes.
+ * @return {Object[]} Visible controls.
+ */
+const getVisibleControls = ( controls, attributes ) => {
+	return controls.filter( ( control ) =>
+		isControlVisible( control, attributes )
+	);
+};
+
+/**
+ * Normalized group for a control ('settings' → 'default', undefined → 'default').
+ *
+ * @param {Object} control - Control config.
+ * @return {string} Group name.
+ */
+const getControlGroup = ( control ) => {
+	const group = control.group;
+
+	return group === undefined || group === 'settings' ? 'default' : group;
+};
+
+/**
+ * Panel title for a control (only used when group uses PanelBody). Defaults to "Custom Block Settings".
+ *
+ * @param {Object} control - Control config.
+ * @return {string} Panel title.
+ */
+const getControlPanelTitle = ( control ) => {
+	return control.panel !== undefined && control.panel !== ''
+		? control.panel
+		: DEFAULT_PANEL_TITLE;
+};
+
+/**
+ * Buckets visible controls by (group, panel) for rendering. Groups in GROUPS_WITH_PANEL
+ * are further split by panel title; other groups are one bucket per group with no panel.
+ *
+ * @param {Object[]} controls   - Control configs.
+ * @param {Object}   attributes - Block attributes.
+ * @return {Object[]} Array of { group, panelTitle?, controls }.
+ */
+const bucketControlsByGroupAndPanel = ( controls, attributes ) => {
+	const visible = getVisibleControls( controls, attributes );
+	if ( visible.length === 0 ) {
+		return [];
+	}
+
+	const map = new Map();
+
+	visible.forEach( ( control ) => {
+		const group = getControlGroup( control );
+		const usePanel = GROUPS_WITH_PANEL.includes( group );
+		const key = usePanel
+			? `${ group }:${ getControlPanelTitle( control ) }`
+			: group;
+
+		if ( ! map.has( key ) ) {
+			map.set( key, {
+				group,
+				panelTitle: usePanel ? getControlPanelTitle( control ) : null,
+				controls: [],
+			} );
+		}
+
+		map.get( key ).controls.push( control );
+	} );
+
+	return Array.from( map.values() );
+};
+
+/**
+ * HOC that adds custom controls to blocks. Controls can be placed in any InspectorControls
+ * group (default, styles, color, dimensions, etc.). Default/stylesheet groups use a named
+ * PanelBody; other groups render controls directly.
  */
 const addBlockControls = createHigherOrderComponent( ( BlockEdit ) => {
 	return ( props ) => {
 		const { attributes, setAttributes, name, isSelected } = props;
 
-		// return default Edit function if block doesn't match blocks we want to target
 		if ( ! state.settings.blocks.includes( name ) ) {
 			return <BlockEdit { ...props } />;
 		}
 
-		// set default attributes if not set
 		state.settings.controls.forEach( ( control ) => {
 			if ( attributes[ control.attribute ] === undefined ) {
 				attributes[ control.attribute ] = control.defaultValue;
 			}
 		} );
 
+		const buckets = bucketControlsByGroupAndPanel(
+			state.settings.controls,
+			attributes
+		);
+
+		if ( buckets.length === 0 || ! isSelected ) {
+			return <BlockEdit { ...props } />;
+		}
+
 		return (
 			<Fragment>
 				<BlockEdit { ...props } />
-				{ isSelected && (
-					<InspectorControls>
+				{ buckets.map( ( bucket, index ) => {
+					const groupProp =
+						bucket.group === 'default' ? undefined : bucket.group;
+					const content = bucket.panelTitle ? (
 						<PanelBody
-							title={ __( 'Custom Block Settings', 'tribe' ) }
+							key={ bucket.panelTitle }
+							title={ bucket.panelTitle }
 						>
-							{ state.settings.controls.map( ( control ) =>
+							{ bucket.controls.map( ( control ) =>
 								determineControlToRender(
 									control,
 									attributes,
@@ -233,22 +478,42 @@ const addBlockControls = createHigherOrderComponent( ( BlockEdit ) => {
 								)
 							) }
 						</PanelBody>
-					</InspectorControls>
-				) }
+					) : (
+						<div
+							className="create-wp-controls__group-control"
+							key={ `direct-${ index }` }
+							style={ { gridColumn: '1 / -1' } }
+						>
+							{ bucket.controls.map( ( control ) =>
+								determineControlToRender(
+									control,
+									attributes,
+									setAttributes
+								)
+							) }
+						</div>
+					);
+
+					return (
+						<InspectorControls
+							key={ `${ bucket.group }-${ index }` }
+							group={ groupProp }
+						>
+							{ content }
+						</InspectorControls>
+					);
+				} ) }
 			</Fragment>
 		);
 	};
 }, 'addBlockControls' );
 
 /**
- * @function addBlockAttributes
+ * Merges declared attributes into existing block settings.
  *
- * @description adds new attributes to existing blocks
- *
- * @param {*} settings
- * @param {*} name
- *
- * @return {*} existing or updated settings
+ * @param {Object} settings - Block type settings.
+ * @param {string} name     - Block name.
+ * @return {Object} Existing or updated settings.
  */
 const addBlockAttributes = ( settings, name ) => {
 	if ( ! state.settings.blocks.includes( name ) ) {
@@ -266,11 +531,9 @@ const addBlockAttributes = ( settings, name ) => {
 };
 
 /**
- * @function init
+ * Initializes the utility with a settings object. No-op if settings is null.
  *
- * @description assumes settings object is provided; if not, module does nothing
- *
- * @param {*} settings
+ * @param {Object|null} settings - Config for blocks, controls, and attributes.
  */
 const init = ( settings = null ) => {
 	if ( ! settings ) {

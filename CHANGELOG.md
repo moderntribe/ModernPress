@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.03]
+
+- Updated: The Create WP Controls utility and its docs; class handling for all control types, optional Inspector group/panel placement, conditional visibility, InputControl for number fields, and layout/visibility behavior in Style subgroups.
+
 ## [2026.02]
 - Added: `moderntribe/tribe_embed` composer package v1.1.0.
 - Updated: Renamed "Moose" to "ModernPress" across the project (excluding Lando configs and deployment pipelines).
