@@ -6,7 +6,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.03]
 
-- Refactor Vertical Tabs block to dynamic block; allow sorting.
+- Updated: Refactor Vertical Tabs block to dynamic block; allow sorting.
 
 ## [2026.02]
 - Added: `moderntribe/tribe_embed` composer package v1.1.0.
