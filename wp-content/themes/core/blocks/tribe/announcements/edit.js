@@ -35,7 +35,9 @@ export default function Edit( { attributes, setAttributes } ) {
 		'b-announcement',
 		`b-announcement--theme-${ theme }`,
 		`b-announcement--align-${ textAlignment }`,
-		orientation === 'vertical' ? 'b-announcement--orientation-vertical' : '',
+		orientation === 'vertical'
+			? 'b-announcement--orientation-vertical'
+			: '',
 		isDark ? 'is-style-dark' : '',
 	]
 		.filter( Boolean )
