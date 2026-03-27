@@ -88,6 +88,7 @@ class Announcement_Renderer {
 			'ctaLink'        => $link['url'] ?? null,
 			'ctaStyle'       => get_field( Announcement_Meta::CTA_STYLE, $announcement->ID ) ?? 'outlined',
 			'textAlignment'  => get_field( Announcement_Meta::ALIGNMENT, $announcement->ID ) ?? 'center',
+			'orientation'    => get_field( Announcement_Meta::ORIENTATION, $announcement->ID ) ?? Announcement_Meta::ORIENTATION_HORIZONTAL,
 			'theme'          => get_field( Announcement_Meta::COLOR_THEME, $announcement->ID ) ?? 'brand',
 			'dismissible'    => (bool) get_field( Announcement_Meta::DISMISSIBLE, $announcement->ID ),
 		];

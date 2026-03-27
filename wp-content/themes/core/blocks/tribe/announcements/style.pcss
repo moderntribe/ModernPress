@@ -172,3 +172,38 @@
 		@mixin t-animated-underline;
 	}
 }
+
+/* -----------------------------------------------------------------------
+ * Orientation: vertical (desktop only; mobile is always stacked)
+ * ----------------------------------------------------------------------- */
+
+.b-announcement--orientation-vertical {
+
+	@media (--mq-navigation) {
+
+		.b-announcement__inner {
+			flex-direction: column;
+			align-items: flex-start;
+			max-width: min(100%, 640px);
+		}
+
+		&.b-announcement--align-center .b-announcement__inner {
+			align-items: center;
+			text-align: center;
+		}
+
+		&.b-announcement--align-center .b-announcement__cta-wrapper {
+			justify-content: center;
+			width: 100%;
+		}
+
+		.b-announcement__dismiss-wrapper {
+			top: var(--vertical-padding);
+			transform: none;
+		}
+
+		&:has(.b-announcement__dismiss-wrapper) .b-announcement__inner {
+			padding-right: calc(var(--announcement-dismiss-width, 0px) + var(--spacer-40));
+		}
+	}
+}
