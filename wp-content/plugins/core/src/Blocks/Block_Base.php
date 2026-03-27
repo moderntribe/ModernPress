@@ -64,27 +64,62 @@ abstract class Block_Base {
 	/**
 	 * Enqueue core block styles
 	 *
-	 * Adds the core block styles to both the public site and to the editor.
-	 * Styles are added as a `<link>` for both block & site editor regardless of if it is inline or iframed.
+	 * On the public site, CSS is inlined onto WordPress's registered style handle for that block
+	 * (e.g. `wp-block-paragraph`) so it only prints when that block's stylesheet is enqueued.
+	 *
+	 * In wp-admin (block / site editor), styles are loaded as `<link>` tags so they work in the
+	 * editor shell and iframed canvas without relying on core's per-block queue on the front end.
+	 *
+	 * On the front end, if the core style handle is not registered, styles are skipped and
+	 * `_doing_it_wrong()` is triggered so the misconfiguration is visible during development.
 	 */
 	public function enqueue_core_block_public_styles(): void {
 		$block    = $this->get_block_handle();
 		$path     = $this->get_block_path();
 		$args     = $this->get_asset_file_args( get_theme_file_path( "dist/blocks/$path/editor.asset.php" ) );
 		$src_path = get_theme_file_path( "dist/blocks/$path/style-index.css" );
-		$src      = get_theme_file_uri( "dist/blocks/$path/style-index.css" );
 
 		if ( ! file_exists( $src_path ) ) {
 			return;
 		}
 
-		wp_enqueue_style(
-			"tribe-$block",
-			$src,
-			[],
-			$args['version'] ?? false,
-			'all'
-		);
+		if ( is_admin() ) {
+			$src = get_theme_file_uri( "dist/blocks/$path/style-index.css" );
+
+			wp_enqueue_style(
+				"tribe-$block",
+				$src,
+				[],
+				$args['version'] ?? false,
+				'all'
+			);
+
+			return;
+		}
+
+		$css = file_get_contents( $src_path );
+
+		if ( $css === false ) {
+			return;
+		}
+
+		$core_handle = $this->get_block_style_handle();
+
+		if ( ! wp_style_is( $core_handle, 'registered' ) ) {
+			_doing_it_wrong(
+				__METHOD__,
+				sprintf(
+					'Extended block "%1$s" has no registered stylesheet handle "%2$s" when attaching front-end styles. Override get_block_style_handle() to match the block\'s registered style, or ensure the block registers its stylesheet on init before wp_enqueue_scripts.',
+					$this->get_block_name(),
+					$core_handle
+				),
+				''
+			);
+
+			return;
+		}
+
+		wp_add_inline_style( $core_handle, $css );
 	}
 
 	/**

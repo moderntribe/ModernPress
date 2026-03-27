@@ -57,8 +57,11 @@ class Blocks_Subscriber extends Abstract_Subscriber {
 		 */
 		add_action( 'enqueue_block_assets', function (): void {
 			foreach ( $this->container->get( Blocks_Definer::EXTENDED ) as $block ) {
-				// core block public styles
-				$block->enqueue_core_block_public_styles();
+				// Public overrides as `<link>` only in wp-admin. On the front end they are attached
+				// from `wp_enqueue_scripts` via inline styles on the core block handle (see Block_Base).
+				if ( is_admin() ) {
+					$block->enqueue_core_block_public_styles();
+				}
 				// core block editor-only styles
 				$block->enqueue_core_block_editor_styles();
 				// core block editor-only scripts
