@@ -6,6 +6,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.03]
 
+- Updated: Refactor Horizontal Tabs block into a dynamic block. Add reordering functionality. 
 - Updated: Refactor Vertical Tabs block to dynamic block; allow sorting.
 
 ## [2026.02]
