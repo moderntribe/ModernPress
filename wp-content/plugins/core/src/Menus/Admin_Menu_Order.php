@@ -50,7 +50,7 @@ class Admin_Menu_Order {
 	protected function get_post_types(): array {
 		try {
 			// get all post type subscribers
-			$subscribers = array_filter( tribe_project()->get_subscribers(), function ( $subscriber ) {
+			$subscribers = array_filter( tribe_project()->get_subscribers(), static function ( $subscriber ) {
 				return str_contains( $subscriber, 'Post_Types\\' );
 			} );
 
