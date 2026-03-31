@@ -24,6 +24,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		ctaStyle,
 		theme,
 		textAlignment,
+		orientation,
 		dismissible,
 	} = attributes;
 
@@ -34,6 +35,9 @@ export default function Edit( { attributes, setAttributes } ) {
 		'b-announcement',
 		`b-announcement--theme-${ theme }`,
 		`b-announcement--align-${ textAlignment }`,
+		orientation === 'vertical'
+			? 'b-announcement--orientation-vertical'
+			: '',
 		isDark ? 'is-style-dark' : '',
 	]
 		.filter( Boolean )
@@ -139,6 +143,29 @@ export default function Edit( { attributes, setAttributes } ) {
 						] }
 						onChange={ ( value ) =>
 							setAttributes( { textAlignment: value } )
+						}
+					/>
+					<SelectControl
+						__nextHasNoMarginBottom
+						__next40pxDefaultSize
+						label={ __( 'Orientation', 'tribe' ) }
+						help={ __(
+							'Desktop layout: horizontal places heading, body, and CTA in one row. Vertical stacks them. On mobile, content is always stacked.',
+							'tribe'
+						) }
+						value={ orientation }
+						options={ [
+							{
+								label: __( 'Horizontal', 'tribe' ),
+								value: 'horizontal',
+							},
+							{
+								label: __( 'Vertical', 'tribe' ),
+								value: 'vertical',
+							},
+						] }
+						onChange={ ( value ) =>
+							setAttributes( { orientation: value } )
 						}
 					/>
 					<ToggleControl
