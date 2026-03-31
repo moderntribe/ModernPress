@@ -20,7 +20,7 @@ import {
 	ToolbarButton,
 	ToolbarGroup,
 } from '@wordpress/components';
-import ServerSideRender from '@wordpress/server-side-render';
+import { ServerSideRender } from '@wordpress/server-side-render';
 import { withSelect } from '@wordpress/data';
 import { useMemo, useState } from '@wordpress/element';
 import DynamicColorPicker from 'components/DynamicColorPicker';
