@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.03]
+
+- Updated: Refactor Horizontal Tabs block into a dynamic block. Add reordering functionality. 
+- Updated: Refactor Vertical Tabs block to dynamic block; allow sorting.
+
 ## [2026.02]
 - Added: `moderntribe/tribe_embed` composer package v1.1.0.
 - Updated: Renamed "Moose" to "ModernPress" across the project (excluding Lando configs and deployment pipelines).
