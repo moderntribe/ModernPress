@@ -15,6 +15,7 @@ class Announcement_Block_Controller extends Abstract_Block_Controller {
 	protected string $cta_link;
 	protected string $cta_style;
 	protected string $text_alignment;
+	protected string $orientation;
 	protected string $theme;
 	protected bool $dismissible;
 
@@ -28,12 +29,17 @@ class Announcement_Block_Controller extends Abstract_Block_Controller {
 		$this->cta_link        = $this->attributes['ctaLink'] ?? '';
 		$this->cta_style       = $this->attributes['ctaStyle'] ?? 'outlined';
 		$this->text_alignment  = $this->attributes['textAlignment'] ?? 'center';
+		$this->orientation     = $this->attributes['orientation'] ?? 'horizontal';
 		$this->theme           = $this->attributes['theme'] ?? 'brand';
 		$this->dismissible     = $this->attributes['dismissible'] ?? false;
 
 		// set classes
 		$this->block_classes .= " b-announcement--theme-{$this->theme}";
 		$this->block_classes .= " b-announcement--align-{$this->text_alignment}";
+
+		if ( 'vertical' === $this->orientation ) {
+			$this->block_classes .= ' b-announcement--orientation-vertical';
+		}
 
 		if ( ! in_array( $this->theme, self::DARK_THEMES ) ) {
 			return;

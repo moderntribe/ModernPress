@@ -6,8 +6,9 @@
 
 .b-announcement {
 	--vertical-padding: 16px;
+	container: announcement / inline-size;
 	display: none;
-	justify-content: flex-start;
+	justify-content: center;
 	position: relative;
 	padding: var(--vertical-padding) var(--grid-margin);
 	background-color: var(--color-blue);
@@ -34,7 +35,7 @@
 		color: var(--color-black);
 	}
 
-	@media (--mq-navigation) {
+	@container announcement (min-width: 960px) {
 		justify-content: center;
 	}
 }
@@ -55,9 +56,32 @@
 		padding-right: calc(var(--announcement-dismiss-width, 0px) + var(--spacer-30)); /* stylelint-disable-line */
 	}
 
-	@media (--mq-navigation) {
+	@container announcement (min-width: 960px) {
 		flex-direction: row;
 		align-items: center;
+	}
+
+	/* CASE: Vertical Orientation */
+	.b-announcement--orientation-vertical & {
+		flex-direction: column;
+		align-items: flex-start;
+
+		> * {
+			width: 100%;
+			max-width: var(--grid-wide-width);
+		}
+	}
+
+	/* CASE: Vertical Orientation & Align Content Center */
+	.b-announcement--orientation-vertical.b-announcement--align-center & {
+
+		@container announcement (min-width: 960px) {
+			text-align: center;
+
+			.b-announcement__cta-wrapper {
+				justify-content: center;
+			}
+		}
 	}
 }
 
@@ -97,9 +121,18 @@
 	top: var(--vertical-padding);
 	right: var(--grid-margin);
 
-	@media (--mq-navigation) {
+	@container announcement (min-width: 960px) {
 		top: 50%;
 		transform: translateY(-50%);
+	}
+
+	/* CASE: Vertical Orientation */
+	.b-announcement--orientation-vertical & {
+
+		@container announcement (min-width: 960px) {
+			top: var(--vertical-padding);
+			transform: none;
+		}
 	}
 }
 
@@ -137,7 +170,7 @@
 		}
 	}
 
-	@media (--mq-navigation) and (--has-hover) {
+	@container announcement (min-width: 960px) and (--has-hover) {
 
 		&:hover {
 
@@ -145,7 +178,7 @@
 		}
 	}
 
-	@media (--mq-navigation) {
+	@container announcement (min-width: 960px) {
 
 		&:focus:not(:focus-visible) {
 
@@ -167,7 +200,7 @@
 	display: none;
 
 	/* only show dismiss text on desktop */
-	@media (--mq-navigation) {
+	@container announcement (min-width: 960px) {
 
 		@mixin t-animated-underline;
 	}

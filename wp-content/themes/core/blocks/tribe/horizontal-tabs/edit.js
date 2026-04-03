@@ -1,27 +1,161 @@
-/**
- * WordPress Dependencies
- */
 import { createBlock } from '@wordpress/blocks';
 import {
 	useBlockProps,
 	RichText,
 	useInnerBlocksProps,
 } from '@wordpress/block-editor';
-import { Button, Flex, FlexItem } from '@wordpress/components';
+import { Button, Flex, FlexItem, Tooltip } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { useEffect } from '@wordpress/element';
+import { useCallback, useEffect, useMemo, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { SVG, Path } from '@wordpress/primitives';
+import { dragHandle, trash } from '@wordpress/icons';
+
+import {
+	closestCenter,
+	DndContext,
+	PointerSensor,
+	useSensor,
+	useSensors,
+} from '@dnd-kit/core';
+import {
+	SortableContext,
+	useSortable,
+	horizontalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 import './editor.pcss';
+
+/**
+ * Sortable tab wrapper for drag-and-drop reordering.
+ * @param {Object}   root0
+ * @param {Object}   root0.tab
+ * @param {number}   root0.index
+ * @param {string}   root0.currentActiveTabInstanceId
+ * @param {Function} root0.onSelectTab
+ * @param {Function} root0.onUpdateLabel
+ * @param {Function} root0.onDeleteTab
+ */
+function SortableTab( {
+	tab,
+	index,
+	currentActiveTabInstanceId,
+	onSelectTab,
+	onUpdateLabel,
+	onDeleteTab,
+} ) {
+	const {
+		attributes,
+		listeners,
+		setNodeRef,
+		transform,
+		transition,
+		isDragging,
+	} = useSortable( { id: tab.clientId } );
+
+	const style = {
+		transform: CSS.Transform.toString( transform ),
+		transition,
+		opacity: isDragging ? 0.5 : 1,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+		gap: 'var(--spacer-10)',
+	};
+
+	const handleTabKeyDown = ( e ) => {
+		// Don't capture keys when user is editing the tab label (so Space/Enter can be typed).
+		if ( e.target.closest( '[contenteditable="true"]' ) ) {
+			return;
+		}
+
+		if ( e.key === 'Enter' || e.key === ' ' ) {
+			e.preventDefault();
+			onSelectTab( tab.id );
+		}
+	};
+
+	return (
+		<div
+			ref={ setNodeRef }
+			role="button"
+			tabIndex={ 0 }
+			className={
+				'wp-block-tribe-horizontal-tabs__tab' +
+				( currentActiveTabInstanceId === tab.id ? ' active-tab' : '' )
+			}
+			style={ style }
+			onClick={ () => onSelectTab( tab.id ) }
+			onKeyDown={ handleTabKeyDown }
+			aria-pressed={ currentActiveTabInstanceId === tab.id }
+		>
+			<Button
+				className="wp-block-tribe-horizontal-tabs__tab-drag-handle"
+				variant="link"
+				icon={ dragHandle }
+				aria-label={ __( 'Drag to reorder tab', 'tribe' ) }
+				onClick={ ( e ) => e.stopPropagation() }
+				{ ...attributes }
+				{ ...listeners }
+			/>
+			<RichText
+				tagName="span"
+				className="wp-block-tribe-horizontal-tabs__tab-label"
+				value={ tab.label }
+				onChange={ ( value ) => onUpdateLabel( value, tab.clientId ) }
+				onClick={ ( e ) => e.stopPropagation() }
+				onFocus={ () => onSelectTab( tab.id ) }
+				onKeyDown={ ( e ) => e.stopPropagation() }
+				allowedFormats={ [] }
+				placeholder={ __( 'Tab Label', 'tribe' ) }
+			/>
+			<Tooltip text={ __( 'Remove tab', 'tribe' ) } delay={ 300 }>
+				<Button
+					className="wp-block-tribe-horizontal-tabs__tab-delete"
+					variant="link"
+					icon={ trash }
+					aria-label={ __( 'Remove tab', 'tribe' ) }
+					onClick={ ( e ) => {
+						e.stopPropagation();
+						onDeleteTab( index, tab.id, tab.clientId );
+					} }
+				/>
+			</Tooltip>
+		</div>
+	);
+}
 
 export default function Edit( { clientId, attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
 	const dispatch = useDispatch( 'core/block-editor' );
-	const { removeBlocks } = useDispatch( 'core/block-editor' );
-	const select = useSelect( 'core/block-editor' );
-	const innerBlocks = select.getBlocks( clientId );
-	const { currentActiveTabInstanceId, tabs } = attributes;
+	const { removeBlocks, moveBlockToPosition } =
+		useDispatch( 'core/block-editor' );
+	// Subscribe to inner blocks so the component re-renders when order changes (e.g. after moveBlockToPosition).
+	const innerBlocks = useSelect(
+		( select ) => select( 'core/block-editor' ).getBlocks( clientId ),
+		[ clientId ]
+	);
+	const blockEditorSelect = useSelect(
+		( select ) => select( 'core/block-editor' ),
+		[]
+	);
+	const { currentActiveTabInstanceId } = attributes;
+
+	// Derive tab list directly from innerBlocks so the tab bar reflects order immediately (no useEffect delay).
+	const tabs = useMemo(
+		() =>
+			innerBlocks.map( ( block ) => ( {
+				clientId: block.clientId,
+				id: block.attributes.blockId,
+				buttonId: 'button-' + block.attributes.blockId,
+				label: block.attributes.tabLabel,
+				isActive:
+					currentActiveTabInstanceId === block.attributes.blockId,
+			} ) ),
+		[ innerBlocks, currentActiveTabInstanceId ]
+	);
+
+	const sensors = useSensors( useSensor( PointerSensor ) );
 
 	/**
 	 * setup inner block props and add classname to wrapper
@@ -38,37 +172,19 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 	);
 
 	/**
-	 * Update the current active tab to the client Id of the first tab
-	 * This will only run once when the block is first added to the editor
+	 * Default to the first tab when the block loads in the editor (once per mount).
+	 * Does not persist which tab was last active; always open with first tab.
 	 */
+	const hasSetInitialTab = useRef( false );
 	useEffect( () => {
-		if ( innerBlocks.length === 0 || currentActiveTabInstanceId !== '' ) {
-			return;
+		if ( innerBlocks.length > 0 && ! hasSetInitialTab.current ) {
+			setAttributes( {
+				currentActiveTabInstanceId: innerBlocks[ 0 ].attributes.blockId,
+			} );
+
+			hasSetInitialTab.current = true;
 		}
-
-		setAttributes( {
-			currentActiveTabInstanceId: innerBlocks[ 0 ].attributes.blockId,
-		} );
-	}, [ innerBlocks, setAttributes, currentActiveTabInstanceId ] );
-
-	/**
-	 * set new tab state when innerBlocks or currentActiveTabInstanceId changes
-	 */
-	useEffect( () => {
-		const data = innerBlocks.map( ( tab ) => {
-			return {
-				clientId: tab.clientId,
-				id: tab.attributes.blockId,
-				buttonId: 'button-' + tab.attributes.blockId,
-				label: tab.attributes.tabLabel,
-				isActive: currentActiveTabInstanceId === tab.attributes.blockId,
-			};
-		} );
-
-		setAttributes( {
-			tabs: data,
-		} );
-	}, [ innerBlocks, currentActiveTabInstanceId, setAttributes ] );
+	}, [ innerBlocks, setAttributes ] );
 
 	/**
 	 * @function updateTabLabel
@@ -99,8 +215,8 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 			.then( () => {
 				// dispatch will return us a promise which we can use to set our new active tab instanceId
 				const newInstanceId =
-					select.getBlocks( clientId )[ positionToAdd ].attributes
-						.blockId;
+					blockEditorSelect.getBlocks( clientId )[ positionToAdd ]
+						.attributes.blockId;
 
 				// set new tab as active
 				setAttributes( {
@@ -123,7 +239,7 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 		removeBlocks( tabClientId );
 
 		// Fetch new inner blocks
-		const newInnerBlocks = select.getBlocks( clientId );
+		const newInnerBlocks = blockEditorSelect.getBlocks( clientId );
 
 		// Add a new tab if we've deleted the last one
 		if ( newInnerBlocks.length === 0 ) {
@@ -148,78 +264,95 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 		} );
 	};
 
-	return (
-		<div { ...blockProps }>
-			<Flex
-				className="wp-block-tribe-horizontal-tabs__tabs"
-				align="center"
+	const moveTab = useCallback(
+		( fromIndex, toIndex ) => {
+			if (
+				fromIndex === toIndex ||
+				toIndex < 0 ||
+				toIndex >= innerBlocks.length
+			) {
+				return;
+			}
+
+			// Use moveBlockToPosition so the block tree order is updated for save.
+			// Signature: (clientId, fromRootClientId, toRootClientId, index).
+			const blockClientId = innerBlocks[ fromIndex ].clientId;
+
+			moveBlockToPosition( blockClientId, clientId, clientId, toIndex );
+		},
+		[ innerBlocks, clientId, moveBlockToPosition ]
+	);
+
+	const handleDragEnd = useCallback(
+		( event ) => {
+			const { active, over } = event;
+
+			if ( ! over || active.id === over.id ) {
+				return;
+			}
+
+			const oldIndex = tabs.findIndex(
+				( t ) => t.clientId === active.id
+			);
+			const newIndex = tabs.findIndex( ( t ) => t.clientId === over.id );
+
+			if ( oldIndex === -1 || newIndex === -1 ) {
+				return;
+			}
+
+			moveTab( oldIndex, newIndex );
+		},
+		[ tabs, moveTab ]
+	);
+
+	const tabList = (
+		<Flex
+			className="wp-block-tribe-horizontal-tabs__tabs"
+			align="center"
+			justify="flex-start"
+		>
+			{ tabs.map( ( tab, index ) => (
+				<SortableTab
+					key={ tab.clientId }
+					tab={ tab }
+					index={ index }
+					currentActiveTabInstanceId={ currentActiveTabInstanceId }
+					onSelectTab={ ( id ) =>
+						setAttributes( { currentActiveTabInstanceId: id } )
+					}
+					onUpdateLabel={ updateTabLabel }
+					onDeleteTab={ deleteTab }
+				/>
+			) ) }
+			<FlexItem
+				className="wp-block-tribe-horizontal-tabs__add"
 				justify="flex-start"
 			>
-				{ tabs.map( ( tab, index ) => (
-					<FlexItem
-						className={
-							'wp-block-tribe-horizontal-tabs__tab' +
-							( currentActiveTabInstanceId === tab.id
-								? ' active-tab'
-								: '' )
-						}
-						key={ 'tab-' + tab.id }
-						style={ {
-							display: 'flex',
-							alignItems: 'center',
-							justifyContent: 'flex-start',
-							gap: 'var(--spacer-10)',
-						} }
-						onClick={ () => {
-							setAttributes( {
-								currentActiveTabInstanceId: tab.id,
-							} );
-						} }
-					>
-						<RichText
-							tagName="span"
-							className="wp-block-tribe-horizontal-tabs__tab-label"
-							value={ tab.label }
-							onChange={ ( value ) =>
-								updateTabLabel( value, tab.clientId )
-							}
-							allowedFormats={ [] }
-							placeholder={ __( 'Tab Label', 'tribe' ) }
-						/>
-						<Button
-							className="wp-block-tribe-horizontal-tabs__tab-delete"
-							variant="link"
-							onClick={ ( e ) => {
-								e.stopPropagation();
-								deleteTab( index, tab.id, tab.clientId );
-							} }
-						>
-							<span
-								style={ {
-									display: 'inline-flex',
-									width: '24px',
-									height: '24px',
-								} }
-							>
-								<SVG
-									xmlns="http://www.w3.org/2000/svg"
-									viewBox="0 0 24 24"
-								>
-									<Path d="m13.06 12 6.47-6.47-1.06-1.06L12 10.94 5.53 4.47 4.47 5.53 10.94 12l-6.47 6.47 1.06 1.06L12 13.06l6.47 6.47 1.06-1.06L13.06 12Z" />
-								</SVG>
-							</span>
-						</Button>
-					</FlexItem>
-				) ) }
-				<FlexItem
-					className="wp-block-tribe-horizontal-tabs__add"
-					justify="flex-start"
+				<Button variant="primary" onClick={ () => addNewTab() }>
+					{ __( 'Add New Tab', 'tribe' ) }
+				</Button>
+			</FlexItem>
+		</Flex>
+	);
+
+	return (
+		<div { ...blockProps }>
+			{ tabs.length > 0 ? (
+				<DndContext
+					sensors={ sensors }
+					collisionDetection={ closestCenter }
+					onDragEnd={ handleDragEnd }
 				>
-					<Button variant="primary" onClick={ () => addNewTab() }>
-						{ __( 'Add New Tab', 'tribe' ) }
-					</Button>
-				</FlexItem>
-			</Flex>
+					<SortableContext
+						items={ tabs.map( ( t ) => t.clientId ) }
+						strategy={ horizontalListSortingStrategy }
+					>
+						{ tabList }
+					</SortableContext>
+				</DndContext>
+			) : (
+				tabList
+			) }
 			<div { ...innerBlocksProps } />
 		</div>
 	);
