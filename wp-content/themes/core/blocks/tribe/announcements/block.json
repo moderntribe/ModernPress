@@ -43,6 +43,11 @@
 			"default": "center",
 			"enum": [ "left", "center" ]
 		},
+		"orientation": {
+			"type": "string",
+			"default": "horizontal",
+			"enum": [ "horizontal", "vertical" ]
+		},
 		"dismissible": {
 			"type": "boolean",
 			"default": false
