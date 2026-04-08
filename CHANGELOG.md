@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.04]
+
+- Updated: Related Posts now supports current post types, taxonomy-based matching, latest-item fallbacks, and mixed post type manual selection.
+
 ## [2026.03]
 
 - Updated: Refactor Horizontal Tabs block into a dynamic block. Add reordering functionality. 

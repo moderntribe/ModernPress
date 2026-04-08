@@ -13,6 +13,7 @@ trait Post_Data {
 	protected \WP_Post_Type|null $post_type_object = null;
 	protected int|false $image_id                  = false;
 	protected \WP_Term|null $primary_category      = null;
+	protected \WP_Term|null $display_term          = null;
 	protected string $post_title                   = '';
 	protected string $author_id                    = '0';
 	protected string $author                       = '';
@@ -31,6 +32,7 @@ trait Post_Data {
 		$this->post_type_object = get_post_type_object( $this->post_type );
 		$this->image_id         = get_post_thumbnail_id( $this->post_id );
 		$this->primary_category = $this->get_primary_term( $this->post_id, Category::NAME );
+		$this->display_term     = $this->primary_category;
 		$this->post_title       = get_the_title( $this->post_id );
 		$this->author_id        = get_post_field( 'post_author', $this->post_id );
 		$this->date             = get_the_date( 'M j, Y', $this->post_id );
@@ -62,6 +64,37 @@ trait Post_Data {
 
 	public function get_primary_category_name(): string {
 		return $this->has_primary_category() ? $this->primary_category->name : '';
+	}
+
+	public function set_display_term_taxonomy( string $taxonomy ): void {
+		if ( null === $this->post_id || 0 === $this->post_id || '' === $taxonomy ) {
+			$this->display_term = null;
+
+			return;
+		}
+
+		if ( Category::NAME === $taxonomy ) {
+			$this->display_term = $this->primary_category;
+
+			return;
+		}
+
+		$terms = get_the_terms( $this->post_id, $taxonomy );
+		if ( $terms && ! is_wp_error( $terms ) ) {
+			$this->display_term = reset( $terms ) ?: null;
+
+			return;
+		}
+
+		$this->display_term = null;
+	}
+
+	public function has_display_term(): bool {
+		return null !== $this->display_term;
+	}
+
+	public function get_display_term_name(): string {
+		return $this->has_display_term() ? $this->display_term->name : '';
 	}
 
 	public function get_post_title(): string {
