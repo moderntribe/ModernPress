@@ -7,6 +7,7 @@ use Tribe\Plugin\Post_Types\Post\Post;
 use Tribe\Plugin\Taxonomies\Category\Category;
 
 class Related_Posts_Controller extends Abstract_Block_Controller {
+
 	private const string LATEST_ITEMS_VALUE = '__latest__';
 
 	/**
@@ -66,8 +67,8 @@ class Related_Posts_Controller extends Abstract_Block_Controller {
 		if ( ! $this->has_automatic_selection ) {
 			$this->query_args = array_merge( $this->query_args, [
 				'post_type' => 'any',
-				'post__in' => array_map( 'absint', wp_list_pluck( $this->chosen_posts, 'id' ) ),
-				'orderby'  => 'post__in',
+				'post__in'  => array_map( 'absint', wp_list_pluck( $this->chosen_posts, 'id' ) ),
+				'orderby'   => 'post__in',
 			] );
 
 			return;
