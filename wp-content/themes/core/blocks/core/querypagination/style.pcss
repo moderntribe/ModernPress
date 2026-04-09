@@ -4,21 +4,37 @@
  *
  * ------------------------------------------------------------------------- */
 
-@import "_variables.pcss";
+@import '_variables.pcss';
 
 .wp-block-query-pagination {
-	gap: 0 var(--spacer-40) !important;
-	margin-top: var(--spacer-50) !important;
+	gap: 0 var( --spacer-40 ) !important;
+	margin-top: var( --spacer-50 ) !important;
 
 	/* ensure all links within the pagination get the same styling */
 	a {
-		color: var(--pagination-link-color);
+		color: var( --pagination-link-color );
 		text-decoration: none;
-		transition: var(--transition);
+		transition: var( --transition );
 
 		&:hover,
-		&:focus:not(:focus-visible) {
-			color: var(--pagination-link-hover-color);
+		&:focus:not( :focus-visible ) {
+			color: var( --pagination-link-hover-color );
+		}
+	}
+
+	/* Handles mobile and desktop pagination variants using dedicated modifier classes */
+	&.b-pagination-desktop {
+		display: none;
+	}
+
+	@media ( --mq-tablet ) {
+
+		&.b-pagination-mobile {
+			display: none;
+		}
+
+		&.b-pagination-desktop {
+			display: flex;
 		}
 	}
 }
@@ -30,27 +46,50 @@
 .wp-block-query-pagination-numbers {
 	display: flex;
 	align-items: center;
-	gap: 0 var(--spacer-20);
+	gap: 0 var( --spacer-20 );
 	margin: 0;
+
+	/* Reduce the space between numbers on tiny screens */
+	@media ( max-width: 376px ) {
+		gap: 0 var( --spacer-10 );
+	}
 
 	.page-numbers {
 		line-height: 1;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		height: var(--pagination-numbers-size);
-		width: var(--pagination-numbers-size);
+		height: var( --pagination-numbers-size );
+		width: var( --pagination-numbers-size );
 		border-radius: 100%;
 
-		&:where(:not(.current, .dots)):hover,
-		&:where(:not(.current, .dots)):focus:not(:focus-visible) {
-			background-color: var(--pagination-numbers-hover-background-color);
+		&:where( :not( .current, .dots ) ):hover,
+		&:where( :not( .current, .dots ) ):focus:not( :focus-visible ) {
+			background-color: var(
+				--pagination-numbers-hover-background-color
+			);
 		}
 
 		/* Current page indicator */
 		&.current {
-			background-color: var(--pagination-numbers-current-background-color);
-			color: var(--pagination-numbers-current-color);
+			background-color: var(
+				--pagination-numbers-current-background-color
+			);
+			color: var( --pagination-numbers-current-color );
+		}
+
+
+		/* Mobile pagination simplification:
+		hide all items except first, last, current page and ellipsis */
+		@media (--mq-mobile-max) {
+			display: none;
+
+			&:first-child,
+			&:last-child,
+			&.current,
+			&.dots {
+				display: flex;
+			}
 		}
 	}
 }
@@ -67,8 +106,8 @@
 	margin: 0;
 	font-size: 0;
 
-	@media (--mq-desktop) {
-		gap: var(--spacer-20);
+	@media ( --mq-desktop ) {
+		gap: var( --spacer-20 );
 		font-size: inherit;
 	}
 
@@ -82,24 +121,24 @@
 		margin: 0;
 
 		&::before {
-			content: "";
+			content: '';
 			display: block;
 			width: 100%;
 			height: 100%;
-			background-color: var(--pagination-prev-next-icon-color);
-			mask: var(--icon-chevron-left) center no-repeat;
+			background-color: var( --pagination-prev-next-icon-color );
+			mask: var( --icon-chevron-left ) center no-repeat;
 			mask-size: contain;
-			transition: var(--transition);
+			transition: var( --transition );
 		}
 	}
 
 	&:hover,
-	&:focus:not(:focus-visible) {
-		color: var(--pagination-prev-next-hover-color) !important;
+	&:focus:not( :focus-visible ) {
+		color: var( --pagination-prev-next-hover-color ) !important;
 
 		.is-arrow-chevron::before,
 		.is-arrow-arrow::before {
-			background-color: var(--pagination-prev-next-icon-hover-color);
+			background-color: var( --pagination-prev-next-icon-hover-color );
 		}
 	}
 }
@@ -109,6 +148,6 @@
 
 	.is-arrow-chevron::before,
 	.is-arrow-arrow::before {
-		mask-image: var(--icon-chevron-right);
+		mask-image: var( --icon-chevron-right );
 	}
 }
