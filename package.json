@@ -54,6 +54,10 @@
 		"prettier": "npm:wp-prettier@^3.0.3",
 		"webpack-remove-empty-scripts": "^1.0.4"
 	},
+	"peerDependencies": {
+		"react": "^18.3",
+		"react-dom": "^18.3"
+	},
 	"scripts": {
 		"dist": "NODE_ENV=production wp-scripts build --webpack-src-dir=$npm_package_config_coreThemeBlocksDir",
 		"build": "wp-scripts build --webpack-src-dir=$npm_package_config_coreThemeBlocksDir",
