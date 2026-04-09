@@ -8,6 +8,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 - Updated: Refactor Horizontal Tabs block into a dynamic block. Add reordering functionality. 
 - Updated: Refactor Vertical Tabs block to dynamic block; allow sorting.
+- Updated: Bump Block Editor Custom Alignments plugin to 1.1.3 to fix enqueuing warnings.
 - Fixed: XDebug config for lando
 - Added: XDebug documentation
 
