@@ -8,7 +8,12 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 - Updated: Refactor Horizontal Tabs block into a dynamic block. Add reordering functionality. 
 - Updated: Refactor Vertical Tabs block to dynamic block; allow sorting.
-- Fixed: Admin menu order should now properly exclude predefined post types
+- Updated: Admin menu order should now properly exclude predefined post types
+- Updated: Sticky Column block setting now respects masthead height.
+- Updated: Button block set to "Default" style now respects the "Width" setting.
+- Updated: Bump Block Editor Custom Alignments plugin to 1.1.3 to fix enqueuing warnings.
+- Fixed: XDebug config for lando
+- Added: XDebug documentation
 
 ## [2026.02]
 - Added: `moderntribe/tribe_embed` composer package v1.1.0.
