@@ -8,6 +8,8 @@ use Tribe\Plugin\Taxonomies\Category\Category;
 
 class Related_Posts_Controller extends Abstract_Block_Controller {
 
+	private const string LATEST_ITEMS_VALUE = '__latest__';
+
 	/**
 	 * @var array <mixed>
 	 */
@@ -21,6 +23,9 @@ class Related_Posts_Controller extends Abstract_Block_Controller {
 	protected bool $has_automatic_selection;
 	protected int $posts_to_show;
 	protected string $block_layout;
+	protected string $taxonomy_slug;
+	protected string $current_post_type;
+	protected string $card_taxonomy_slug = '';
 	protected \WP_Query $query;
 
 	public function __construct( array $args = [] ) {
@@ -32,6 +37,8 @@ class Related_Posts_Controller extends Abstract_Block_Controller {
 		$this->chosen_posts            = $this->attributes['chosenPosts'] ?? [];
 		$this->posts_to_show           = absint( $this->attributes['postsToShow'] ?? 3 );
 		$this->block_layout            = $this->attributes['layout'] ?? 'grid';
+		$this->current_post_type       = get_post_type( $this->post_id ) ?: Post::NAME;
+		$this->taxonomy_slug           = $this->get_effective_taxonomy_slug( $this->attributes['taxonomySlug'] ?? Category::NAME );
 
 		$this->block_classes .= " b-related-posts--layout-{$this->block_layout}";
 
@@ -47,16 +54,21 @@ class Related_Posts_Controller extends Abstract_Block_Controller {
 		return $this->query;
 	}
 
+	public function get_card_taxonomy_slug(): string {
+		return $this->card_taxonomy_slug;
+	}
+
 	private function set_query_args(): void {
 		$this->query_args = [
-			'post_type'   => Post::NAME,
+			'post_type'   => $this->current_post_type,
 			'post_status' => 'publish',
 		];
 
 		if ( ! $this->has_automatic_selection ) {
 			$this->query_args = array_merge( $this->query_args, [
-				'post__in' => array_map( 'absint', wp_list_pluck( $this->chosen_posts, 'id' ) ),
-				'orderby'  => 'post__in',
+				'post_type' => 'any',
+				'post__in'  => array_map( 'absint', wp_list_pluck( $this->chosen_posts, 'id' ) ),
+				'orderby'   => 'post__in',
 			] );
 
 			return;
@@ -67,7 +79,11 @@ class Related_Posts_Controller extends Abstract_Block_Controller {
 			'post__not_in'   => [ $this->post_id ],
 		] );
 
-		$post_terms = get_the_terms( $this->post_id, Category::NAME );
+		if ( self::LATEST_ITEMS_VALUE === $this->taxonomy_slug || ! is_object_in_taxonomy( $this->current_post_type, $this->taxonomy_slug ) ) {
+			return;
+		}
+
+		$post_terms = get_the_terms( $this->post_id, $this->taxonomy_slug );
 
 		if ( empty( $post_terms ) || is_wp_error( $post_terms ) ) {
 			return;
@@ -76,7 +92,7 @@ class Related_Posts_Controller extends Abstract_Block_Controller {
 		$term_ids = wp_list_pluck( $post_terms, 'term_id' );
 
 		$this->query_args['tax_query'][] = [
-			'taxonomy' => Category::NAME,
+			'taxonomy' => $this->taxonomy_slug,
 			'field'    => 'term_id',
 			'terms'    => $term_ids,
 		];
@@ -84,6 +100,41 @@ class Related_Posts_Controller extends Abstract_Block_Controller {
 
 	private function set_query(): void {
 		$this->query = new \WP_Query( $this->query_args );
+
+		if ( $this->has_automatic_selection && ! $this->query->have_posts() && ! empty( $this->query_args['tax_query'] ) ) {
+			unset( $this->query_args['tax_query'] );
+			$this->query = new \WP_Query( $this->query_args );
+		}
+
+		$this->card_taxonomy_slug = ! empty( $this->query_args['tax_query'] ) ? $this->taxonomy_slug : '';
+	}
+
+	/**
+	 * @return array<string, \WP_Taxonomy>
+	 */
+	private function get_available_taxonomies(): array {
+		return array_filter(
+			get_object_taxonomies( $this->current_post_type, 'objects' ),
+			static fn( \WP_Taxonomy $taxonomy ): bool => (bool) $taxonomy->show_in_rest
+		);
+	}
+
+	private function get_effective_taxonomy_slug( string $taxonomy_slug ): string {
+		if ( self::LATEST_ITEMS_VALUE === $taxonomy_slug ) {
+			return $taxonomy_slug;
+		}
+
+		$available_taxonomies = $this->get_available_taxonomies();
+
+		if ( is_object_in_taxonomy( $this->current_post_type, $taxonomy_slug ) ) {
+			return $taxonomy_slug;
+		}
+
+		if ( array_key_exists( Category::NAME, $available_taxonomies ) ) {
+			return Category::NAME;
+		}
+
+		return array_key_first( $available_taxonomies ) ?: '';
 	}
 
 }

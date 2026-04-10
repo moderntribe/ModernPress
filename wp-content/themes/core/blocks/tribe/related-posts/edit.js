@@ -10,40 +10,103 @@ import {
 import { ServerSideRender } from '@wordpress/server-side-render';
 import { withSelect } from '@wordpress/data';
 
-function Edit( { props, postList } ) {
+const getPickerLabel = ( post ) => {
+	if ( post.pickerLabel ) {
+		return post.pickerLabel;
+	}
+
+	return post.value;
+};
+
+const LATEST_ITEMS_VALUE = '__latest__';
+
+const getEffectiveTaxonomySlug = ( taxonomies = [], taxonomySlug = '' ) => {
+	if ( taxonomySlug === LATEST_ITEMS_VALUE ) {
+		return taxonomySlug;
+	}
+
+	if ( taxonomies.some( ( taxonomy ) => taxonomy.slug === taxonomySlug ) ) {
+		return taxonomySlug;
+	}
+
+	if ( taxonomies.some( ( taxonomy ) => taxonomy.slug === 'category' ) ) {
+		return 'category';
+	}
+
+	return taxonomies[ 0 ]?.slug ?? '';
+};
+
+function Edit( { props, postList, taxonomies } ) {
 	const blockProps = useBlockProps();
 	const { attributes, isSelected, setAttributes } = props;
-	const { hasAutomaticSelection, chosenPosts, postsToShow, layout } =
-		attributes;
+	const {
+		hasAutomaticSelection,
+		chosenPosts,
+		postsToShow,
+		taxonomySlug,
+		layout,
+	} = attributes;
+	const effectiveTaxonomySlug = getEffectiveTaxonomySlug(
+		taxonomies,
+		taxonomySlug
+	);
+	const taxonomyOptions = [
+		{
+			label: __( 'Latest Items', 'tribe' ),
+			value: LATEST_ITEMS_VALUE,
+		},
+		...( taxonomies ?? [] ).map( ( taxonomy ) => ( {
+			label: taxonomy.name,
+			value: taxonomy.slug,
+		} ) ),
+	];
+	const tokenValues = ( chosenPosts ?? [] ).map( ( chosenPost ) => {
+		if ( typeof chosenPost === 'string' ) {
+			return chosenPost;
+		}
+
+		const matchedPost = ( postList ?? [] ).find(
+			( post ) => post.id === chosenPost.id
+		);
+		if ( matchedPost ) {
+			return {
+				...chosenPost,
+				value: matchedPost.pickerLabel,
+			};
+		}
+
+		return chosenPost;
+	} );
 
 	const setChosenPosts = ( selectedPosts ) => {
-		const newChosenPosts = selectedPosts.map( ( selectedPost ) => {
-			/**
-			 * if we've already added a value, it will appear as an object
-			 * in this case, we can just return the existing object
-			 */
-			if ( typeof selectedPost !== 'string' ) {
-				return selectedPost;
-			}
+		const newChosenPosts = selectedPosts
+			.map( ( selectedPost ) => {
+				/**
+				 * if we've already added a value, it will appear as an object
+				 * in this case, we can just return the existing object
+				 */
+				if ( typeof selectedPost !== 'string' ) {
+					return selectedPost;
+				}
 
-			/**
-			 * if this is a new value, it will appear as a string so we'll need to grab
-			 * the post object via the post title. The name is provided via the Suggestions
-			 * array in the FormTokenField component.
-			 */
-			const foundPost = postList.find(
-				( post ) => post.title.rendered === selectedPost
-			);
+				/**
+				 * if this is a new value, it will appear as a string so we'll need to grab
+				 * the post object via the picker label shown in the suggestions list.
+				 */
+				const foundPost = ( postList ?? [] ).find(
+					( post ) => post.pickerLabel === selectedPost
+				);
 
-			if ( ! foundPost ) {
-				return false;
-			}
+				if ( ! foundPost ) {
+					return false;
+				}
 
-			return {
-				value: foundPost.title.rendered,
-				id: foundPost.id,
-			};
-		} );
+				return {
+					value: foundPost.pickerLabel,
+					id: foundPost.id,
+				};
+			} )
+			.filter( Boolean );
 
 		setAttributes( {
 			chosenPosts: newChosenPosts,
@@ -54,7 +117,10 @@ function Edit( { props, postList } ) {
 		<div { ...blockProps }>
 			<ServerSideRender
 				block="tribe/related-posts"
-				attributes={ attributes }
+				attributes={ {
+					...attributes,
+					taxonomySlug: effectiveTaxonomySlug,
+				} }
 			/>
 			{ isSelected && (
 				<InspectorControls>
@@ -63,7 +129,7 @@ function Edit( { props, postList } ) {
 							__nextHasNoMarginBottom
 							label={ __( 'Has Automatic Selection?', 'tribe' ) }
 							help={ __(
-								'If checked, this setting allows the block to control which posts show. Currently this is done by adding posts that have any categories in common with the current post.',
+								'When enabled, the block shows posts related by the selected option. Taxonomy matches fall back to latest items if no matches are found.',
 								'tribe'
 							) }
 							onChange={ ( value ) => {
@@ -83,10 +149,10 @@ function Edit( { props, postList } ) {
 										'Manual Post Selection',
 										'tribe'
 									) }
-									suggestions={ postList.map(
-										( post ) => post.title.rendered
+									suggestions={ ( postList ?? [] ).map(
+										getPickerLabel
 									) }
-									value={ chosenPosts }
+									value={ tokenValues }
 									onChange={ ( tokens ) => {
 										setChosenPosts( tokens );
 									} }
@@ -98,23 +164,41 @@ function Edit( { props, postList } ) {
 							</div>
 						) }
 						{ hasAutomaticSelection && (
-							<RangeControl
-								__next40pxDefaultSize
-								__nextHasNoMarginBottom
-								label={ __(
-									'Number of Posts to Display',
-									'tribe'
-								) }
-								min={ 1 }
-								max={ 9 }
-								marks={ true }
-								value={ postsToShow }
-								onChange={ ( value ) => {
-									setAttributes( {
-										postsToShow: value,
-									} );
-								} }
-							/>
+							<>
+								<SelectControl
+									__next40pxDefaultSize
+									__nextHasNoMarginBottom
+									label={ __( 'Related By', 'tribe' ) }
+									help={ __(
+										'Choose whether automatic mode uses the latest items or matches by a taxonomy.',
+										'tribe'
+									) }
+									value={ effectiveTaxonomySlug }
+									options={ taxonomyOptions }
+									onChange={ ( value ) => {
+										setAttributes( {
+											taxonomySlug: value,
+										} );
+									} }
+								/>
+								<RangeControl
+									__next40pxDefaultSize
+									__nextHasNoMarginBottom
+									label={ __(
+										'Number of Posts to Display',
+										'tribe'
+									) }
+									min={ 1 }
+									max={ 9 }
+									marks={ true }
+									value={ postsToShow }
+									onChange={ ( value ) => {
+										setAttributes( {
+											postsToShow: value,
+										} );
+									} }
+								/>
+							</>
 						) }
 						<SelectControl
 							__next40pxDefaultSize
@@ -143,17 +227,49 @@ function Edit( { props, postList } ) {
 }
 
 export default withSelect( ( select, ownProps ) => {
-	const { getEntityRecords } = select( 'core' );
-	const { getCurrentPostId } = select( 'core/editor' );
+	const { getEntityRecords, getPostTypes, getTaxonomies } = select( 'core' );
+	const { getCurrentPostId, getCurrentPostType } = select( 'core/editor' );
 	const currentPostId = getCurrentPostId();
+	const currentPostType = getCurrentPostType();
 
-	const postList = getEntityRecords( 'postType', 'post', {
-		per_page: 100,
-		exclude: [ currentPostId ],
+	const EXCLUDED_TYPES = new Set( [
+		'attachment',
+		'page',
+		'wp_block',
+		'wp_template',
+		'wp_template_part',
+		'wp_navigation',
+	] );
+
+	const allPostTypes = getPostTypes( { per_page: -1 } ) ?? [];
+	const selectableTypes = allPostTypes.filter(
+		( type ) => type.viewable === true && ! EXCLUDED_TYPES.has( type.slug )
+	);
+	const taxonomies = currentPostType
+		? (
+				getTaxonomies( {
+					type: currentPostType,
+					per_page: -1,
+				} ) ?? []
+		  ).filter(
+				( taxonomy ) => taxonomy.visibility?.show_in_rest !== false
+		  )
+		: [];
+
+	const postList = selectableTypes.flatMap( ( type ) => {
+		const records = getEntityRecords( 'postType', type.slug, {
+			per_page: 100,
+			exclude: [ currentPostId ],
+		} );
+		return ( records ?? [] ).map( ( post ) => ( {
+			...post,
+			pickerLabel: `${ post.title.rendered } (${ type.labels.singular_name })`,
+		} ) );
 	} );
 
 	return {
 		props: ownProps,
 		postList,
+		taxonomies,
 	};
 } )( Edit );
