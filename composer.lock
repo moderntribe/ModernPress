@@ -4,14 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c7fed3b4f52bd9dcf7164581537d01f",
+    "content-hash": "dc1b687810fccc61daabcfb145db12fe",
     "packages": [
         {
             "name": "block-editor-custom-alignments/block-editor-custom-alignments",
-            "version": "1.1.1",
+            "version": "1.1.3",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/moderntribe/block-editor-custom-alignments/releases/download/v1.1.1/block-editor-custom-alignments.1.1.1.zip"
+                "url": "https://github.com/moderntribe/block-editor-custom-alignments/releases/download/v1.1.3/block-editor-custom-alignments.1.1.3.zip"
             },
             "require": {
                 "ffraenz/private-composer-installer": "^5.0"
