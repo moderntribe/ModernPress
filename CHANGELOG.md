@@ -14,6 +14,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - Updated: Sticky Column block setting now respects masthead height.
 - Updated: Button block set to "Default" style now respects the "Width" setting.
 - Updated: Bump Block Editor Custom Alignments plugin to 1.1.3 to fix enqueuing warnings.
+- Updated: Update force activation options. Force activate ACF Pro, Disable Emojis, Safe SVG on all envs
 - Fixed: XDebug config for lando
 - Added: XDebug documentation
 
