@@ -39,6 +39,9 @@ class Announcement_Meta extends Meta_Object {
 	public const string ALIGNMENT_CENTER                = 'center';
 	public const string ALIGNMENT                       = 'alignment';
 	public const string ALIGNMENT_LEFT                  = 'left';
+	public const string ORIENTATION                     = 'orientation';
+	public const string ORIENTATION_HORIZONTAL          = 'horizontal';
+	public const string ORIENTATION_VERTICAL            = 'vertical';
 	public const string DISPLAY_TAB                     = 'display_tab';
 	public const string PLACEMENT                       = 'placement';
 	public const string PLACEMENT_ABOVE                 = 'placement_above';
@@ -100,6 +103,13 @@ class Announcement_Meta extends Meta_Object {
 					self::ALIGNMENT_CENTER => esc_html__( 'Center', 'tribe' ),
 				] )
 				->default( self::ALIGNMENT_CENTER ),
+			RadioButton::make( esc_html__( 'Orientation', 'tribe' ), self::ORIENTATION )
+				->choices( [
+					self::ORIENTATION_HORIZONTAL => esc_html__( 'Horizontal', 'tribe' ),
+					self::ORIENTATION_VERTICAL   => esc_html__( 'Vertical', 'tribe' ),
+				] )
+				->default( self::ORIENTATION_HORIZONTAL )
+				->helperText( esc_html__( 'Desktop layout. On mobile, content is always stacked.', 'tribe' ) ),
 
 			Tab::make( esc_html__( 'Display', 'tribe' ), self::DISPLAY_TAB )
 				->placement( 'left' ),
