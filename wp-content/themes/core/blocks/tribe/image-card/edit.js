@@ -3,31 +3,24 @@ import {
 	BlockControls,
 	InspectorControls,
 	LinkControl,
-	MediaUpload,
-	MediaUploadCheck,
 	useBlockProps,
 } from '@wordpress/block-editor';
 import {
-	BaseControl,
-	Button,
-	Flex,
-	FlexItem,
 	PanelBody,
 	Popover,
-	ResponsiveWrapper,
 	TextareaControl,
 	TextControl,
 	ToolbarButton,
 	ToolbarGroup,
 } from '@wordpress/components';
 import { ServerSideRender } from '@wordpress/server-side-render';
-import { withSelect } from '@wordpress/data';
 import { useMemo, useState } from '@wordpress/element';
+import MediaImageControl from 'components/MediaImageControl';
 import blockSettings from './block.json';
 
 import './editor.pcss';
 
-const Edit = ( { attributes, setAttributes, isSelected, media } ) => {
+export default function Edit( { attributes, setAttributes, isSelected } ) {
 	const blockProps = useBlockProps();
 
 	const {
@@ -149,100 +142,11 @@ const Edit = ( { attributes, setAttributes, isSelected, media } ) => {
 			{ isSelected && (
 				<InspectorControls>
 					<PanelBody title={ __( 'Block Settings', 'tribe' ) }>
-						<BaseControl __nextHasNoMarginBottom>
-							<BaseControl.VisualLabel>
-								{ __( 'Image', 'tribe' ) }
-							</BaseControl.VisualLabel>
-							<MediaUploadCheck>
-								<MediaUpload
-									allowedTypes={ [ 'image' ] }
-									onSelect={ onSelectMedia }
-									value={ mediaId }
-									render={ ( { open } ) => (
-										<Button
-											className={
-												mediaId === 0
-													? 'editor-post-featured-image__toggle'
-													: 'editor-post-featured-image__preview'
-											}
-											onClick={ open }
-										>
-											{ mediaId === 0 &&
-												__(
-													'Choose an image',
-													'tribe'
-												) }
-											{ media !== undefined && (
-												<ResponsiveWrapper
-													naturalWidth={
-														media.media_details
-															.width
-													}
-													naturalHeight={
-														media.media_details
-															.height
-													}
-												>
-													<img
-														src={ media.source_url }
-														alt={
-															media.media_details
-																.alt
-														}
-													/>
-												</ResponsiveWrapper>
-											) }
-										</Button>
-									) }
-								/>
-							</MediaUploadCheck>
-							{ mediaId !== 0 && (
-								<Flex
-									style={ {
-										marginTop: '1rem',
-									} }
-								>
-									<FlexItem>
-										<MediaUploadCheck>
-											<MediaUpload
-												title={ __(
-													'Replace image',
-													'tribe'
-												) }
-												value={ mediaId }
-												onSelect={ onSelectMedia }
-												allowedTypes={ [ 'image' ] }
-												render={ ( { open } ) => (
-													<Button
-														onClick={ open }
-														variant="secondary"
-													>
-														{ __(
-															'Replace image',
-															'tribe'
-														) }
-													</Button>
-												) }
-											/>
-										</MediaUploadCheck>
-									</FlexItem>
-									<FlexItem>
-										<MediaUploadCheck>
-											<Button
-												onClick={ removeMedia }
-												isLink
-												isDestructive
-											>
-												{ __(
-													'Remove image',
-													'tribe'
-												) }
-											</Button>
-										</MediaUploadCheck>
-									</FlexItem>
-								</Flex>
-							) }
-						</BaseControl>
+						<MediaImageControl
+							mediaId={ mediaId }
+							onSelect={ onSelectMedia }
+							onRemove={ removeMedia }
+						/>
 						<TextControl
 							__next40pxDefaultSize
 							__nextHasNoMarginBottom
@@ -309,15 +213,4 @@ const Edit = ( { attributes, setAttributes, isSelected, media } ) => {
 			) }
 		</div>
 	);
-};
-
-/**
- * Pass the media object to the Edit function as a prop.
- */
-export default withSelect( ( select, props ) => {
-	return {
-		media: props.attributes.mediaId
-			? select( 'core' ).getMedia( props.attributes.mediaId )
-			: undefined,
-	};
-} )( Edit );
+}

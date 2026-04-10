@@ -9,6 +9,13 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - Updated: Refactor Horizontal Tabs block into a dynamic block. Add reordering functionality. 
 - Updated: Refactor Vertical Tabs block to dynamic block; allow sorting.
 - Updated: All blocks that use the `ServerSideRender` package now properly pull from the named import instead of the default import (deprecated).
+- Updated: Image / Image Overlay blocks now use a shared `MediaImageControl` component instead of adding the media control separately.
+- Updated: Admin menu order should now properly exclude predefined post types
+- Updated: Sticky Column block setting now respects masthead height.
+- Updated: Button block set to "Default" style now respects the "Width" setting.
+- Updated: Bump Block Editor Custom Alignments plugin to 1.1.3 to fix enqueuing warnings.
+- Fixed: XDebug config for lando
+- Added: XDebug documentation
 
 ## [2026.02]
 - Added: `moderntribe/tribe_embed` composer package v1.1.0.

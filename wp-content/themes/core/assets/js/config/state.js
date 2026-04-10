@@ -6,4 +6,5 @@ export default {
 	v_height: 0,
 	v_width: 0,
 	isMobileMenuShown: false,
+	headerHeight: 0,
 };
