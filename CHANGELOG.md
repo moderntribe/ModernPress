@@ -8,6 +8,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 - Updated: Refactor Horizontal Tabs block into a dynamic block. Add reordering functionality. 
 - Updated: Refactor Vertical Tabs block to dynamic block; allow sorting.
+- Updated: Image / Image Overlay blocks now use a shared `MediaImageControl` component instead of adding the media control separately.
 - Updated: Admin menu order should now properly exclude predefined post types
 - Updated: Sticky Column block setting now respects masthead height.
 - Updated: Button block set to "Default" style now respects the "Width" setting.
