@@ -49,20 +49,18 @@ class Admin_Menu_Order {
 	 */
 	protected function get_post_types(): array {
 		try {
-			$subscribers = tribe_project()->get_subscribers();
+			// get all post type subscribers
+			$subscribers = array_filter( tribe_project()->get_subscribers(), static function ( $subscriber ) {
+				return str_contains( $subscriber, 'Post_Types\\' );
+			} );
 
 			$post_types = [];
 			foreach ( $subscribers as $subscriber ) {
-				// skip non-post types subscribers
-				if ( ! str_contains( $subscriber, 'Post_Types\\' ) ) {
-					continue;
-				}
-
+				// there is no post subscriber so there's no need to define it here to skip
 				$skip_post_types = [
-					'Post_Types\\Announcement',
-					'Post_Types\\Page',
-					'Post_Types\\Post',
-					'Post_Types\\Training',
+					'Tribe\\Plugin\\Post_Types\\Page\\Page_Subscriber',
+					'Tribe\\Plugin\\Post_Types\\Training\\Training_Subscriber',
+					'Tribe\\Plugin\\Post_Types\\Announcement\\Announcement_Subscriber',
 				];
 
 				// skip std / predefined post types
