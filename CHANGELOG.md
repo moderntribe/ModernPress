@@ -6,6 +6,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.03]
 
+- Updated: Asset enqueuing for core blocks should now allow block scripts & styles to properly render across the FE & editor. 
 - Updated: Refactor Horizontal Tabs block into a dynamic block. Add reordering functionality. 
 - Updated: Refactor Vertical Tabs block to dynamic block; allow sorting.
 - Updated: All blocks that use the `ServerSideRender` package now properly pull from the named import instead of the default import (deprecated).
