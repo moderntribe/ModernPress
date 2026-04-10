@@ -13,9 +13,9 @@ import {
 	ToolbarButton,
 	ToolbarGroup,
 } from '@wordpress/components';
-import MediaImageControl from 'components/MediaImageControl';
 import { ServerSideRender } from '@wordpress/server-side-render';
 import { useMemo, useState } from '@wordpress/element';
+import MediaImageControl from 'components/MediaImageControl';
 import blockSettings from './block.json';
 
 import './editor.pcss';
