@@ -37,6 +37,7 @@
 	},
 	"devDependencies": {
 		"@csstools/postcss-global-data": "^4.0",
+		"@types/react": "^18.3.28",
 		"@wordpress/create-block": "^4.75.0",
 		"@wordpress/element": "^6.40.0",
 		"@wordpress/eslint-plugin": "^24.1",
@@ -54,9 +55,12 @@
 		"prettier": "npm:wp-prettier@^3.0.3",
 		"webpack-remove-empty-scripts": "^1.0.4"
 	},
-	"peerDependencies": {
+	"overrides": {
+		"minimatch": "^9.0.9",
 		"react": "^18.3",
-		"react-dom": "^18.3"
+		"react-dom": "^18.3",
+		"serialize-javascript": "^7.0.5",
+		"webpack-dev-server": "^5.2.3"
 	},
 	"scripts": {
 		"dist": "NODE_ENV=production wp-scripts build --webpack-src-dir=$npm_package_config_coreThemeBlocksDir",
