@@ -75,19 +75,6 @@
 			);
 			color: var(--pagination-numbers-current-color);
 		}
-
-		/* Mobile pagination simplification:
-		hide all items except first, last, current page and ellipsis */
-		@media (--mq-mobile-max) {
-			display: none;
-
-			&:first-child,
-			&:last-child,
-			&.current,
-			&.dots {
-				display: flex;
-			}
-		}
 	}
 }
 
