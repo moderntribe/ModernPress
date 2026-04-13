@@ -4,14 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a3fbbbec01c39e5f7e1bfafe2da051ef",
+    "content-hash": "998619edfc3ee11610a0c81667810c0a",
     "packages": [
         {
             "name": "block-editor-custom-alignments/block-editor-custom-alignments",
-            "version": "1.1.1",
+            "version": "1.1.3",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/moderntribe/block-editor-custom-alignments/releases/download/v1.1.1/block-editor-custom-alignments.1.1.1.zip"
+                "url": "https://github.com/moderntribe/block-editor-custom-alignments/releases/download/v1.1.3/block-editor-custom-alignments.1.1.3.zip"
             },
             "require": {
                 "ffraenz/private-composer-installer": "^5.0"
@@ -6104,24 +6104,6 @@
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/safe-svg/"
-        },
-        {
-            "name": "wpackagist-plugin/seo-by-rank-math",
-            "version": "1.0.267",
-            "source": {
-                "type": "svn",
-                "url": "https://plugins.svn.wordpress.org/seo-by-rank-math/",
-                "reference": "tags/1.0.267"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/seo-by-rank-math.1.0.267.zip"
-            },
-            "require": {
-                "composer/installers": "^1.0 || ^2.0"
-            },
-            "type": "wordpress-plugin",
-            "homepage": "https://wordpress.org/plugins/seo-by-rank-math/"
         },
         {
             "name": "wpackagist-plugin/social-sharing-block",
