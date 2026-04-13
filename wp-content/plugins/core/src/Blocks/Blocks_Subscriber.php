@@ -50,25 +50,20 @@ class Blocks_Subscriber extends Abstract_Subscriber {
 		}, 10, 0 );
 
 		/**
-		 * Enqueue styles in the editor for WP Core blocks
-		 */
-		add_action( 'admin_init', function (): void {
-			foreach ( $this->container->get( Blocks_Definer::EXTENDED ) as $block ) {
-				// core block public styles
-				$block->enqueue_core_block_public_styles();
-				// core block editor-only styles
-				$block->enqueue_core_block_editor_styles();
-			}
-		}, 10, 0 );
-
-		/**
 		 * Enqueue block editor-only scripts
 		 *
 		 * Core blocks shouldn't ever have FE scripts and should only include
 		 * editor scripts in order to override default block functionality
 		 */
-		add_action( 'enqueue_block_editor_assets', function (): void {
+		add_action( 'enqueue_block_assets', function (): void {
 			foreach ( $this->container->get( Blocks_Definer::EXTENDED ) as $block ) {
+				// Public overrides as `<link>` only in wp-admin. On the front end they are attached
+				// from `wp_enqueue_scripts` via inline styles on the core block handle (see Block_Base).
+				if ( is_admin() ) {
+					$block->enqueue_core_block_public_styles();
+				}
+				// core block editor-only styles
+				$block->enqueue_core_block_editor_styles();
 				// core block editor-only scripts
 				$block->enqueue_core_block_editor_scripts();
 			}

@@ -142,6 +142,7 @@ module.exports = {
 			components: resolve(
 				'./wp-content/themes/core/assets/js/components'
 			),
+			hooks: resolve( './wp-content/themes/core/assets/js/hooks' ),
 		},
 	},
 	entry: {
