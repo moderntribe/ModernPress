@@ -43,9 +43,11 @@ final class ForcePluginActivation {
 	 * @var array<string, string[]> 'directory/file.php' => (WP_ENVIRONMENT_TYPE|'all')[]
 	 */
 	private array $plugins = [
-		'core/core.php'                                                   => [ 'all' ],
-		'limit-login-attempts-reloaded/limit-login-attempts-reloaded.php' => [ 'development', 'staging', 'production' ],
-		'tribe-glomar/tribe-glomar.php'                                   => [ 'development', 'staging' ],
+		'core/core.php'                      => [ 'all' ],
+		'advanced-custom-fields-pro/acf.php' => [ 'all' ],
+		'disable-emojis/disable-emojis.php'  => [ 'all' ],
+		'safe-svg/safe-svg.php'              => [ 'all' ],
+		'tribe-glomar/tribe-glomar.php'      => [ 'development', 'staging' ],
 	];
 
 	/**
