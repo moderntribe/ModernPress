@@ -2,6 +2,10 @@
 
 namespace Tribe\Plugin\Menus;
 
+use Tribe\Plugin\Post_Types\Announcement\Announcement;
+use Tribe\Plugin\Post_Types\Page\Page;
+use Tribe\Plugin\Post_Types\Training\Training;
+
 class Admin_Menu_Order {
 
 	public function custom_menu_order(): array {
@@ -9,7 +13,8 @@ class Admin_Menu_Order {
 		$before = [
 			'index.php',
 			'separator1',
-			'edit.php?post_type=page',
+			'edit.php?post_type=' . Page::NAME,
+			'edit.php',
 		];
 
 		foreach ( $cpts as $post_type ) {
@@ -17,7 +22,7 @@ class Admin_Menu_Order {
 		}
 
 		$after = [
-			'edit.php',
+			'edit.php?post_type=' . Announcement::NAME,
 			'upload.php',
 			'gf_edit_forms',
 			'separator2',
@@ -26,7 +31,7 @@ class Admin_Menu_Order {
 			'users.php',
 			'tools.php',
 			'options-general.php',
-			'edit.php?post_type=training',
+			'edit.php?post_type=' . Training::NAME,
 			'separator-last',
 			'edit.php?post_type=acf-field-group',
 			'wpseo_dashboard',
@@ -44,17 +49,22 @@ class Admin_Menu_Order {
 	 */
 	protected function get_post_types(): array {
 		try {
-			$subscribers = tribe_project()->get_subscribers();
+			// get all post type subscribers
+			$subscribers = array_filter( tribe_project()->get_subscribers(), static function ( $subscriber ) {
+				return str_contains( $subscriber, 'Post_Types\\' );
+			} );
 
 			$post_types = [];
 			foreach ( $subscribers as $subscriber ) {
-				// skip non-post types subscribers
-				if ( ! str_contains( $subscriber, 'Post_Types\\' ) ) {
-					continue;
-				}
+				// there is no post subscriber so there's no need to define it here to skip
+				$skip_post_types = [
+					'Tribe\\Plugin\\Post_Types\\Page\\Page_Subscriber',
+					'Tribe\\Plugin\\Post_Types\\Training\\Training_Subscriber',
+					'Tribe\\Plugin\\Post_Types\\Announcement\\Announcement_Subscriber',
+				];
 
-				// skip std post types
-				if ( str_contains( $subscriber, 'Post_Types\\Page' ) || str_contains( $subscriber, 'Post_Types\\Post' ) || str_contains( $subscriber, 'Post_Types\\Event' ) ) {
+				// skip std / predefined post types
+				if ( in_array( $subscriber, $skip_post_types, true ) ) {
 					continue;
 				}
 

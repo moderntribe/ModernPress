@@ -1,0 +1,207 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Announcements - Styles - FE / Editor
+ *
+ * ------------------------------------------------------------------------- */
+
+.b-announcement {
+	--vertical-padding: 16px;
+	container: announcement / inline-size;
+	display: none;
+	justify-content: center;
+	position: relative;
+	padding: var(--vertical-padding) var(--grid-margin);
+	background-color: var(--color-blue);
+	color: var(--color-white);
+
+	/* CASE: Align Content Left */
+	&.b-announcement--align-left {
+		justify-content: flex-start;
+	}
+
+	/* CASE: Black Theme */
+	&.b-announcement--theme-black {
+		background-color: var(--color-black);
+	}
+
+	/* CASE: Error Theme */
+	&.b-announcement--theme-error {
+		background-color: var(--color-alert-error-dark);
+	}
+
+	/* CASE: Warning Theme */
+	&.b-announcement--theme-warning {
+		background-color: var(--color-alert-warning);
+		color: var(--color-black);
+	}
+
+	@container announcement (min-width: 960px) {
+		justify-content: center;
+	}
+}
+
+/* -----------------------------------------------------------------------
+ * Announcements Block - Inner Wrapper
+ * ----------------------------------------------------------------------- */
+
+.b-announcement__inner {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: flex-start;
+	gap: var(--spacer-20);
+
+	/* only add padding if the dismiss button is present */
+	.b-announcement:has(.b-announcement__dismiss-wrapper) & {
+		padding-right: calc(var(--announcement-dismiss-width, 0px) + var(--spacer-30)); /* stylelint-disable-line */
+	}
+
+	@container announcement (min-width: 960px) {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	/* CASE: Vertical Orientation */
+	.b-announcement--orientation-vertical & {
+		flex-direction: column;
+		align-items: flex-start;
+
+		> * {
+			width: 100%;
+			max-width: var(--grid-wide-width);
+		}
+	}
+
+	/* CASE: Vertical Orientation & Align Content Center */
+	.b-announcement--orientation-vertical.b-announcement--align-center & {
+
+		@container announcement (min-width: 960px) {
+			text-align: center;
+
+			.b-announcement__cta-wrapper {
+				justify-content: center;
+			}
+		}
+	}
+}
+
+/* -----------------------------------------------------------------------
+ * Announcements Block - Heading
+ * ----------------------------------------------------------------------- */
+
+.b-announcement__heading {
+	flex: 0 0 auto;
+	margin-top: 0;
+	font-weight: var(--font-weight-bold) !important;
+}
+
+/* -----------------------------------------------------------------------
+ * Announcements Block - Body Copy
+ * ----------------------------------------------------------------------- */
+
+.b-announcement__body {
+	flex: 1;
+	margin-top: 0 !important;
+}
+
+/* -----------------------------------------------------------------------
+ * Announcements Block - CTA Wrapper
+ * ----------------------------------------------------------------------- */
+
+.b-announcement__cta-wrapper {
+	flex: 0 0 auto;
+}
+
+/* -----------------------------------------------------------------------
+ * Announcements Block - Dismiss Wrapper
+ * ----------------------------------------------------------------------- */
+
+.b-announcement__dismiss-wrapper {
+	position: absolute;
+	top: var(--vertical-padding);
+	right: var(--grid-margin);
+
+	@container announcement (min-width: 960px) {
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	/* CASE: Vertical Orientation */
+	.b-announcement--orientation-vertical & {
+
+		@container announcement (min-width: 960px) {
+			top: var(--vertical-padding);
+			transform: none;
+		}
+	}
+}
+
+/* -----------------------------------------------------------------------
+ * Announcements Block - Dismiss
+ * ----------------------------------------------------------------------- */
+
+.b-announcement__dismiss {
+	display: flex;
+	align-items: center;
+	gap: var(--spacer-10);
+	padding: 0;
+	background-color: transparent;
+	border: 0;
+	border-radius: 0;
+	color: var(--color-white);
+	cursor: pointer;
+
+	&::after {
+		content: '';
+		display: block;
+		width: 32px;
+		height: 32px;
+		mask: var(--icon-dismiss) center no-repeat;
+		mask-size: 24px;
+		background-color: var(--color-white);
+	}
+
+	/* CASE: Warning Theme */
+	.b-announcement:not(.is-style-dark) & {
+		color: var(--color-black);
+
+		&::after {
+			background-color: var(--color-black);
+		}
+	}
+
+	@container announcement (min-width: 960px) and (--has-hover) {
+
+		&:hover {
+
+			@mixin announcement-dismiss-hover-focus;
+		}
+	}
+
+	@container announcement (min-width: 960px) {
+
+		&:focus:not(:focus-visible) {
+
+			@mixin announcement-dismiss-hover-focus;
+		}
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+}
+
+/* -----------------------------------------------------------------------
+ * Announcements Block - Dismiss Text
+ * ----------------------------------------------------------------------- */
+
+.b-announcement__dismiss-text {
+	display: none;
+
+	/* only show dismiss text on desktop */
+	@container announcement (min-width: 960px) {
+
+		@mixin t-animated-underline;
+	}
+}

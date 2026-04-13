@@ -6,6 +6,7 @@ parameters:
 		- wp-content/mu-plugins/
 	excludePaths:
 		- vendor
+		- wp-content/themes/core/dist/ (?)
 	bootstrapFiles:
 		- vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
 		- vendor/php-stubs/acf-pro-stubs/acf-pro-stubs.php

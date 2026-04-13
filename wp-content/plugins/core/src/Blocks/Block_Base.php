@@ -64,29 +64,62 @@ abstract class Block_Base {
 	/**
 	 * Enqueue core block styles
 	 *
-	 * Adds the core block styles to both the public site and to the editor.
-	 * On the public site, styles are inlined into the document inside a `<style>` element.
-	 * Styles are added as a `<link>` for both block & site editor regardless of if it is inline or iframed.
-	 * Additionally, the selectors are prefixed with `.editor-styles-wrapper` in the editors.
+	 * On the public site, CSS is inlined onto WordPress's registered style handle for that block
+	 * (e.g. `wp-block-paragraph`) so it only prints when that block's stylesheet is enqueued.
+	 *
+	 * In wp-admin (block / site editor), styles are loaded as `<link>` tags so they work in the
+	 * editor shell and iframed canvas without relying on core's per-block queue on the front end.
+	 *
+	 * On the front end, if the core style handle is not registered, styles are skipped and
+	 * `_doing_it_wrong()` is triggered so the misconfiguration is visible during development.
 	 */
 	public function enqueue_core_block_public_styles(): void {
-		$handle   = $this->get_block_style_handle();
+		$block    = $this->get_block_handle();
 		$path     = $this->get_block_path();
-		$args     = $this->get_asset_file_args( get_theme_file_path( "dist/blocks/$path/index.asset.php" ) );
-		$version  = $args['version'] ?? false;
+		$args     = $this->get_asset_file_args( get_theme_file_path( "dist/blocks/$path/editor.asset.php" ) );
 		$src_path = get_theme_file_path( "dist/blocks/$path/style-index.css" );
-		$src      = get_theme_file_uri( "dist/blocks/$path/style-index.css" );
 
 		if ( ! file_exists( $src_path ) ) {
 			return;
 		}
 
-		if ( ! empty( $version ) ) {
-			$src = $src . '?ver=' . $version;
+		if ( is_admin() ) {
+			$src = get_theme_file_uri( "dist/blocks/$path/style-index.css" );
+
+			wp_enqueue_style(
+				"tribe-$block",
+				$src,
+				[],
+				$args['version'] ?? false,
+				'all'
+			);
+
+			return;
 		}
 
-		wp_add_inline_style( $handle, file_get_contents( $src_path ) );
-		add_editor_style( $src );
+		$css = file_get_contents( $src_path );
+
+		if ( $css === false ) {
+			return;
+		}
+
+		$core_handle = $this->get_block_style_handle();
+
+		if ( ! wp_style_is( $core_handle, 'registered' ) ) {
+			_doing_it_wrong(
+				__METHOD__,
+				sprintf(
+					'Extended block "%1$s" has no registered stylesheet handle "%2$s" when attaching front-end styles. Override get_block_style_handle() to match the block\'s registered style, or ensure the block registers its stylesheet on init before wp_enqueue_scripts.',
+					$this->get_block_name(),
+					$core_handle
+				),
+				''
+			);
+
+			return;
+		}
+
+		wp_add_inline_style( $core_handle, $css );
 	}
 
 	/**
@@ -94,27 +127,36 @@ abstract class Block_Base {
 	 *
 	 * These are the editor specific style overrides for the block.
 	 * Styles are added as a `<link>` file for both block & site editor regardless of if it is inline or iframed.
-	 * Additionally, the selectors are prefixed with `.editor-styles-wrapper` in the editors.
 	 */
 	public function enqueue_core_block_editor_styles(): void {
-		$path            = $this->get_block_path();
-		$args            = $this->get_asset_file_args( get_theme_file_path( "dist/blocks/$path/editor.asset.php" ) );
-		$version         = $args['version'] ?? false;
-		$editor_src_path = get_theme_file_path( "dist/blocks/$path/editor.css" );
-		$editor_src      = get_theme_file_uri( "dist/blocks/$path/editor.css" );
-
-		if ( ! file_exists( $editor_src_path ) ) {
+		if ( ! is_admin() ) {
 			return;
 		}
 
-		if ( ! empty( $version ) ) {
-			$editor_src = $editor_src . '?ver=' . $version;
+		$block    = $this->get_block_handle();
+		$path     = $this->get_block_path();
+		$args     = $this->get_asset_file_args( get_theme_file_path( "dist/blocks/$path/editor.asset.php" ) );
+		$src_path = get_theme_file_path( "dist/blocks/$path/editor.css" );
+		$src      = get_theme_file_uri( "dist/blocks/$path/editor.css" );
+
+		if ( ! file_exists( $src_path ) ) {
+			return;
 		}
 
-		add_editor_style( $editor_src );
+		wp_enqueue_style(
+			"tribe-editor-$block",
+			$src,
+			[],
+			$args['version'] ?? false,
+			'all'
+		);
 	}
 
 	public function enqueue_core_block_editor_scripts(): void {
+		if ( ! is_admin() ) {
+			return;
+		}
+
 		$block    = $this->get_block_handle();
 		$path     = $this->get_block_path();
 		$args     = $this->get_asset_file_args( get_theme_file_path( "dist/blocks/$path/editor.asset.php" ) );
@@ -126,7 +168,7 @@ abstract class Block_Base {
 		}
 
 		wp_enqueue_script(
-			"admin-$block-scripts",
+			"tribe-editor-$block",
 			$src,
 			$args['dependencies'] ?? [],
 			$args['version'] ?? false,

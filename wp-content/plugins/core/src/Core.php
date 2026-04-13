@@ -34,6 +34,7 @@ class Core {
 		// Post Types
 		Post_Types\Page\Page_Subscriber::class,
 		Post_Types\Training\Training_Subscriber::class,
+		Post_Types\Announcement\Announcement_Subscriber::class,
 	];
 
 	private static self $instance;

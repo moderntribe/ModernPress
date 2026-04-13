@@ -8,17 +8,9 @@
 	"icon": "align-pull-right",
 	"description": "Tab content displayed vertically",
 	"attributes": {
-		"blockUpdated": {
-			"type": "string",
-			"default": ""
-		},
 		"currentActiveTabInstanceId": {
 			"type": "string",
 			"default": ""
-		},
-		"tabs": {
-			"type": "array",
-			"default": []
 		}
 	},
 	"supports": {

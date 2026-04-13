@@ -1,0 +1,22 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Announcements - Styles - Editor Only
+ *
+ * ------------------------------------------------------------------------- */
+
+.b-announcement {
+	display: flex;
+}
+
+.b-announcement__inner {
+	--announcement-dismiss-width: 32px;
+
+	/* only add padding if the dismiss button is present */
+	.b-announcement:has(.b-announcement__dismiss-wrapper) & {
+		padding-right: calc(var(--announcement-dismiss-width) + var(--spacer-30)); /* stylelint-disable-line */
+	}
+
+	@media (--mq-navigation) {
+		--announcement-dismiss-width: 106px;
+	}
+}
