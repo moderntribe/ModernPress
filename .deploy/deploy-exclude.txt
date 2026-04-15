@@ -3,6 +3,7 @@
 .editorconfig
 .env
 .env.sample
+.env.testing.slic
 .eslintrc
 .git
 .github/
@@ -17,7 +18,11 @@
 .stylelintrc
 .vscode
 *.exe
+/auth.template.json
 browsersync.config.js
+codeception.dist.yml
+/composer.json
+/composer.lock
 deploy
 dev
 dev_components
@@ -27,9 +32,13 @@ lefthook.yml
 local-config-sample.*
 local-config.*
 node_modules
+/package-lock.json
+/package.json
 phpcs.xml*
 phpstan.neon*
+postcss.config.js
 Procfile
+webpack.config.js
 wp-config.php
 wp-content/debug.log
 wp-content/object-cache.php

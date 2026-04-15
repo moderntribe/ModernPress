@@ -3,7 +3,7 @@
  *
  * @description handles creating WP controls given an object of settings
  *
- * @see https://github.com/moderntribe/moose/tree/main/docs/create-wp-controls-script.md
+ * @see https://github.com/moderntribe/modernpress/tree/main/docs/create-wp-controls-script.md
  */
 
 import { InspectorControls } from '@wordpress/block-editor';

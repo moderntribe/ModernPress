@@ -13,7 +13,7 @@ class Block_Registrar {
 		 * @todo BE to look into if we can edit this in a way where we can pull tribe/ custom blocks
 		 * as well instead of only ACF custom blocks.
 		 *
-		 * @see https://github.com/moderntribe/moose/pull/63#discussion_r1269701151
+		 * @see https://github.com/moderntribe/modernpress/pull/63#discussion_r1269701151
 		 */
 		if ( ! str_contains( $block_name, 'tribe' ) ) {
 			$args = [

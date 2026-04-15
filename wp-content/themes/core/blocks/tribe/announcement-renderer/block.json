@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "tribe/announcement-renderer",
+	"version": "0.1.0",
+	"title": "Announcement Renderer",
+	"category": "theme",
+	"icon": "block-default",
+	"description": "A dynamic block to render CPT Announcements",
+	"attributes": {
+		"placement": {
+			"type": "string",
+			"default": "top"
+		}
+	},
+	"supports": {
+		"html": false,
+		"alignCustom": [ "wide", "grid", "full" ],
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"textdomain": "tribe",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"render": "file:./render.php"
+}

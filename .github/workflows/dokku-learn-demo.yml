@@ -1,7 +1,7 @@
 name: 'Dokku Deploy: Learn Demo'
 
 # Manually deploys to the learn.tri.be demo environment.
-# This environment is used to showcase and create demo videos of Moose.
+# This environment is used to showcase and create demo videos of ModernPress.
 
 on:
   workflow_dispatch:

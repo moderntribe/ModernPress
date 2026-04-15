@@ -1,12 +1,12 @@
-## Color Picker (Moose)
+## Color Picker
 
 Provides a predefined color palette and stores the slug (e.g. white, blue) instead of a hex code. Works with ACF via Extended ACF.
 
 ### Add a Color Picker field
 ```php 
-use Extended\ACF\Fields\ColorPickerMoose;
+use Extended\ACF\Fields\ColorPickerTribe;
 
-ColorPickerMoose::make('Header background color', 'page_header_bg_color')
+ColorPickerTribe::make('Header background color', 'page_header_bg_color')
 ->colors([
 'white' => '#ffffff',
 'black' => '#000000',
