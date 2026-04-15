@@ -1,0 +1,87 @@
+.fdate-input {
+    outline: none;
+}
+
+.fdate-wrap {
+    width: 300px;
+    display: none;
+    background: #fff;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    user-select: none;
+    -webkit-user-select: none;
+    z-index: 10000;
+}
+
+.fdate-wrap.opened {
+    display: block;
+}
+
+.fdate-wrap .disabled {
+    opacity: 0.1;
+}
+
+.fdate-nav {
+    display: grid;
+    grid-template-columns: 1fr 5fr 1fr;
+}
+
+.fdate-nav > div,
+.fdate-clear {
+    padding: 10px 0;
+    text-align: center;
+    cursor: pointer;
+}
+
+.fdate-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    text-align: center;
+}
+
+.fdate-grid.grid-day {
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.fdate-grid > div {
+    padding: 20px 0;
+    opacity: 0.3;
+}
+
+.fdate-grid > div:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.fdate-grid .fdate-day {
+    padding: 8px 0;
+}
+
+.fdate-grid .weekday,
+.fdate-grid .inner {
+    opacity: 1;
+}
+
+.fdate-grid .today {
+    background-color: #F8F8F8;
+}
+
+.fdate-grid .selected {
+    background-color: #DDD6FE;
+}
+
+.fdate-day.weekday {
+    font-weight: bold;
+    padding-top: 0;
+}
+
+.fdate-grid .weekday:hover,
+.fdate-grid .disabled:hover {
+    background-color: transparent;
+    cursor: default;
+}
+
+.fdate-wrap .disabled:hover {
+    cursor: not-allowed;
+}
