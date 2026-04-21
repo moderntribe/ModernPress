@@ -40,25 +40,6 @@ Xdebug **3** uses **port 9003** by default (not 9000). Configure your IDE to lis
 
 ---
 
-## Composer commands for IDE debugging
-
-The repo ships two **optional** Composer scripts that copy or inject shared debug-related IDE settings. **Both can overwrite what you already have** in the paths below. If you customized those files or sections, back them up or merge your changes after running a script.
-
-### `composer run phpstorm-workspace-php-debug`
-
-Updates **only** **`.idea/workspace.xml`**, by adding or replacing the **PhpStorm** **PhpServers** block (path mappings such as project root → **`/app`**). If **PhpServers** already exists and differs from the project default, the script **asks for confirmation** before replacing it; in a non-interactive shell (no TTY), set **`PHPSTORM_PHP_DEBUG_OVERWRITE=1`** or the update is refused. Close PhpStorm first so it does not rewrite **`workspace.xml`** when the IDE exits.
-
-### `composer run sync-vscode-launch`
-
-Copies **`dev/configs/.vscode/launch.json`** to **`.vscode/launch.json`** at the project root and creates **`.vscode`** if it is missing. **Running this replaces the whole file** if **`.vscode/launch.json`** already exists.
-
-**Visual Studio Code** and **Cursor** need the **PHP Debug** extension by Xdebug (**extension id** **`xdebug.php-debug`**) as a **minimum** to use the Xdebug listen / launch definitions in that file—the editor cannot drive those configurations without it. Xdebug still runs inside **Lando**; the extension only connects the IDE to the debugger.
-
-* [PHP Debug — Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=xdebug.php-debug)
-* [PHP Debug — Open VSX](https://open-vsx.org/extension/xdebug/php-debug) (often used by Cursor and other VS Code–compatible editors)
-
----
-
 ## PhpStorm
 
 Official reference: [Debug PHP with PhpStorm](https://www.jetbrains.com/help/phpstorm/debugging-php.html) and [Zero-configuration debugging](https://www.jetbrains.com/help/phpstorm/zero-configuration-debugging.html).
@@ -68,6 +49,10 @@ Official reference: [Debug PHP with PhpStorm](https://www.jetbrains.com/help/php
 PhpStorm includes PHP and Xdebug support; install PhpStorm from [JetBrains](https://www.jetbrains.com/phpstorm/download/). No separate Xdebug install is required on your Mac—Xdebug runs **inside** the Lando PHP container.
 
 ### Configure
+
+You can configure everything **manually** in PhpStorm (steps below), **or** from the project root run **`composer run phpstorm-workspace-php-debug`** to inject the team’s **basic PhpServers** block (project root → **`/app`**) into **`.idea/workspace.xml`**. You still need to set port **9003**, start listening, and match host/port to your Lando URL—those are not written by the script. Close PhpStorm before running the Composer command so it does not overwrite **`workspace.xml`** on exit.
+
+If **PhpServers** already exists and differs from the project default, the script **prompts** before replacing it; in a non-interactive shell set **`PHPSTORM_PHP_DEBUG_OVERWRITE=1`**. Back up or merge **`.idea/workspace.xml`** if you rely on custom **PhpServers** settings.
 
 1. **PHP interpreter (optional check)**  
    **Settings → PHP**. You can use a local PHP or skip remote CLI if you only debug web requests via Lando.
@@ -79,8 +64,7 @@ PhpStorm includes PHP and Xdebug support; install PhpStorm from [JetBrains](http
    Start **Listen for PHP Debug Connections** (toolbar telephone icon, or **Run → Start Listening for PHP Debug Connections**).
 
 4. **Server and path mappings**  
-   **Settings → PHP → Servers**: add a server whose **host** and **port** match the URL you open in the browser (from `lando info`). Enable **Use path mappings** and map your project root to **`/app`**.  
-   Alternatively, from the project root you can run **`composer run phpstorm-workspace-php-debug`** to inject the team **PhpServers** snippet into **`.idea/workspace.xml`** (see [Composer commands for IDE debugging](#composer-commands-for-ide-debugging)—this can overwrite an existing **PhpServers** block).
+   **Settings → PHP → Servers**: add a server whose **host** and **port** match the URL you open in the browser (from `lando info`). Enable **Use path mappings** and map your project root to **`/app`**, **or** use **`composer run phpstorm-workspace-php-debug`** as described above instead of entering **PhpServers** by hand.
 
 5. **IDE key (if you use a browser extension)**  
    **Settings → PHP → Debug → DBGp Proxy**: set the **IDE key** (for example `PHPSTORM`) and enter the same value in the browser extension so the session matches.
@@ -99,13 +83,15 @@ PhpStorm includes PHP and Xdebug support; install PhpStorm from [JetBrains](http
 ### Install
 
 1. Install [Visual Studio Code](https://code.visualstudio.com/).
-2. Install the **PHP Debug** extension by Xdebug (**extension id** **`xdebug.php-debug`**). It is **required** if you use the repo’s **`launch.json`** Xdebug configurations ([Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=xdebug.php-debug)). Extension documentation: [vscode-php-debug](https://github.com/xdebug/vscode-php-debug).
+2. Install the **PHP Debug** extension by Xdebug (**extension id** **`xdebug.php-debug`**). It is **required** to use the Xdebug listen / launch definitions in **`launch.json`** ([Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=xdebug.php-debug)). Extension documentation: [vscode-php-debug](https://github.com/xdebug/vscode-php-debug).
 
 Xdebug itself still runs only in the **Lando** container; the extension connects from VS Code to that debug session.
 
 ### Configure `launch.json`
 
-From the project root, **`composer run sync-vscode-launch`** copies **`dev/configs/.vscode/launch.json`** into **`.vscode/launch.json`** (see [Composer commands for IDE debugging](#composer-commands-for-ide-debugging)—**this overwrites** an existing **`.vscode/launch.json`**). Or add a configuration manually. Example **Listen for Xdebug** setup (adjust **`pathMappings`** if your workspace root differs):
+You can maintain `.vscode/launch.json` entirely by hand, **or** from the project root run **`composer run sync-vscode-launch`** to copy **`dev/configs/.vscode/launch.json`** into **`.vscode/launch.json`** (creates **`.vscode`** if needed). That gives you the repo’s **basic** listen / path-mapping setup in one step. **Running the command replaces the whole file** if **`.vscode/launch.json`** already exists—back it up first if you have custom configurations.
+
+If you prefer to edit manually, use something like the following **Listen for Xdebug** example (adjust **`pathMappings`** if your workspace root differs):
 
 ```json
 {
@@ -139,7 +125,7 @@ Lando-specific notes and examples: [Using Lando with VS Code](https://docs.lando
 
 ## Cursor
 
-There is no separate Xdebug stack for Cursor. Cursor is a [VS Code–compatible editor](https://cursor.com/), so you use the **same** approach as in [Visual Studio Code](#visual-studio-code): install the **PHP Debug** extension (**`xdebug.php-debug`**; [Open VSX listing](https://open-vsx.org/extension/xdebug/php-debug)), run **`composer run sync-vscode-launch`** if you want the shared **`.vscode/launch.json`** (overwrites an existing file—see [Composer commands for IDE debugging](#composer-commands-for-ide-debugging)), or add the same **`launch.json`** listen configuration (port **9003**, `pathMappings` from **`/app`** to **`${workspaceFolder}`**). Then run **`lando xdebug-on`**, start the listener, and trigger a request from the browser.
+There is no separate Xdebug stack for Cursor. Cursor is a [VS Code–compatible editor](https://cursor.com/), so you follow the **same** model as [Visual Studio Code](#visual-studio-code): install the **PHP Debug** extension (**`xdebug.php-debug`**; [Open VSX listing](https://open-vsx.org/extension/xdebug/php-debug)), then either **manually** add the **`launch.json`** listen configuration (port **9003**, `pathMappings` from **`/app`** to **`${workspaceFolder}`**) **or** run **`composer run sync-vscode-launch`** from the project root to copy the repo’s **`launch.json`** into **`.vscode/`** (same overwrite warning as in the VS Code section). Then run **`lando xdebug-on`**, start the listener, and trigger a request from the browser.
 
 Install extensions from Cursor’s **Extensions** view (Cursor may pull from its own marketplace or Open VSX depending on version). If an extension is missing from search, see [Cursor documentation](https://docs.cursor.com/) (including migration / troubleshooting for VS Code parity).
 
