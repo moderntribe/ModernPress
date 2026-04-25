@@ -1,0 +1,18 @@
+{
+	"name": "pattern-sync/pattern-sync",
+	"description": "Sync registered block patterns between WordPress installations.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=8.2",
+		"php-di/php-di": "^7.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"PatternSync\\": "src/"
+		}
+	},
+	"config": {
+		"sort-packages": true
+	}
+}
