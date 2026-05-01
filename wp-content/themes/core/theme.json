@@ -24,11 +24,6 @@
 		],
 		"appearanceTools": true,
 		"blocks": {
-			"core/buttons": {
-				"spacing": {
-					"blockGap": true
-				}
-			},
 			"core/button": {
 				"border": {
 					"color": false,
@@ -37,7 +32,9 @@
 					"width": false
 				},
 				"color": {
-					"text": false
+					"text": false,
+					"background": false,
+					"gradients": []
 				},
 				"shadow": [],
 				"spacing": {
@@ -45,46 +42,58 @@
 				},
 				"typography": {
 					"fontFamilies": [],
+					"customFontSize": false,
 					"fontSizes": [],
-					"textTransform": false
-				}
-			},
-			"core/columns": {
-				"spacing": {
-					"blockGap": true
+					"textTransform": false,
+					"fontWeight": false,
+					"fontStyle": false,
+					"lineHeight": false,
+					"letterSpacing": false,
+					"textDecoration": false
 				}
 			},
 			"core/group": {
-				"spacing": {
-					"blockGap": true
-				}
-			},
-			"core/navigation": {
-				"spacing": {
-					"blockGap": true
+				"color": {
+					"button": false,
+					"link": false
 				}
 			},
 			"core/post-template": {
 				"spacing": {
-					"blockGap": true
+					"blockGap": false
 				}
 			},
-			"core/social-links": {
-				"spacing": {
-					"blockGap": true
+			"core/query-pagination": {
+				"color": {
+					"link": false,
+					"text": false
 				}
 			},
-			"outermost/social-sharing": {
-				"spacing": {
-					"blockGap": true
+			"core/table": {
+				"color": {
+					"background": false,
+					"text": false
 				}
 			}
 		},
 		"color": {
+			"customDuotone": false,
 			"defaultGradients": false,
 			"defaultPalette": false,
+			"defaultDuotone": false,
 			"duotone": [],
-			"gradients": [],
+			"gradients": [
+				{
+					"slug": "simple-black-horizontal",
+					"name": "Simple horizontal gradient from transparent to black",
+					"gradient": "linear-gradient(90deg,rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)"
+				},
+				{
+					"slug": "simple-black-vertical",
+					"name": "Simple vertical gradient from transparent to black",
+					"gradient": "linear-gradient(180deg,rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)"
+				}
+			],
 			"palette": [
 				{
 					"color": "#3050E5",
