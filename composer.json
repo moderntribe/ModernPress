@@ -128,6 +128,7 @@
 		"wpackagist-plugin/duplicate-post": "^4.5",
 		"wpackagist-plugin/safe-svg": "^2.4",
 		"wpackagist-plugin/social-sharing-block": "^1.0",
+		"wpackagist-plugin/view-transitions": "^1.2",
 		"wpengine/advanced-custom-fields-pro": "^6.4"
 	},
 	"extra": {

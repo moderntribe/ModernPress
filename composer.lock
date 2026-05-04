@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "998619edfc3ee11610a0c81667810c0a",
+    "content-hash": "52349d61c335308c51483784c1d6d03b",
     "packages": [
         {
             "name": "block-editor-custom-alignments/block-editor-custom-alignments",
@@ -6122,6 +6122,24 @@
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/social-sharing-block/"
+        },
+        {
+            "name": "wpackagist-plugin/view-transitions",
+            "version": "1.2.0",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/view-transitions/",
+                "reference": "tags/1.2.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/view-transitions.1.2.0.zip"
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/view-transitions/"
         },
         {
             "name": "wpengine/advanced-custom-fields-pro",
