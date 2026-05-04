@@ -18,6 +18,7 @@ import { createHigherOrderComponent } from '@wordpress/compose';
 import { Fragment } from '@wordpress/element';
 import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
+import { cleanForSlug } from '@wordpress/url';
 
 const state = {
 	settings: {},
@@ -28,23 +29,6 @@ const DEFAULT_PANEL_TITLE = __( 'Custom Block Settings', 'tribe' );
 
 /** Groups that render controls inside a PanelBody; all others render controls directly. */
 const GROUPS_WITH_PANEL = [ 'default', 'styles' ];
-
-/**
- * Slugifies a string for safe use in class names (e.g. "Full Width" → "full-width").
- *
- * @param {string} value - Raw value to slugify.
- * @return {string} Slugified string.
- */
-const slugify = ( value ) => {
-	if ( typeof value !== 'string' ) {
-		return String( value );
-	}
-	return value
-		.trim()
-		.toLowerCase()
-		.replace( /\s+/g, '-' )
-		.replace( /[^a-z0-9-]/g, '' );
-};
 
 /**
  * Whether the control's current value should apply its class/style ("active").
@@ -92,7 +76,7 @@ const getClassesForControl = ( control, value ) => {
 			return [ control.applyClass ];
 		case 'select':
 			return [
-				`${ control.applyClass }-${ slugify( String( value ) ) }`,
+				`${ control.applyClass }-${ cleanForSlug( String( value ) ) }`,
 			];
 		default:
 			return [ control.applyClass ];
