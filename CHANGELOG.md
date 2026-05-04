@@ -4,7 +4,12 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.05]
+
+- Added: View Transitions plugin.
+
 ## [2026.04]
+
 - Updated: all plugins, composer & npm packages to latest; pin React to v18 as an override to resolve conflicts between ` @dnd-kit/core` and `@wordpress/icons`; pin several other packages to newer versions to resolve security warnings.
 
 ## [2026.03]
@@ -23,6 +28,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - Added: XDebug documentation
 
 ## [2026.02]
+
 - Added: `moderntribe/tribe_embed` composer package v1.1.0.
 - Updated: Renamed "Moose" to "ModernPress" across the project (excluding Lando configs and deployment pipelines).
 - Updated: Expected PHP version to v8.4, Node version to v24 LTS
