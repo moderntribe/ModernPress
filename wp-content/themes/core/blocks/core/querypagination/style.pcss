@@ -21,6 +21,22 @@
 			color: var(--pagination-link-hover-color);
 		}
 	}
+
+	/* Handles mobile and desktop pagination variants using dedicated modifier classes */
+	&.b-pagination-desktop {
+		display: none;
+	}
+
+	@media (--mq-tablet) {
+
+		&.b-pagination-mobile {
+			display: none;
+		}
+
+		&.b-pagination-desktop {
+			display: flex;
+		}
+	}
 }
 
 /* -----------------------------------------------------------------------
@@ -32,6 +48,11 @@
 	align-items: center;
 	gap: 0 var(--spacer-20);
 	margin: 0;
+
+	/* Reduce the space between numbers on tiny screens */
+	@media (max-width: 376px) {
+		gap: 0 var(--spacer-10);
+	}
 
 	.page-numbers {
 		line-height: 1;
@@ -49,7 +70,9 @@
 
 		/* Current page indicator */
 		&.current {
-			background-color: var(--pagination-numbers-current-background-color);
+			background-color: var(
+				--pagination-numbers-current-background-color
+			);
 			color: var(--pagination-numbers-current-color);
 		}
 	}

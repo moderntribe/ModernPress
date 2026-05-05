@@ -11,11 +11,12 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 ## [2026.04]
 
 - Updated: all plugins, composer & npm packages to latest; pin React to v18 as an override to resolve conflicts between ` @dnd-kit/core` and `@wordpress/icons`; pin several other packages to newer versions to resolve security warnings.
+- Updated: Archive, index, and search templates now use dedicated mobile and desktop pagination variants for improved responsive layouts. [MOOSE-348](https://moderntribe.atlassian.net/browse/MOOSE-348)
 
 ## [2026.03]
 
-- Updated: Asset enqueuing for core blocks should now allow block scripts & styles to properly render across the FE & editor. 
-- Updated: Refactor Horizontal Tabs block into a dynamic block. Add reordering functionality. 
+- Updated: Asset enqueuing for core blocks should now allow block scripts & styles to properly render across the FE & editor.
+- Updated: Refactor Horizontal Tabs block into a dynamic block. Add reordering functionality.
 - Updated: Refactor Vertical Tabs block to dynamic block; allow sorting.
 - Updated: All blocks that use the `ServerSideRender` package now properly pull from the named import instead of the default import (deprecated).
 - Updated: Image / Image Overlay blocks now use a shared `MediaImageControl` component instead of adding the media control separately.
@@ -45,7 +46,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.01]
 
-- Updated: Interactive card blocks now use the animated underline on the title element on hover. 
+- Updated: Interactive card blocks now use the animated underline on the title element on hover.
 - Fixed: Vertical Tabs block now scrolls the selected tab into view on mobile, respecting reduced motion preferences. [MOOSE-333](https://moderntribe.atlassian.net/browse/MOOSE-333)
 - Fixed: Removed top margin from spacer block
 - Added: Yoast Duplicate Post plugin v4.5 for easier content duplication in the editor.
@@ -111,10 +112,10 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2025.01]
 - Chore: WordPress plugin updates, Composer & NPM package updates.
-- Updated: Inline link styling should now apply to all links inside the post content block that do not have a 
+- Updated: Inline link styling should now apply to all links inside the post content block that do not have a
   class assigned to them. This should exclude things like buttons & navigation.
 - Added: `Admin_Menu_Order` class to handle reordering the WP Admin menu items that Moose loads with by default.
-  This also includes Yoast SEO & RankMath, just in case either are used by default. 
+  This also includes Yoast SEO & RankMath, just in case either are used by default.
 - Added: Node service to Lando so FE assets can be built automatically on start up.
 - Updated: project start up scripts to automatically generate the correct contents of the lcoal config files.
 - Updated: script to install WordPress so we can use a version constant and not install WP every time composer is
