@@ -40,6 +40,8 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - Updated: `npm run create-block` script template files updated.
 - Added: New Accordion block styling
 - Added: support for custom ACF Color Picker field integration.
+- Updated: `theme.json` border controls are now enabled only for `core/group`, `core/columns`, and `core/cover`.
+- Fixed: Block editor panel label now shows "Border & Shadow" via a centralized editor filter workaround for [Gutenberg issue #60192](https://github.com/WordPress/gutenberg/issues/60192).
 - Removed: Details block styling
 - Fixed: pre-push git hooks running properly again.
 

@@ -6,6 +6,7 @@
 
 import blockAnimations from './block-animations';
 import colorPicker from './color-picker';
+import filters from './filters';
 
 /**
  * @function init
@@ -14,6 +15,7 @@ import colorPicker from './color-picker';
 
 const init = () => {
 	// initialize block animation controls in editor
+	filters();
 	blockAnimations();
 	colorPicker();
 

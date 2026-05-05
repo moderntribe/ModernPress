@@ -44,13 +44,22 @@
 				}
 			},
 			"core/columns": {
+				"border": {
+					"color": true,
+					"radius": true,
+					"style": true,
+					"width": true
+				},
 				"spacing": {
 					"blockGap": true
 				}
 			},
 			"core/cover": {
 				"border": {
-					"radius": true
+					"color": true,
+					"radius": true,
+					"style": true,
+					"width": true
 				}
 			},
 			"core/details": {
@@ -66,6 +75,13 @@
 				}
 			},
 			"core/group": {
+				"border": {
+					"color": true,
+					"radius": true,
+					"style": true,
+					"width": true
+				},
+				"shadow": true,
 				"color": {
 					"background": true
 				},
@@ -175,6 +191,12 @@
 					"blockGap": true
 				}
 			}
+		},
+		"border": {
+			"color": false,
+			"radius": false,
+			"style": false,
+			"width": false
 		},
 		"color": {
 			"background": false,
