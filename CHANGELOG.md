@@ -26,6 +26,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - Updated: Update force activation options. Force activate ACF Pro, Disable Emojis, Safe SVG on all envs
 - Fixed: XDebug config for lando
 - Added: XDebug documentation
+- Added: The core Heading block now contains an "Overline" style that's consistent with the style guide.
 
 ## [2026.02]
 
