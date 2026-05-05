@@ -3,7 +3,9 @@
 	"version": 3,
 	"slug": "white",
 	"title": "White",
-	"blockTypes": [ "core/group" ],
+	"blockTypes": [
+		"core/group"
+	],
 	"styles": {
 		"css": "--color-text-secondary: var(--color-neutral-50)",
 		"color": {
@@ -47,9 +49,6 @@
 					}
 				}
 			}
-		},
-		"spacing": {
-			"padding": "var(--group-themed-default-padding)"
 		}
 	}
 }
