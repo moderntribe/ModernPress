@@ -50,10 +50,6 @@ PhpStorm includes PHP and Xdebug support; install PhpStorm from [JetBrains](http
 
 ### Configure
 
-You can configure everything **manually** in PhpStorm (steps below), **or** from the project root run **`composer run phpstorm-workspace-php-debug`** to inject the team’s **basic PhpServers** block (project root → **`/app`**) into **`.idea/workspace.xml`**. You still need to set port **9003**, start listening, and match host/port to your Lando URL—those are not written by the script. Close PhpStorm before running the Composer command so it does not overwrite **`workspace.xml`** on exit.
-
-If **PhpServers** already exists and differs from the project default, the script **prompts** before replacing it; in a non-interactive shell set **`PHPSTORM_PHP_DEBUG_OVERWRITE=1`**. Back up or merge **`.idea/workspace.xml`** if you rely on custom **PhpServers** settings.
-
 1. **PHP interpreter (optional check)**  
    **Settings → PHP**. You can use a local PHP or skip remote CLI if you only debug web requests via Lando.
 
@@ -64,7 +60,7 @@ If **PhpServers** already exists and differs from the project default, the scrip
    Start **Listen for PHP Debug Connections** (toolbar telephone icon, or **Run → Start Listening for PHP Debug Connections**).
 
 4. **Server and path mappings**  
-   **Settings → PHP → Servers**: add a server whose **host** and **port** match the URL you open in the browser (from `lando info`). Enable **Use path mappings** and map your project root to **`/app`**, **or** use **`composer run phpstorm-workspace-php-debug`** as described above instead of entering **PhpServers** by hand.
+   **Settings → PHP → Servers**: add a server whose **host** and **port** match the URL you open in the browser (from `lando info`). Enable **Use path mappings** and map your **local project root** (repository root) to **`/app`** (the path inside the Lando container). PhpStorm stores **PhpServers** data inside **`.idea/workspace.xml`** (workspace-local settings).
 
 5. **IDE key (if you use a browser extension)**  
    **Settings → PHP → Debug → DBGp Proxy**: set the **IDE key** (for example `PHPSTORM`) and enter the same value in the browser extension so the session matches.
