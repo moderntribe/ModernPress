@@ -3,7 +3,9 @@
 	"version": 3,
 	"slug": "light",
 	"title": "Light",
-	"blockTypes": [ "core/group" ],
+	"blockTypes": [
+		"core/group"
+	],
 	"styles": {
 		"css": "--color-text-secondary: var(--color-neutral-50)",
 		"color": {
@@ -46,12 +48,6 @@
 						"text": "var(--color-white)"
 					}
 				}
-			}
-		},
-		"spacing": {
-			"padding": {
-				"top": "var(--group-themed-default-padding)",
-				"bottom": "var(--group-themed-default-padding)"
 			}
 		}
 	}

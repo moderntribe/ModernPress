@@ -3,7 +3,9 @@
 	"version": 3,
 	"slug": "brand",
 	"title": "Brand",
-	"blockTypes": [ "core/group" ],
+	"blockTypes": [
+		"core/group"
+	],
 	"styles": {
 		"css": "--color-text-secondary: var(--color-neutral-10)",
 		"color": {
@@ -46,12 +48,6 @@
 						"text": "var(--color-black)"
 					}
 				}
-			}
-		},
-		"spacing": {
-			"padding": {
-				"top": "var(--group-themed-default-padding)",
-				"bottom": "var(--group-themed-default-padding)"
 			}
 		}
 	}
