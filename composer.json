@@ -65,11 +65,11 @@
 			"type": "package",
 			"package": {
 				"name": "block-editor-custom-alignments/block-editor-custom-alignments",
-				"version": "1.1.1",
+				"version": "1.1.3",
 				"type": "wordpress-plugin",
 				"dist": {
 					"type": "zip",
-					"url": "https://github.com/moderntribe/block-editor-custom-alignments/releases/download/v1.1.1/block-editor-custom-alignments.1.1.1.zip"
+					"url": "https://github.com/moderntribe/block-editor-custom-alignments/releases/download/v1.1.3/block-editor-custom-alignments.1.1.3.zip"
 				},
 				"require": {
 					"ffraenz/private-composer-installer": "^5.0"
@@ -126,14 +126,12 @@
 		"wp-cli/wp-cli-bundle": "^2.12",
 		"wpackagist-plugin/disable-emojis": "^1.7",
 		"wpackagist-plugin/duplicate-post": "^4.5",
-		"wpackagist-plugin/limit-login-attempts-reloaded": "^2.26",
 		"wpackagist-plugin/safe-svg": "^2.4",
-		"wpackagist-plugin/seo-by-rank-math": "^1.0",
 		"wpackagist-plugin/social-sharing-block": "^1.0",
 		"wpengine/advanced-custom-fields-pro": "^6.4"
 	},
 	"extra": {
-		"wordpress-version": "6.9.1",
+		"wordpress-version": "6.9.4",
 		"installer-paths": {
 			"wp-content/plugins/{$name}": [
 				"type:wordpress-plugin"
