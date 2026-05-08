@@ -14,6 +14,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.03]
 
+- Updated: Remove added padding on the Group block entirely.
 - Updated: Asset enqueuing for core blocks should now allow block scripts & styles to properly render across the FE & editor. 
 - Updated: Refactor Horizontal Tabs block into a dynamic block. Add reordering functionality. 
 - Updated: Refactor Vertical Tabs block to dynamic block; allow sorting.
