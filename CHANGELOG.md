@@ -6,6 +6,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.05]
 
+- Updated: Announcement Renderer block adjusted to not be available in the inserter and attributes updated to actual values
 - Added: View Transitions plugin.
 
 ## [2026.04]
