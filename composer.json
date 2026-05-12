@@ -84,7 +84,7 @@
 				"type": "wordpress-plugin",
 				"dist": {
 					"type": "zip",
-					"url": "https://github.com/moderntribe/tribe-embeds/releases/download/v1.2-alpha/tribe-embed.1.1.1.zip"
+					"url": "https://github.com/moderntribe/tribe-embeds/releases/download/v1.2-alpha/tribe-embed.2.0.0.zip"
 				},
 				"require": {
 					"ffraenz/private-composer-installer": "^5.0"
@@ -128,6 +128,7 @@
 		"wpackagist-plugin/duplicate-post": "^4.5",
 		"wpackagist-plugin/safe-svg": "^2.4",
 		"wpackagist-plugin/social-sharing-block": "^1.0",
+		"wpackagist-plugin/view-transitions": "^1.2",
 		"wpengine/advanced-custom-fields-pro": "^6.4"
 	},
 	"extra": {

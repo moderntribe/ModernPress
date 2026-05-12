@@ -4,11 +4,18 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.05]
+
+- Updated: Announcement Renderer block adjusted to not be available in the inserter and attributes updated to actual values
+- Added: View Transitions plugin.
+
 ## [2026.04]
+
 - Updated: all plugins, composer & npm packages to latest; pin React to v18 as an override to resolve conflicts between ` @dnd-kit/core` and `@wordpress/icons`; pin several other packages to newer versions to resolve security warnings.
 
 ## [2026.03]
 
+- Updated: Remove added padding on the Group block entirely.
 - Updated: Asset enqueuing for core blocks should now allow block scripts & styles to properly render across the FE & editor. 
 - Updated: Refactor Horizontal Tabs block into a dynamic block. Add reordering functionality. 
 - Updated: Refactor Vertical Tabs block to dynamic block; allow sorting.
@@ -21,8 +28,11 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - Updated: Update force activation options. Force activate ACF Pro, Disable Emojis, Safe SVG on all envs
 - Fixed: XDebug config for lando
 - Added: XDebug documentation
+- Updated: The Create WP Controls utility and its docs; class handling for all control types, optional Inspector group/panel placement, conditional visibility,
+- Added: The core Heading block now contains an "Overline" style that's consistent with the style guide.
 
 ## [2026.02]
+
 - Added: `moderntribe/tribe_embed` composer package v1.1.0.
 - Updated: Renamed "Moose" to "ModernPress" across the project (excluding Lando configs and deployment pipelines).
 - Updated: Expected PHP version to v8.4, Node version to v24 LTS
