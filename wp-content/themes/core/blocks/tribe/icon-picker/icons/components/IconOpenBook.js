@@ -1,31 +1,32 @@
+import * as React from 'react';
 const SvgIconOpenBook = ( props ) => (
 	<svg
+		xmlns="http://www.w3.org/2000/svg"
 		width="1em"
 		height="1em"
-		viewBox="0 0 64 64"
 		fill="none"
-		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 64 64"
 		{ ...props }
 	>
 		<path
+			stroke="currentColor"
+			strokeMiterlimit={ 10 }
+			strokeWidth={ 2 }
 			d="M32 12v38"
-			stroke="currentColor"
-			strokeWidth={ 2 }
-			strokeMiterlimit={ 10 }
 		/>
 		<path
+			stroke="currentColor"
+			strokeLinecap="square"
+			strokeMiterlimit={ 10 }
+			strokeWidth={ 2 }
 			d="M62 14v44H2V14"
-			stroke="currentColor"
-			strokeWidth={ 2 }
-			strokeMiterlimit={ 10 }
-			strokeLinecap="square"
 		/>
 		<path
-			d="m10 6 22 6 22-6v38l-22 6-22-6V6Z"
 			stroke="currentColor"
-			strokeWidth={ 2 }
-			strokeMiterlimit={ 10 }
 			strokeLinecap="square"
+			strokeMiterlimit={ 10 }
+			strokeWidth={ 2 }
+			d="m10 6 22 6 22-6v38l-22 6-22-6z"
 		/>
 	</svg>
 );

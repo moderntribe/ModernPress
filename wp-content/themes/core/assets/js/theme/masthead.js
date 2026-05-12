@@ -5,9 +5,11 @@
  */
 
 import { HEADER_BREAKPOINT } from 'config/options.js';
+import globalState from 'config/state.js';
 import { triggerCustomEvent } from 'utils/events.js';
 
 const el = {
+	body: document.body,
 	header: document.querySelector( '.site-header' ),
 	navigation: document.querySelector( '.site-header__navigation' ),
 };
@@ -96,6 +98,8 @@ const handleResize = () => {
 		cloneElements();
 		createMobileMenu();
 	}
+
+	getHeaderHeight();
 };
 
 /**
@@ -120,6 +124,20 @@ const bindEvents = () => {
 };
 
 /**
+ * @function getHeaderHeight
+ *
+ * @description since the masthead is a dynamic height, we need to be able to offset the mobile menu using a CSS
+ *     property
+ */
+const getHeaderHeight = () => {
+	globalState.headerHeight = el.header.offsetHeight;
+	el.body.style.setProperty(
+		'--header-height',
+		globalState.headerHeight + 'px'
+	);
+};
+
+/**
  * @function init
  * @description Initializes the masthead by setting up elements, creating the mobile menu, and binding events.
  */
@@ -133,6 +151,7 @@ const init = () => {
 		createMobileMenu();
 	}
 
+	getHeaderHeight();
 	bindEvents();
 };
 
