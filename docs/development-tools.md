@@ -65,6 +65,9 @@ PhpStorm includes PHP and Xdebug support; install PhpStorm from [JetBrains](http
 5. **IDE key (if you use a browser extension)**  
    **Settings → PHP → Debug → DBGp Proxy**: set the **IDE key** (for example `PHPSTORM`) and enter the same value in the browser extension so the session matches.
 
+### Demo
+[Demo](https://www.loom.com/share/71e0b10f08094c08b1ed0a14d134d1a5)
+
 ### Typical workflow
 
 1. `lando start` then `lando xdebug-on`.
