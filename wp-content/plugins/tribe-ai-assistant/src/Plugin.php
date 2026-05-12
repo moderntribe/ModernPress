@@ -100,7 +100,7 @@ class Plugin {
 	 * @return void
 	 */
 	private function init_hooks(): void {
-		add_action( 'admin_menu', [ $this->settings_page, 'register_menu' ] );
+		add_action( 'admin_menu', [ $this->settings_page, 'add_menu_page' ] );
 		add_action( 'admin_init', [ $this->settings_page, 'register_settings' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this->assets_enqueuer, 'enqueue' ] );
 		add_action( 'rest_api_init', [ $this->rest_controller, 'register_routes' ] );
