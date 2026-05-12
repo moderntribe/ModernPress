@@ -65,12 +65,6 @@ class Settings_Page {
 			'tribe_ai_api_section'
 		);
 
-		add_settings_section(
-			'tribe_ai_cache_section',
-			__( 'Site Analysis Cache', 'tribe-ai-assistant' ),
-			[ $this, 'render_cache_section' ],
-			'tribe-ai-assistant'
-		);
 	}
 
 	/**
@@ -117,6 +111,7 @@ class Settings_Page {
 				submit_button( __( 'Save Settings', 'tribe-ai-assistant' ) );
 				?>
 			</form>
+			<?php $this->render_cache_section(); ?>
 		</div>
 		<?php
 	}
