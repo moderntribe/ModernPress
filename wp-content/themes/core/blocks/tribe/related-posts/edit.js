@@ -1,22 +1,16 @@
 import { __ } from '@wordpress/i18n';
+import { useMemo } from '@wordpress/element';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
-	FormTokenField,
 	PanelBody,
 	RangeControl,
 	SelectControl,
 	ToggleControl,
 } from '@wordpress/components';
 import { ServerSideRender } from '@wordpress/server-side-render';
-import { withSelect } from '@wordpress/data';
-
-const getPickerLabel = ( post ) => {
-	if ( post.pickerLabel ) {
-		return post.pickerLabel;
-	}
-
-	return post.value;
-};
+import { useSelect } from '@wordpress/data';
+import { store as coreDataStore } from '@wordpress/core-data';
+import PostSearchField from 'components/PostSearchField';
 
 const LATEST_ITEMS_VALUE = '__latest__';
 
@@ -36,9 +30,8 @@ const getEffectiveTaxonomySlug = ( taxonomies = [], taxonomySlug = '' ) => {
 	return taxonomies[ 0 ]?.slug ?? '';
 };
 
-function Edit( { props, postList, taxonomies } ) {
+export default function Edit( { attributes, isSelected, setAttributes } ) {
 	const blockProps = useBlockProps();
-	const { attributes, isSelected, setAttributes } = props;
 	const {
 		hasAutomaticSelection,
 		chosenPosts,
@@ -46,10 +39,35 @@ function Edit( { props, postList, taxonomies } ) {
 		taxonomySlug,
 		layout,
 	} = attributes;
+
+	const { taxonomies, currentPostId } = useSelect( ( select ) => {
+		const { getCurrentPostId, getCurrentPostType } =
+			select( 'core/editor' );
+		const currentType = getCurrentPostType();
+
+		let taxList = [];
+		if ( currentType ) {
+			const allTaxonomies =
+				select( coreDataStore ).getTaxonomies( {
+					type: currentType,
+					per_page: -1,
+				} ) ?? [];
+			taxList = allTaxonomies.filter(
+				( taxonomy ) => taxonomy.visibility?.show_in_rest !== false
+			);
+		}
+
+		return {
+			taxonomies: taxList,
+			currentPostId: getCurrentPostId(),
+		};
+	}, [] );
+
 	const effectiveTaxonomySlug = getEffectiveTaxonomySlug(
 		taxonomies,
 		taxonomySlug
 	);
+
 	const taxonomyOptions = [
 		{
 			label: __( 'Latest Items', 'tribe' ),
@@ -60,57 +78,14 @@ function Edit( { props, postList, taxonomies } ) {
 			value: taxonomy.slug,
 		} ) ),
 	];
-	const tokenValues = ( chosenPosts ?? [] ).map( ( chosenPost ) => {
-		if ( typeof chosenPost === 'string' ) {
-			return chosenPost;
-		}
 
-		const matchedPost = ( postList ?? [] ).find(
-			( post ) => post.id === chosenPost.id
-		);
-		if ( matchedPost ) {
-			return {
-				...chosenPost,
-				value: matchedPost.pickerLabel,
-			};
-		}
-
-		return chosenPost;
-	} );
+	const excludeIds = useMemo(
+		() => ( currentPostId ? [ currentPostId ] : [] ),
+		[ currentPostId ]
+	);
 
 	const setChosenPosts = ( selectedPosts ) => {
-		const newChosenPosts = selectedPosts
-			.map( ( selectedPost ) => {
-				/**
-				 * if we've already added a value, it will appear as an object
-				 * in this case, we can just return the existing object
-				 */
-				if ( typeof selectedPost !== 'string' ) {
-					return selectedPost;
-				}
-
-				/**
-				 * if this is a new value, it will appear as a string so we'll need to grab
-				 * the post object via the picker label shown in the suggestions list.
-				 */
-				const foundPost = ( postList ?? [] ).find(
-					( post ) => post.pickerLabel === selectedPost
-				);
-
-				if ( ! foundPost ) {
-					return false;
-				}
-
-				return {
-					value: foundPost.pickerLabel,
-					id: foundPost.id,
-				};
-			} )
-			.filter( Boolean );
-
-		setAttributes( {
-			chosenPosts: newChosenPosts,
-		} );
+		setAttributes( { chosenPosts: selectedPosts } );
 	};
 
 	return (
@@ -139,29 +114,17 @@ function Edit( { props, postList, taxonomies } ) {
 							} }
 							checked={ hasAutomaticSelection }
 						/>
-						{ ! hasAutomaticSelection && postList && (
-							<div style={ { marginBottom: '16px' } }>
-								<FormTokenField
-									__next40pxDefaultSize
-									__nextHasNoMarginBottom
-									__experimentalShowHowTo={ false }
-									label={ __(
-										'Manual Post Selection',
-										'tribe'
-									) }
-									suggestions={ ( postList ?? [] ).map(
-										getPickerLabel
-									) }
-									value={ tokenValues }
-									onChange={ ( tokens ) => {
-										setChosenPosts( tokens );
-									} }
-									placeholder={ __(
-										'Start typing to search for posts',
-										'tribe'
-									) }
-								/>
-							</div>
+						{ ! hasAutomaticSelection && (
+							<PostSearchField
+								label={ __( 'Manual Post Selection', 'tribe' ) }
+								placeholder={ __(
+									'Type to search for posts…',
+									'tribe'
+								) }
+								value={ chosenPosts }
+								onChange={ setChosenPosts }
+								excludeIds={ excludeIds }
+							/>
 						) }
 						{ hasAutomaticSelection && (
 							<>
@@ -225,51 +188,3 @@ function Edit( { props, postList, taxonomies } ) {
 		</div>
 	);
 }
-
-export default withSelect( ( select, ownProps ) => {
-	const { getEntityRecords, getPostTypes, getTaxonomies } = select( 'core' );
-	const { getCurrentPostId, getCurrentPostType } = select( 'core/editor' );
-	const currentPostId = getCurrentPostId();
-	const currentPostType = getCurrentPostType();
-
-	const EXCLUDED_TYPES = new Set( [
-		'attachment',
-		'page',
-		'wp_block',
-		'wp_template',
-		'wp_template_part',
-		'wp_navigation',
-	] );
-
-	const allPostTypes = getPostTypes( { per_page: -1 } ) ?? [];
-	const selectableTypes = allPostTypes.filter(
-		( type ) => type.viewable === true && ! EXCLUDED_TYPES.has( type.slug )
-	);
-	const taxonomies = currentPostType
-		? (
-				getTaxonomies( {
-					type: currentPostType,
-					per_page: -1,
-				} ) ?? []
-		  ).filter(
-				( taxonomy ) => taxonomy.visibility?.show_in_rest !== false
-		  )
-		: [];
-
-	const postList = selectableTypes.flatMap( ( type ) => {
-		const records = getEntityRecords( 'postType', type.slug, {
-			per_page: 100,
-			exclude: [ currentPostId ],
-		} );
-		return ( records ?? [] ).map( ( post ) => ( {
-			...post,
-			pickerLabel: `${ post.title.rendered } (${ type.labels.singular_name })`,
-		} ) );
-	} );
-
-	return {
-		props: ownProps,
-		postList,
-		taxonomies,
-	};
-} )( Edit );
