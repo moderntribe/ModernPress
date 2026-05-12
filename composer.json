@@ -46,13 +46,6 @@
 		"update-db": "Runs the wpcli command to update the WordPress database. This is sometimes required after a version update."
 	},
 	"repositories": {
-		"tribe-ai-assistant": {
-			"type": "path",
-			"url": "/tribe-ai-assistant",
-			"options": {
-				"symlink": true
-			}
-		},
 		"0": {
 			"type": "composer",
 			"url": "https://composer.gravity.io"
@@ -103,7 +96,6 @@
 	},
 	"require": {
 		"php": "^8.3",
-		"tribe/ai-assistant": "@dev",
 		"ext-exif": "*",
 		"ext-gd": "*",
 		"ext-intl": "*",
