@@ -131,7 +131,7 @@
 		"wpengine/advanced-custom-fields-pro": "^6.4"
 	},
 	"extra": {
-		"wordpress-version": "7.0-RC2",
+		"wordpress-version": "7.0-RC3",
 		"installer-paths": {
 			"wp-content/plugins/{$name}": [
 				"type:wordpress-plugin"
