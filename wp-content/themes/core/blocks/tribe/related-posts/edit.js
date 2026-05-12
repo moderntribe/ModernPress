@@ -10,7 +10,7 @@ import {
 import { ServerSideRender } from '@wordpress/server-side-render';
 import { useSelect } from '@wordpress/data';
 import { store as coreDataStore } from '@wordpress/core-data';
-import PostSearchField from '../../../assets/js/components/PostSearchField';
+import PostSearchField from 'components/PostSearchField';
 
 const LATEST_ITEMS_VALUE = '__latest__';
 
