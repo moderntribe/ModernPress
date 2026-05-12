@@ -1,26 +1,30 @@
 <?php declare(strict_types=1);
 
-namespace Tribe\Plugin\Blocks\Helpers;
+namespace Tribe\Plugin\Components\Blocks;
 
-use Tribe\Plugin\Templates\Traits\Primary_Term;
+use Tribe\Plugin\Components\Abstracts\Abstract_Block_Controller;
+use Tribe\Plugin\Components\Traits\Primary_Term;
+use Tribe\Plugin\Taxonomies\Category\Category;
 
-class Terms_Block {
+class Terms_Block_Controller extends Abstract_Block_Controller {
 
 	use Primary_Term;
 
-	private string $taxonomy        = 'category';
-	private bool $only_primary_term = false;
-	private bool $has_links         = false;
+	protected string $taxonomy;
+	protected bool $only_primary_term;
+	protected bool $has_links;
 
 	/**
 	 * @var \WP_Term[]
 	 */
-	private array $terms = [];
+	protected array $terms = [];
 
-	public function __construct( array $block_attributes ) {
-		$this->taxonomy          = $block_attributes['taxonomyToUse'] ?? 'category';
-		$this->only_primary_term = $block_attributes['onlyPrimaryTerm'] ?? false;
-		$this->has_links         = $block_attributes['hasLinks'] ?? false;
+	public function __construct( array $args = [] ) {
+		parent::__construct( $args );
+
+		$this->taxonomy          = $this->attributes['taxonomyToUse'] ?? Category::NAME;
+		$this->only_primary_term = $this->attributes['onlyPrimaryTerm'] ?? false;
+		$this->has_links         = $this->attributes['hasLinks'] ?? false;
 	}
 
 	/**

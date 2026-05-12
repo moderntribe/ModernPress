@@ -12,6 +12,15 @@
 			}
 		],
 		"_experimentalLayoutSorting": true,
+		"animationExcludes": [
+			"core/accordion",
+			"core/accordion-heading",
+			"core/accordion-panel",
+			"tribe/carousel-slide",
+			"tribe/horizontal-tab",
+			"tribe/logo-marquee",
+			"tribe/vertical-tab"
+		],
 		"blocks": {
 			"core/buttons": {
 				"spacing": {
@@ -407,6 +416,39 @@
 			"background": "var(--wp--preset--color--base-white)"
 		},
 		"blocks": {
+			"core/accordion-heading": {
+				"typography": {
+					"fontFamily": "var(--wp--preset--font-family--inter)",
+					"fontSize": "var(--wp--preset--font-size--30)",
+					"lineHeight": "1.4",
+					"fontWeight": "var(--wp--custom--font-weight--bold)"
+				}
+			},
+			"core/accordion-item": {
+				"border": {
+					"top": {
+						"color": "var(--color-border-secondary)",
+						"style": "solid",
+						"width": "1px"
+					},
+					"bottom": {
+						"color": "var(--color-border-secondary)",
+						"style": "solid",
+						"width": "1px"
+					}
+				}
+			},
+			"core/accordion-panel": {
+				"spacing": {
+					"margin": {
+						"top": "0",
+						"bottom": "0"
+					},
+					"padding": {
+						"bottom": "var(--wp--preset--spacing--40)"
+					}
+				}
+			},
 			"core/buttons": {
 				"spacing": {
 					"blockGap": "var(--wp--preset--spacing--30)"
@@ -418,32 +460,6 @@
 						"left": "var(--wp--style--root--padding-left)",
 						"right": "var(--wp--style--root--padding-right)"
 					}
-				}
-			},
-			"core/details": {
-				"border": {
-					"top": {
-						"color": "var(--wp--preset--color--base-black)",
-						"style": "solid",
-						"width": "1px"
-					},
-					"bottom": {
-						"color": "var(--wp--preset--color--base-black)",
-						"style": "solid",
-						"width": "1px"
-					}
-				},
-				"spacing": {
-					"padding": {
-						"top": "0",
-						"bottom": "0"
-					}
-				},
-				"typography": {
-					"fontFamily": "var(--wp--preset--font-family--inter)",
-					"fontSize": "var(--wp--preset--font-size--30)",
-					"lineHeight": "1.4",
-					"fontWeight": "var(--wp--custom--font-weight--bold)"
 				}
 			},
 			"core/embed": {
@@ -626,6 +642,14 @@
 					"margin": {
 						"top": "var(--wp--preset--spacing--40)",
 						"bottom": "var(--wp--preset--spacing--40)"
+					}
+				}
+			},
+			"core/spacer": {
+				"spacing": {
+					"margin": {
+						"top": "0",
+						"bottom": "0"
 					}
 				}
 			},

@@ -10,6 +10,11 @@
 	--horizontal-tabs-border-selected-color: var(--color-blue);
 	--horizontal-tabs-title-color: var(--color-black);
 	--horizontal-tabs-title-selected-color: var(--color-blue);
+
+	--horizontal-tabs-editor-border-color: var(--color-black);
+	--horizontal-tabs-editor-border-cutout: var(--color-white);
+	--horizontal-tabs-editor-delete-color: var(--color-black);
+	--horizontal-tabs-editor-delete-hover-color: var(--color-blue);
 }
 
 :--dark-themes {
@@ -17,4 +22,20 @@
 	--horizontal-tabs-border-selected-color: var(--color-white);
 	--horizontal-tabs-title-color: var(--color-white);
 	--horizontal-tabs-title-selected-color: var(--color-white);
+
+	--horizontal-tabs-editor-border-color: var(--color-white);
+	--horizontal-tabs-editor-delete-color: var(--color-white);
+	--horizontal-tabs-editor-delete-hover-color: var(--color-neutral-10);
+}
+
+:--light-theme {
+	--horizontal-tabs-editor-border-cutout: var(--color-neutral-10);
+}
+
+:--dark-theme {
+	--horizontal-tabs-editor-border-cutout: var(--color-black);
+}
+
+:--brand-theme {
+	--horizontal-tabs-editor-border-cutout: var(--color-blue);
 }

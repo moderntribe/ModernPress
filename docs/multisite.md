@@ -1,6 +1,6 @@
 # WordPress Multisite
 
-Moose supports WordPress Multisite installations. Both subdomain and subdirectory installations may be used.
+ModernPress supports WordPress Multisite installations. Both subdomain and subdirectory installations may be used.
 For more information about WordPress Multisite, see the [WordPress Codex](https://codex.wordpress.org/Create_A_Network).
 
 ## Enabling a Subdirectory Multisite

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Tribe\Plugin\Templates\Traits;
+namespace Tribe\Plugin\Components\Traits;
 
 use WP_Term;
 

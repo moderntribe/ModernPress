@@ -1,0 +1,20 @@
+name: 'Dokku Deploy: GUQ: NEW'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy_app:
+    uses: ./.github/workflows/pipeline-dokku.yml
+    with:
+      app_name: guq-new
+      branch: ${{ github.ref }}
+      server: d1.moderntribe.qa
+      is_review_app: false
+    secrets:
+      github_pat_token: ${{ secrets.GH_BOT_TOKEN }}
+      ssh_private_key: ${{ secrets.DOKKU_DEPLOY_KEY }}
+      slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
+      OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+      OP_VAULT: ${{ secrets.OP_VAULT }}
+      OP_ITEM: ${{ secrets.OP_ITEM }}

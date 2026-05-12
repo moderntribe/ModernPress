@@ -1,0 +1,23 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Accordion - Mixins
+ *
+ * Because we want to be able to apply the same styles on both hover and
+ * focus, we use a mixin to avoid code duplication.
+ *
+ * ------------------------------------------------------------------------- */
+
+@define-mixin accordion-hover-focus {
+
+	.wp-block-accordion-heading__toggle-title {
+
+		@mixin t-transparent-underline-hover;
+
+		/**
+		 * WP adds text-decoration: underline to the toggle title on hover
+		 * the only value we need to add back is the thickness
+		 * @see https://p.tri.be/i/RF6crT
+		 */
+		text-decoration-thickness: var(--text-decoration-thickness);
+	}
+}

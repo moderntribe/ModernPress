@@ -13,14 +13,14 @@ pre-push:
   parallel: true
   jobs:
     - name: phpcs
-      run: ./vendor/bin/phpcs -- {staged_files}
+      run: ./vendor/bin/phpcs {push_files}
       glob:
         - ".phpstorm.meta.php"
         - "local-config-sample.php"
         - "wp-config.php"
         - "wp-config-environment.php"
-        - "wp-content/themes/core/*.php"
-        - "wp-content/plugins/core/*.php"
+        - "wp-content/themes/core/**/*.php"
+        - "wp-content/plugins/core/**/*.php"
     - name: phpstan
       run: ./vendor/bin/phpstan analyse --memory-limit=-1
       glob:
@@ -28,24 +28,24 @@ pre-push:
         - "local-config-sample.php"
         - "wp-config.php"
         - "wp-config-environment.php"
-        - "wp-content/themes/core/*.php"
-        - "wp-content/plugins/core/*.php"
+        - "wp-content/themes/core/**/*.php"
+        - "wp-content/plugins/core/**/*.php"
     - name: lintcss
-      run: ./node_modules/.bin/wp-scripts lint-style {staged_files}
+      run: ./node_modules/.bin/wp-scripts lint-style {push_files}
       glob:
-        - "wp-content/themes/core/*.pcss"
+        - "wp-content/themes/core/**/*.pcss"
     - name: lintjs
-      run: ./node_modules/.bin/wp-scripts lint-js {staged_files}
+      run: ./node_modules/.bin/wp-scripts lint-js {push_files}
       glob:
-        - "wp-content/themes/core/*.js"
+        - "wp-content/themes/core/**/*.js"
     - name: lintconfigs
-      run: ./node_modules/.bin/wp-scripts lint-js {staged_files}
+      run: ./node_modules/.bin/wp-scripts lint-js {push_files}
       glob:
         - "browsersync.config.js"
         - "postcss.config.js"
         - "webpack.config.js"
     - name: lintpkgjson
-      run: ./node_modules/.bin/wp-scripts lint-pkg-json {staged_files}
+      run: ./node_modules/.bin/wp-scripts lint-pkg-json
       glob:
         - "package.json"
 

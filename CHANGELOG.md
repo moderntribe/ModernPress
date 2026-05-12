@@ -4,9 +4,61 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.05]
+
+- Updated: Announcement Renderer block adjusted to not be available in the inserter and attributes updated to actual values
+- Added: View Transitions plugin.
+
+## [2026.04]
+
+- Updated: all plugins, composer & npm packages to latest; pin React to v18 as an override to resolve conflicts between ` @dnd-kit/core` and `@wordpress/icons`; pin several other packages to newer versions to resolve security warnings.
+
+## [2026.03]
+
+- Updated: Remove added padding on the Group block entirely.
+- Updated: Asset enqueuing for core blocks should now allow block scripts & styles to properly render across the FE & editor. 
+- Updated: Refactor Horizontal Tabs block into a dynamic block. Add reordering functionality. 
+- Updated: Refactor Vertical Tabs block to dynamic block; allow sorting.
+- Updated: All blocks that use the `ServerSideRender` package now properly pull from the named import instead of the default import (deprecated).
+- Updated: Image / Image Overlay blocks now use a shared `MediaImageControl` component instead of adding the media control separately.
+- Updated: Admin menu order should now properly exclude predefined post types
+- Updated: Sticky Column block setting now respects masthead height.
+- Updated: Button block set to "Default" style now respects the "Width" setting.
+- Updated: Bump Block Editor Custom Alignments plugin to 1.1.3 to fix enqueuing warnings.
+- Updated: Update force activation options. Force activate ACF Pro, Disable Emojis, Safe SVG on all envs
+- Fixed: XDebug config for lando
+- Added: XDebug documentation
+- Updated: The Create WP Controls utility and its docs; class handling for all control types, optional Inspector group/panel placement, conditional visibility,
+- Added: The core Heading block now contains an "Overline" style that's consistent with the style guide.
+
+## [2026.02]
+
+- Added: `moderntribe/tribe_embed` composer package v1.1.0.
+- Updated: Renamed "Moose" to "ModernPress" across the project (excluding Lando configs and deployment pipelines).
+- Updated: Expected PHP version to v8.4, Node version to v24 LTS
+- Updated: WordPress to v6.9.1
+- Updated: All plugins, composer dependencies, and npm packages to latest versions.
+- Updated: Consistent theming across all usages.
+- Updated: `npm run create-block` script template files updated.
+- Added: New Accordion block styling
+- Added: support for custom ACF Color Picker field integration.
+- Removed: Details block styling
+- Fixed: pre-push git hooks running properly again.
+
+## [2026.01]
+
+- Updated: Interactive card blocks now use the animated underline on the title element on hover. 
+- Fixed: Vertical Tabs block now scrolls the selected tab into view on mobile, respecting reduced motion preferences. [MOOSE-333](https://moderntribe.atlassian.net/browse/MOOSE-333)
+- Fixed: Removed top margin from spacer block
+- Added: Yoast Duplicate Post plugin v4.5 for easier content duplication in the editor.
+- Updated: Dynamic blocks now pass data to PHP controller classes for processing, moving toward a more OOP/MVC approach.
+- Updated: Login logo styling
+- Updated: Typography utility class selectors are now more specific in order to override WP core default paragraphy / heading selectors.
+
 ## [2025.12]
 
 - Fixed: Image Card & Image Overlay Card blocks now properly pass animation attributes to the animation helper class.
+- Added: Inline Notice Block
 - Updated: Logo Marquee block now has updated padding between images & contains a range selector to adjust the marquee speed as needed.
 - Added: Caption elements in media blocks (Image, Video, Embed) are now contained to the content width.
 - Updated: Cleaned up core Details block with comments, consistent underline styling, and reordered `theme.json` styles for clarity.

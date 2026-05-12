@@ -1,0 +1,29 @@
+/* -------------------------------------------------------------------------
+ *
+ * Mixins: Cards
+ *
+ * ------------------------------------------------------------------------- */
+
+@define-mixin post-card-hover-focus {
+
+	.c-post-card__image img {
+		transform: scale(1.05);
+	}
+
+	.c-post-card__title {
+
+		@mixin t-animated-underline-hover;
+	}
+}
+
+@define-mixin search-card-hover-focus {
+
+	.c-search-card__image img {
+		transform: scale(1.05);
+	}
+
+	.c-search-card__title {
+
+		@mixin t-animated-underline-hover;
+	}
+}

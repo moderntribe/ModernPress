@@ -4,6 +4,8 @@
  *
  * ------------------------------------------------------------------------- */
 
+@import '_variables.pcss';
+
 /* always allow tab to be interacted with in editor */
 .b-vertical-tabs__tab {
 	pointer-events: auto !important;
@@ -18,4 +20,50 @@
 .b-vertical-tabs__editor-add-tab {
 	margin-left: calc(var(--spacer-30) + 3px);
 	margin-top: var(--spacer-30);
+}
+
+/* toolbar: handle + title (grows) + delete */
+.b-vertical-tabs__tab-toolbar {
+	gap: var(--spacer-10);
+	width: 100%;
+}
+
+.b-vertical-tabs__tab-toolbar-title {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.b-vertical-tabs__tab-drag-handle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	background: transparent;
+	color: var(--vertical-tabs-editor-grab-icon-color) !important;
+	cursor: grab;
+	opacity: 0.7;
+	flex-shrink: 0;
+
+	&:hover,
+	&:focus {
+		color: var(--vertical-tabs-editor-grab-icon-hover-color) !important;
+		opacity: 1;
+	}
+
+	&:active {
+		cursor: grabbing;
+	}
+}
+
+.b-vertical-tabs__tab-delete {
+	padding: 0 !important;
+	flex-shrink: 0;
+	color: var(--vertical-tabs-editor-delete-icon-color) !important;
+
+	&:hover,
+	&:focus {
+		color: var(--vertical-tabs-editor-delete-icon-hover-color) !important;
+	}
 }

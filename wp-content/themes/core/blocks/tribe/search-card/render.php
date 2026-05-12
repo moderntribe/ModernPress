@@ -1,12 +1,8 @@
 <?php declare(strict_types=1);
 
-use Tribe\Plugin\Blocks\Helpers\Block_Animation_Attributes;
-
 /**
  * @var array $attributes
  */
-
-$animation_attributes = new Block_Animation_Attributes( $attributes );
 
 /**
  * $_GET['editorPostId'] is set when the block is used in the editor via context
@@ -22,6 +18,6 @@ if ( ! $post_id ) {
 }
 
 get_template_part( 'components/cards/search', null, [
-	'post_id'              => $post_id,
-	'animation_attributes' => $animation_attributes,
+	'post_id'    => $post_id,
+	'attributes' => $attributes,
 ] );

@@ -64,15 +64,18 @@
 		transition: var(--transition);
 	}
 
-	&:hover,
+	@media (--has-hover) {
+
+		&:hover {
+
+			@mixin horizontal-tabs-tab-hover-focus;
+		}
+	}
+
 	&:focus:not(:focus-visible),
 	&[aria-selected="true"] {
-		color: var(--horizontal-tabs-title-selected-color);
 
-		&::after {
-			width: 100%;
-			background-color: var(--horizontal-tabs-border-selected-color);
-		}
+		@mixin horizontal-tabs-tab-hover-focus;
 	}
 
 	&:focus-visible {

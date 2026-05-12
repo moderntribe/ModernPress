@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
-use Tribe\Plugin\Blocks\Helpers\Block_Animation_Attributes;
-use Tribe\Plugin\Blocks\Helpers\Terms_Block;
+use Tribe\Plugin\Components\Blocks\Terms_Block_Controller;
 
 /**
  * All of the parameters passed to the function where this file is being required are accessible in this scope:
@@ -11,18 +10,19 @@ use Tribe\Plugin\Blocks\Helpers\Terms_Block;
  * @var \WP_Block $block          The instance of the WP_Block class that represents the block being rendered.
  */
 
-$animation_attributes = new Block_Animation_Attributes( $attributes );
-$terms_block          = new Terms_Block( $attributes );
-$terms_block_terms    = $terms_block->get_the_terms();
-$wrapper_attributes   = get_block_wrapper_attributes([
-	'class' => $animation_attributes->get_classes(),
-	'style' => $animation_attributes->get_styles(),
+$c                  = Terms_Block_Controller::factory( [
+	'attributes' => $attributes,
+] );
+$terms_block_terms  = $c->get_the_terms();
+$wrapper_attributes = get_block_wrapper_attributes([
+	'class' => $c->get_block_classes(),
+	'style' => $c->get_block_styles(),
 ]);
 
 // No terms and we're in the block editor
 if ( 0 === count( $terms_block_terms ) && ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
 	echo '<span class="wp-block-tribe-terms__empty-msg t-category">';
-	printf( esc_html__( "No %s", 'tribe' ), $terms_block->get_taxonomy_name() );
+	printf( esc_html__( "No %s", 'tribe' ), $c->get_taxonomy_name() );
 	echo '</span>';
 
 	return;
@@ -34,7 +34,7 @@ echo '<ul class="wp-block-tribe-terms__list">';
 foreach ( $terms_block_terms as $term ) {
 	echo '<li class="wp-block-tribe-terms__term">';
 
-	if ( $terms_block->display_as_links() ) {
+	if ( $c->display_as_links() ) {
 		printf(
 			'<a href="%s" class="wp-block-tribe-terms__link t-category">%s</a>',
 			esc_url( get_term_link( $term ) ?? '' ),

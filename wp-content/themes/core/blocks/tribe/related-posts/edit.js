@@ -7,7 +7,7 @@ import {
 	SelectControl,
 	ToggleControl,
 } from '@wordpress/components';
-import ServerSideRender from '@wordpress/server-side-render';
+import { ServerSideRender } from '@wordpress/server-side-render';
 import { withSelect } from '@wordpress/data';
 
 function Edit( { props, postList } ) {

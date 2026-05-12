@@ -1,10 +1,7 @@
 <?php declare(strict_types=1);
 
-namespace Tribe\Plugin\Components;
+namespace Tribe\Plugin\Components\Abstracts;
 
-/**
- * Base class for other controllers to extend.
- */
 abstract class Abstract_Controller {
 
 	/**

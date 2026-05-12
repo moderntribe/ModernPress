@@ -12,6 +12,10 @@ registerBlockType( metadata.name, {
 	 */
 	edit: Edit,
 
+	/**
+	 * Saves inner blocks only; tab list markup comes from render.php.
+	 * @param {Object} props - The block props.
+	 */
 	save: ( props ) => {
 		return <InnerBlocks.Content { ...props } />;
 	},

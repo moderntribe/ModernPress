@@ -2,7 +2,7 @@ name: moose
 recipe: wordpress
 
 config:
-  php: '8.3'
+  php: '8.4'
   database: mariadb:11.4
   composer_version: 2-latest
   via: nginx
@@ -24,11 +24,9 @@ services:
       - composer create-local-configs
     overrides:
       environment:
-        - XDEBUG_TRIGGER=1
-      volumes:
-        - ../tribe-ai-assistant:/tribe-ai-assistant
+        XDEBUG_MODE: 'debug,develop'
   node:
-    type: node:22
+    type: node:24
 
 # Enabling MailHog will cause an error on start: `/bin/sh: 1: curl: not found`.
 # Related GH Issue: https://github.com/lando/mailhog/issues/35
@@ -54,11 +52,16 @@ tooling:
     service: node
   xdebug-on:
     service: appserver
-    description: Enable xdebug for nginx.
-    cmd: docker-php-ext-enable xdebug && pkill -o -USR2 php-fpm && echo "Xdebug enabled"
+    description: Enable Xdebug.
     user: root
+    cmd:
+      - docker-php-ext-enable xdebug && kill -USR2 $(pgrep -o php-fpm) > /dev/null || /etc/init.d/apache2 reload
+      - tput setaf 2 && echo "Xdebug On" && tput sgr 0 && echo
+
   xdebug-off:
     service: appserver
-    description: Disable xdebug for nginx.
-    cmd: rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && pkill -o -USR2 php-fpm && echo "Xdebug disabled"
+    description: Disable Xdebug.
     user: root
+    cmd:
+      - rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && kill -USR2 $(pgrep -o php-fpm) > /dev/null || /etc/init.d/apache2 reload
+      - tput setaf 1 && echo "Xdebug Off" && tput sgr 0 && echo

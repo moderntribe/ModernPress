@@ -5,6 +5,7 @@
  */
 
 import blockAnimations from './block-animations';
+import colorPicker from './color-picker';
 
 /**
  * @function init
@@ -14,6 +15,7 @@ import blockAnimations from './block-animations';
 const init = () => {
 	// initialize block animation controls in editor
 	blockAnimations();
+	colorPicker();
 
 	console.info(
 		'Editor: Initialized all javascript that targeted document ready.'

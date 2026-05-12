@@ -1,6 +1,10 @@
-/**
- * Styles specific to this block
- */
+/* -------------------------------------------------------------------------
+ *
+ * Block - Post Author Name - FE / Editor Styles
+ *
+ * ------------------------------------------------------------------------- */
+
+@import "./_variables.pcss";
 
 .wp-block-post-author-name {
 
@@ -10,15 +14,7 @@
 	 */
 	&::before {
 		content: "By ";
-		color: var(--color-black) !important;
-	}
-
-	/* CASE: Dark / Brand themes */
-	:--dark-themes & {
-
-		&::before {
-			color: var(--color-white) !important;
-		}
+		color: var(--post-author-name-before-color) !important;
 	}
 }
 
@@ -26,21 +22,24 @@
  * If the author name is set as a link we should style that as well
  */
 .wp-block-post-author-name__link {
-	color: var(--color-black);
+	color: var(--post-author-name-link-color);
 	font-weight: 700;
 
-	&:hover,
-	&:focus {
-		color: var(--color-neutral-80);
+	@media (--has-hover) {
+
+		&:hover {
+
+			@mixin post-author-name-hover-focus;
+		}
 	}
 
-	/* CASE: Dark / Brand themes */
-	:--dark-themes & {
-		color: var(--color-white);
+	&:focus:not(:focus-visible) {
 
-		&:hover,
-		&:focus {
-			color: var(--color-neutral-10);
-		}
+		@mixin post-author-name-hover-focus;
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
 	}
 }

@@ -1,0 +1,70 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "tribe/announcements",
+	"version": "1.0.0",
+	"title": "Announcements",
+	"category": "theme",
+	"icon": "megaphone",
+	"description": "A block to display globally configured announcements",
+	"attributes": {
+		"announcementId": {
+			"type": "number",
+			"default": 0
+		},
+		"heading": {
+			"type": "string",
+			"default": ""
+		},
+		"body": {
+			"type": "string",
+			"default": ""
+		},
+		"ctaLabel": {
+			"type": "string",
+			"default": ""
+		},
+		"ctaLink": {
+			"type": "string",
+			"default": ""
+		},
+		"ctaStyle": {
+			"type": "string",
+			"default": "outlined",
+			"enum": [ "outlined", "ghost" ]
+		},
+		"theme": {
+			"type": "string",
+			"default": "brand",
+			"enum": [ "brand", "black", "warning", "error" ]
+		},
+		"textAlignment": {
+			"type": "string",
+			"default": "center",
+			"enum": [ "left", "center" ]
+		},
+		"orientation": {
+			"type": "string",
+			"default": "horizontal",
+			"enum": [ "horizontal", "vertical" ]
+		},
+		"dismissible": {
+			"type": "boolean",
+			"default": false
+		}
+	},
+	"supports": {
+		"html": false,
+		"alignCustom": [ "wide", "grid", "full" ],
+		"spacing": {
+			"margin": true,
+			"padding": false
+		}
+	},
+	"textdomain": "tribe",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScript": "file:./view.js"
+}

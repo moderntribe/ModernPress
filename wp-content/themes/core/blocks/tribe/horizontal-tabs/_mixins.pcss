@@ -1,0 +1,14 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Horizontal Tabs - Mixins
+ *
+ * ------------------------------------------------------------------------- */
+
+@define-mixin horizontal-tabs-tab-hover-focus {
+	color: var(--horizontal-tabs-title-selected-color);
+
+	&::after {
+		width: 100%;
+		background-color: var(--horizontal-tabs-border-selected-color);
+	}
+}

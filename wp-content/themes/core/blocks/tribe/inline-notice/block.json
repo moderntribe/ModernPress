@@ -1,0 +1,70 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "tribe/inline-notice",
+	"version": "0.1.0",
+	"title": "Inline Notice",
+	"category": "theme",
+	"icon": "info-outline",
+	"description": "An announcement block with inner blocks functionality",
+	"attributes": {
+		"isRounded": {
+			"type": "boolean",
+			"default": false
+		},
+		"iconLabel": {
+			"type": "string",
+			"default": ""
+		},
+		"iconSize": {
+			"type": "number",
+			"default": 30
+		},
+		"iconPadding": {
+			"type": "number",
+			"default": 0
+		},
+		"searchQuery": {
+			"type": "string",
+			"default": ""
+		},
+		"selectedIcon": {
+			"type": "string",
+			"default": "icon-circle-information"
+		},
+		"selectedIconColor": {
+			"type": "string",
+			"default": "#ffffff"
+		},
+		"selectedBgColor": {
+			"type": "string",
+			"default": "transparent"
+		},
+		"heading": {
+			"type": "string",
+			"default": ""
+		},
+		"headerTextColorTheme": {
+			"type": "string",
+			"default": "light",
+			"enum": [ "light", "dark" ]
+		},
+		"themeColor": {
+			"type": "string",
+			"default": "#3050E5"
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "grid", "full" ],
+		"spacing": {
+			"margin": true,
+			"padding": false
+		}
+	},
+	"textdomain": "tribe",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

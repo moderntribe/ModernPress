@@ -1,0 +1,34 @@
+{{#isDynamicVariant}}
+<?php declare(strict_types=1);
+
+namespace Tribe\Plugin\Components\Blocks;
+
+use Tribe\Plugin\Components\Abstracts\Abstract_Block_Controller;
+
+/**
+ * TODO:
+ * - Rename class & file name to match the block name.
+ * - Move file to wp-content/plugins/core/src/Components/Blocks/
+ * - If this is a card block, update the Abstract_Block_Controller class to Abstract_Card_Controller.
+ * - If this block contains post data:
+ *     - Use `use Tribe\Plugin\Components\Traits\Post_Data;`.
+ *     - Add `use Post_Data;` within this class to inherit the post data trait + methods.
+ * - Extend / update to include any block specific logic & fields
+ */
+
+class Block_Controller extends Abstract_Block_Controller {
+
+	protected string $example_text_control;
+
+	public function __construct( array $args = [] ) {
+		parent::__construct( $args );
+
+		$this->example_text_control = $this->attributes['exampleTextControl'] ?? '';
+	}
+
+	public function get_example_text_control(): string {
+		return $this->example_text_control;
+	}
+
+}
+{{/isDynamicVariant}}

@@ -16,12 +16,7 @@
 	container: searchcard / inline-size;
 	position: relative;
 	padding: var(--spacer-50) 0;
-	border-top: 1px solid var(--color-black);
-
-	/* CASE: Dark and Brand styles */
-	:--dark-themes & {
-		border-top-color: var(--color-white);
-	}
+	border-top: 1px solid var(--search-results-card-border-color);
 }
 
 /* -----------------------------------------------------------------------
@@ -36,11 +31,6 @@
 
 	& img {
 		transition: var(--transition);
-
-		.c-search-card:hover &,
-		.c-search-card:focus-within & {
-			transform: scale(1.05);
-		}
 	}
 
 	/* add some space below the image when the text could wrap */
@@ -64,18 +54,19 @@
 }
 
 /* -----------------------------------------------------------------------
+ * Search Result Post Card - Title Wrap
+ * ----------------------------------------------------------------------- */
+
+.c-search-card__title-wrap {
+	margin-bottom: var(--spacer-10);
+}
+
+/* -----------------------------------------------------------------------
  * Search Result Post Card - Title
  * ----------------------------------------------------------------------- */
 
 .c-search-card__title {
 	margin-top: 0 !important;
-	margin-bottom: var(--spacer-10) !important;
-
-	.c-search-card:hover &,
-	.c-search-card:focus-within & {
-
-		@mixin t-transparent-underline-hover;
-	}
 }
 
 /* -----------------------------------------------------------------------
@@ -110,15 +101,10 @@
 	-webkit-line-clamp: 2;
 	overflow: hidden;
 	margin-top: var(--spacer-10) !important;
-	color: var(--color-blue);
+	color: var(--search-results-card-visible-permalink-color);
 	font-weight: var(--font-weight-bold);
 	text-overflow: ellipsis;
 	word-break: break-all;
-
-	/* CASE: Dark and Brand styles */
-	:--dark-themes & {
-		color: var(--color-white);
-	}
 }
 
 /* -----------------------------------------------------------------------

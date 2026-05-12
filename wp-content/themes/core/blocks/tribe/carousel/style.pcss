@@ -1,7 +1,14 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Carousel - FE / Editor Styles
+ *
+ * ------------------------------------------------------------------------- */
+
+@import "./_variables.pcss";
+
 .wp-block-tribe-carousel {
 
 	.swiper {
-		--swiper-controls-size: 48px;
 
 		.swiper-navigation {
 			position: relative;
@@ -45,17 +52,14 @@
 		/* add navigation styling */
 		.swiper-button-next,
 		.swiper-button-prev {
-			--swiper-navigation-icon-width: 11px;
-			--swiper-navigation-icon-height: 20px;
-			--swiper-navigation-color: var(--color-black);
 			width: var(--swiper-controls-size);
 			height: var(--swiper-controls-size);
-			border: 1px solid var(--color-neutral-50);
-			border-radius: 100%;
-			background-color: transparent;
-			transition: var(--transition);
 			position: static;
 			margin: 0;
+			background-color: transparent;
+			border: 1px solid var(--swiper-navigation-border-color);
+			border-radius: 100%;
+			transition: var(--transition);
 			color: var(--swiper-navigation-color);
 
 			/* Swiper switched to an inline SVG icon, so we need to size it */
@@ -64,16 +68,17 @@
 				height: var(--swiper-navigation-icon-height);
 			}
 
-			&:hover,
-			&:focus {
-				--swiper-navigation-color: var(--color-black);
-				border: 2px solid var(--color-black);
+			@media (--has-hover) {
+
+				&:hover {
+
+					@mixin swiper-navigation-hover-focus;
+				}
 			}
 
-			&.swiper-button-disabled {
-				--swiper-navigation-color: var(--color-neutral-50);
-				border-color: var(--color-neutral-50);
-				background-color: var(--color-neutral-30);
+			&:focus:not(:focus-visible) {
+
+				@mixin swiper-navigation-hover-focus;
 			}
 
 			&:focus-visible {
@@ -81,38 +86,15 @@
 				@mixin focus-visible;
 			}
 
-			/* CASE: Dark Theme */
-			:--dark-themes & {
-				--swiper-navigation-color: var(--color-white);
-				border-color: var(--color-white);
-
-				&.swiper-button-disabled {
-					--swiper-navigation-color: var(--color-black);
-				}
-
-				&:hover,
-				&:focus {
-					--swiper-navigation-color: var(--color-white);
-					border: 2px solid var(--color-white);
-				}
-			}
-
-			/* CASE: Brand Theme */
-			:--brand-theme & {
-
-				&.swiper-button-disabled {
-					--swiper-navigation-color: var(--color-blue);
-				}
+			&.swiper-button-disabled {
+				border-color: var(--swiper-navigation-disabled-border-color);
+				background-color: var(--swiper-navigation-disabled-background-color);
+				color: var(--swiper-navigation-disabled-color);
 			}
 		}
 
 		/* add pagination styling */
 		.swiper-pagination {
-			--swiper-pagination-bullet-size: 10px;
-			--swiper-theme-color: var(--color-black);
-			--swiper-pagination-bullet-inactive-color: var(--color-black);
-			--swiper-pagination-bullet-inactive-opacity: 0.3;
-			--swiper-pagination-bullet-horizontal-gap: 6px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -123,12 +105,6 @@
 			z-index: 2;
 			height: var(--swiper-controls-size);
 			width: 100%;
-
-			/* Style Dark */
-			:--dark-themes & {
-				--swiper-theme-color: var(--color-white);
-				--swiper-pagination-bullet-inactive-color: var(--color-white);
-			}
 		}
 
 		.swiper-pagination-bullet[role="button"] {

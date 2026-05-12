@@ -1,6 +1,6 @@
 # Supported Block Features & Settings
 
-In reference to a "[Roster of design tools per block (WordPress 6.6 edition)](https://make.wordpress.org/core/2024/06/20/roster-of-design-tools-per-block-wordpress-6-6-edition/)" post made to highlight what features are available to what blocks within WordPress, we're creating this living document to highlight which of these features Moose has disabled.
+In reference to a "[Roster of design tools per block (WordPress 6.6 edition)](https://make.wordpress.org/core/2024/06/20/roster-of-design-tools-per-block-wordpress-6-6-edition/)" post made to highlight what features are available to what blocks within WordPress, we're creating this living document to highlight which of these features ModernPress has disabled.
 
 ## Global Disabled Features
 

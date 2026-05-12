@@ -194,6 +194,17 @@ const switchTabs = ( targetTabButton ) => {
 			tabButton
 		);
 	} );
+
+	// On mobile, scroll the selected tab into view so the user doesn't have to scroll back up
+	if ( config.isMobile && config.contentMergesOnMobile ) {
+		const prefersReducedMotion = window.matchMedia(
+			'(prefers-reduced-motion: reduce)'
+		).matches;
+		targetTabButton.scrollIntoView( {
+			behavior: prefersReducedMotion ? 'auto' : 'smooth',
+			block: 'start',
+		} );
+	}
 };
 
 /**
