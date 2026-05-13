@@ -72,7 +72,7 @@ const mountColorPicker = ( el ) => {
 const init = () => {
 	window.MTColorPickerBridge ??= [];
 	window.MTColorPickerBridge.forEach( ( { el } ) => mountColorPicker( el ) );
-	window.MTColorPickerBridg = { push: ( { el } ) => mountColorPicker( el ) };
+	window.MTColorPickerBridge = { push: ( { el } ) => mountColorPicker( el ) };
 
 	[ 'acf/render_block_preview', 'acf/setup_fields' ].forEach( ( event ) => {
 		window.addEventListener( event, () => {
