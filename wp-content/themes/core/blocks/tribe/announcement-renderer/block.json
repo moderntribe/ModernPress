@@ -10,12 +10,17 @@
 	"attributes": {
 		"placement": {
 			"type": "string",
-			"default": "top"
+			"default": "placement_above"
 		}
 	},
 	"supports": {
+		"inserter": false,
 		"html": false,
-		"alignCustom": [ "wide", "grid", "full" ],
+		"alignCustom": [
+			"wide",
+			"grid",
+			"full"
+		],
 		"spacing": {
 			"margin": true,
 			"padding": true
