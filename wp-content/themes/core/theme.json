@@ -16,6 +16,7 @@
 			"core/accordion",
 			"core/accordion-heading",
 			"core/accordion-panel",
+			"core/breadcrumbs",
 			"tribe/carousel-slide",
 			"tribe/horizontal-tab",
 			"tribe/logo-marquee",
