@@ -60,6 +60,7 @@ wp-content/themes/*
 wp-content/plugins/*
 !wp-content/themes/core
 !wp-content/plugins/core
+!wp-content/plugins/facetwp
 !wp-config.php
 !wp-config-environment.php
 

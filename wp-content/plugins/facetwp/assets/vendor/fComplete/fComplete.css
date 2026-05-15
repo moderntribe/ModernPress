@@ -1,0 +1,29 @@
+.fcomplete-wrap {
+    position: absolute;
+    border: 1px solid #ddd;
+    border-top: none;
+    background-color: #fff;
+    max-width: 400px;
+}
+
+.fcomplete-result,
+.fcomplete-status {
+    padding: 6px 8px;
+}
+
+.fcomplete-result {
+    cursor: pointer;
+}
+
+.fcomplete-result:hover {
+    background-color: #f5f5f5;
+}
+
+.fcomplete-status {
+    font-size: 13px;
+    font-style: italic;
+}
+
+.fcomplete-hidden {
+    display: none;
+}
