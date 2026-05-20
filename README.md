@@ -60,6 +60,8 @@ members to use and provides a number of helpful features. Below are a number of 
 * `lando xdebug-on` - Enables Xdebug in the project container (Xdebug is disabled by default).
 * `lando xdebug-off` - Disables Xdebug in the project container (Xdebug is disabled by default).
 
+Step debugging with PhpStorm, VS Code, and browser triggers is covered in the [Development tools](./docs/development-tools.md) doc.
+
 For further documentation on Lando, please visit the [Lando Docs](https://docs.lando.dev/).
 
 ### Composer
@@ -94,6 +96,7 @@ We use GitHub Action as a CI for deployments, testing and many other features. T
 Specific features and functionality may have additional documentation in the [./docs](./docs) folder.
 
 * [Composer](./docs/composer.md)
+* [Development tools](./docs/development-tools.md)
 * [NPM Packages, Scripts & Building Assets](./docs/npm.md)
 * [1Password CLI](./docs/1password-cli.md)
 * [GitHub Actions](./docs/actions.md)

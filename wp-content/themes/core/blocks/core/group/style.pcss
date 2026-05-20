@@ -4,24 +4,10 @@
  *
  * ------------------------------------------------------------------------- */
 
-:root {
-	--group-themed-default-padding: var(--spacer-30);
-}
-
 .wp-block-group {
 
 	/* CASE: Has Transparent Background */
 	&.has-transparent-background {
 		background-color: transparent !important;
-	}
-
-	/**
-	 * CASE: Ensures that full width blocks share the same global
-	 * root padding for left and right. Allows content within the
-	 * group block to align with other content not contained in full
-	 * width group blocks.
-	 */
-	main &.alignfull {
-		padding: var(--group-themed-default-padding) var(--wp--style--root--padding-left);
 	}
 }

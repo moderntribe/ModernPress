@@ -12,7 +12,6 @@
 
 	@mixin a-btn-arrow;
 	display: inline-block;
-	width: auto;
 	height: auto;
 	position: relative;
 	background-color: var(--btn-background-color);
@@ -27,6 +26,11 @@
 	text-decoration: none;
 	text-align: left;
 	transition: var(--transition);
+
+	/* only set width to auto if button block doesn't have a custom width applied */
+	.wp-block-button:not(.has-custom-width) & {
+		width: auto;
+	}
 
 	/**
 	 * Extra right padding to accommodate the absolutely positioned arrow

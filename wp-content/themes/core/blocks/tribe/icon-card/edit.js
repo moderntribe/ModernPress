@@ -16,7 +16,7 @@ import {
 	ToolbarButton,
 	ToolbarGroup,
 } from '@wordpress/components';
-import ServerSideRender from '@wordpress/server-side-render';
+import { ServerSideRender } from '@wordpress/server-side-render';
 import { useMemo, useState } from '@wordpress/element';
 import IconPicker from 'components/IconPicker';
 import { formatIconName } from 'blocks/tribe/icon-picker/utils';

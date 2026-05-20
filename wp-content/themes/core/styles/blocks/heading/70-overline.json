@@ -1,0 +1,15 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"slug": "overline",
+	"title": "Overline",
+	"blockTypes": [ "core/heading" ],
+	"styles": {
+		"typography": {
+			"fontFamily": "var(--wp--preset--font-family--inter)",
+			"fontSize": "var(--wp--preset--font-size--20)",
+			"lineHeight": "1.6",
+			"fontWeight": "var(--wp--custom--font-weight--bold)"
+		}
+	}
+}
