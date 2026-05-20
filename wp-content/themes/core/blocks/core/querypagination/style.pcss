@@ -10,17 +10,17 @@
 body nav.wp-block-query-pagination {
 	flex-wrap: nowrap;
 	justify-content: center;
-	gap: 0 var(--wp--preset--spacing--20);
+	gap: var(--wp--preset--spacing--20);
 	margin-top: var(--wp--preset--spacing--50);
 
-	/* Reduce spacings on very short screens */
+	/* Reduce spacing on narrow screens */
 	@media (max-width: 420px) {
 		gap: 0;
 		justify-content: space-between;
 	}
 
 	@media (--mq-tablet) {
-		gap: 0 var(--wp--preset--spacing--40);
+		gap: var(--wp--preset--spacing--40);
 	}
 
 	/* ensure all links within the pagination get the same styling */
@@ -47,7 +47,7 @@ body nav.wp-block-query-pagination {
 	gap: var(--spacer-30);
 	margin: 0;
 
-	/* Reduce spacings on very short screens */
+	/* Reduce spacing on narrow screens */
 	@media (max-width: 420px) {
 		gap: 0;
 		width: 100%;
@@ -68,16 +68,12 @@ body nav.wp-block-query-pagination {
 
 		&:where(:not(.current, .dots)):hover,
 		&:where(:not(.current, .dots)):focus:not(:focus-visible) {
-			background-color: var(
-				--pagination-numbers-hover-background-color
-			);
+			background-color: var(--pagination-numbers-hover-background-color);
 		}
 
 		/* Current page indicator */
 		&.current {
-			background-color: var(
-				--pagination-numbers-current-background-color
-			);
+			background-color: var(--pagination-numbers-current-background-color);
 			color: var(--pagination-numbers-current-color);
 		}
 
@@ -101,7 +97,7 @@ body nav.wp-block-query-pagination {
 	margin: 0;
 	font-size: 0;
 
-	/* Reduce spacings on very short screens */
+	/* Reduce spacing on narrow screens */
 	@media (max-width: 380px) {
 		gap: 10px;
 	}
@@ -120,7 +116,7 @@ body nav.wp-block-query-pagination {
 		margin: 0;
 
 		&::before {
-			content: '';
+			content: "";
 			display: block;
 			width: 100%;
 			height: 100%;
