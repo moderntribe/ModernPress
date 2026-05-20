@@ -234,7 +234,6 @@ export default withSelect( ( select, ownProps ) => {
 
 	const EXCLUDED_TYPES = new Set( [
 		'attachment',
-		'page',
 		'wp_block',
 		'wp_template',
 		'wp_template_part',
