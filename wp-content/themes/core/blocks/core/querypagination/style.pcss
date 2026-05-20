@@ -13,6 +13,7 @@ body nav.wp-block-query-pagination {
 	gap: 0 var( --wp--preset--spacing--20 );
 	margin-top: var( --wp--preset--spacing--50 );
 
+	/* Reduce spacings on very short screens */
 	@media (max-width: 420px) {
 		gap: 0;
 		justify-content: space-between;
@@ -46,6 +47,7 @@ body nav.wp-block-query-pagination {
 	gap: var( --spacer-30 );
 	margin: 0;
 
+	/* Reduce spacings on very short screens */
 	@media (max-width: 420px) {
 		gap: 0;
 		width: 100%;
