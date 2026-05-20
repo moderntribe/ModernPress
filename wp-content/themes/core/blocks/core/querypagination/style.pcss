@@ -6,9 +6,24 @@
 
 @import "_variables.pcss";
 
-.wp-block-query-pagination {
-	gap: 0 var(--spacer-40) !important;
-	margin-top: var(--spacer-50) !important;
+/* Increase specificity to override WordPress default `body .is-layout-flex` styles */
+body nav.wp-block-query-pagination {
+	display: grid;
+	grid-template-areas:"prev numbers numbers next" ;
+	gap: var(--wp--preset--spacing--50) 0;
+	margin-top: var(--wp--preset--spacing--50);
+	justify-content: space-between;
+
+	@media (--mq-tablet) {
+		display: flex;
+		gap: 0 var(--wp--preset--spacing--20);
+		justify-content: center;
+	}
+
+	@media (--mq-desktop) {
+		display: flex;
+		gap: 0 var(--wp--preset--spacing--40);
+	}
 
 	/* ensure all links within the pagination get the same styling */
 	a {
@@ -30,8 +45,14 @@
 .wp-block-query-pagination-numbers {
 	display: flex;
 	align-items: center;
-	gap: 0 var(--spacer-20);
+	justify-content: space-between;
+	gap: var(--spacer-20);
 	margin: 0;
+	grid-area: numbers;
+
+	@media (max-width: 410px) {
+		gap: var(--spacer-10);
+	}
 
 	.page-numbers {
 		line-height: 1;
@@ -52,6 +73,11 @@
 			background-color: var(--pagination-numbers-current-background-color);
 			color: var(--pagination-numbers-current-color);
 		}
+
+		/* Reduce dots width on very short screens */
+		&.dots {
+			width: auto;
+		}
 	}
 }
 
@@ -63,12 +89,12 @@
 .wp-block-query-pagination-next {
 	display: flex;
 	align-items: center;
-	gap: 0;
+	gap: var(--spacer-20);
 	margin: 0;
+	grid-area: prev;
 	font-size: 0;
 
-	@media (--mq-desktop) {
-		gap: var(--spacer-20);
+	@media (--mq-tablet) {
 		font-size: inherit;
 	}
 
@@ -106,6 +132,8 @@
 
 /* pagination next button arrow has a different mask (reversed chevron) */
 .wp-block-query-pagination-next {
+	grid-area: next;
+	justify-self: flex-end;
 
 	.is-arrow-chevron::before,
 	.is-arrow-arrow::before {
