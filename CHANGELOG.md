@@ -9,6 +9,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - Fixed: Pagination breaking on mobile
 - Updated: Announcement Renderer block adjusted to not be available in the inserter and attributes updated to actual values
 - Added: View Transitions plugin.
+- Updated: `create-wp-controls.js` script wasn't properly applying class names to V3 core blocks.
 
 ## [2026.04]
 
