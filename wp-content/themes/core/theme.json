@@ -220,8 +220,8 @@
 				"bold": 700
 			},
 			"spacing": {
-				"grid-gutter": "round(down, clamp(1.5rem, 1.2rem + 1.5vw, 3rem), 4px)",
-				"grid-margin": "round(down, clamp(1rem, -0.3rem + 6.5vw, 7.5rem), 4px)"
+				"grid-gutter": "round(down, clamp(1.5rem, 1.2rem + 1.5vw, 3rem), 2px)",
+				"grid-margin": "round(down, clamp(1rem, -0.3rem + 6.5vw, 7.5rem), 2px)"
 			}
 		},
 		"layout": {
@@ -281,47 +281,47 @@
 			"fontSizes": [
 				{
 					"slug": "10",
-					"size": "round(down, clamp(0.875rem, 0.85rem + 0.125vw, 1rem), 4px)",
+					"size": "round(down, clamp(0.875rem, 0.85rem + 0.125vw, 1rem), 2px)",
 					"name": "Font Size 10"
 				},
 				{
 					"slug": "20",
-					"size": "round(down, clamp(1rem, 0.95rem + 0.25vw, 1.25rem), 4px)",
+					"size": "round(down, clamp(1rem, 0.95rem + 0.25vw, 1.25rem), 2px)",
 					"name": "Font Size 20"
 				},
 				{
 					"slug": "30",
-					"size": "round(down, clamp(1.125rem, 1.05rem + 0.375vw, 1.5rem), 4px)",
+					"size": "round(down, clamp(1.125rem, 1.05rem + 0.375vw, 1.5rem), 2px)",
 					"name": "Font Size 30"
 				},
 				{
 					"slug": "40",
-					"size": "round(down, clamp(1.25rem, 1.1rem + 0.75vw, 2rem), 4px)",
+					"size": "round(down, clamp(1.25rem, 1.1rem + 0.75vw, 2rem), 2px)",
 					"name": "Font Size 40"
 				},
 				{
 					"slug": "50",
-					"size": "round(down, clamp(1.375rem, 1.15rem + 1.125vw, 2.5rem), 4px)",
+					"size": "round(down, clamp(1.375rem, 1.15rem + 1.125vw, 2.5rem), 2px)",
 					"name": "Font Size 50"
 				},
 				{
 					"slug": "60",
-					"size": "round(down, clamp(1.5rem, 1.2rem + 1.5vw, 3rem), 4px)",
+					"size": "round(down, clamp(1.5rem, 1.2rem + 1.5vw, 3rem), 2px)",
 					"name": "Font Size 60"
 				},
 				{
 					"slug": "70",
-					"size": "round(down, clamp(2rem, 1.6rem + 2vw, 4rem), 4px)",
+					"size": "round(down, clamp(2rem, 1.6rem + 2vw, 4rem), 2px)",
 					"name": "Font Size 70"
 				},
 				{
 					"slug": "80",
-					"size": "round(down, clamp(2.5rem, 2.05rem + 2.25vw, 4.75rem), 4px)",
+					"size": "round(down, clamp(2.5rem, 2.05rem + 2.25vw, 4.75rem), 2px)",
 					"name": "Font Size 80"
 				},
 				{
 					"slug": "90",
-					"size": "round(down, clamp(3rem, 2.4rem + 3vw, 6rem), 4px)",
+					"size": "round(down, clamp(3rem, 2.4rem + 3vw, 6rem), 2px)",
 					"name": "Font Size 90"
 				}
 			],
@@ -372,37 +372,37 @@
 			"blockGap": false,
 			"spacingSizes": [
 				{
-					"size": "round(down, clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem), 4px)",
+					"size": "round(down, clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem), 2px)",
 					"slug": "10",
 					"name": "XX Small"
 				},
 				{
-					"size": "round(down, clamp(0.75rem, 0.7rem + 0.25vw, 1rem), 4px)",
+					"size": "round(down, clamp(0.75rem, 0.7rem + 0.25vw, 1rem), 2px)",
 					"slug": "20",
 					"name": "X Small"
 				},
 				{
-					"size": "round(down, clamp(1rem, 0.9rem + 0.5vw, 1.5rem), 4px)",
+					"size": "round(down, clamp(1rem, 0.9rem + 0.5vw, 1.5rem), 2px)",
 					"slug": "30",
 					"name": "Small"
 				},
 				{
-					"size": "round(down, clamp(1.5rem, 1.4rem + 0.5vw, 2rem), 4px)",
+					"size": "round(down, clamp(1.5rem, 1.4rem + 0.5vw, 2rem), 2px)",
 					"slug": "40",
 					"name": "Medium"
 				},
 				{
-					"size": "round(down, clamp(2rem, 1.8rem + 1vw, 3rem), 4px)",
+					"size": "round(down, clamp(2rem, 1.8rem + 1vw, 3rem), 2px)",
 					"slug": "50",
 					"name": "Large"
 				},
 				{
-					"size": "round(down, clamp(3rem, 2.8rem + 1vw, 4rem), 4px)",
+					"size": "round(down, clamp(3rem, 2.8rem + 1vw, 4rem), 2px)",
 					"slug": "60",
 					"name": "X Large"
 				},
 				{
-					"size": "round(down, clamp(4rem, 3.6rem + 2vw, 6rem), 4px)",
+					"size": "round(down, clamp(4rem, 3.6rem + 2vw, 6rem), 2px)",
 					"slug": "70",
 					"name": "XX Large"
 				}
