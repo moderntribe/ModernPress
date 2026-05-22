@@ -7,7 +7,6 @@ import { __ } from '@wordpress/i18n';
 
 const DEFAULT_EXCLUDED_TYPES = [
 	'attachment',
-	'page',
 	'wp_block',
 	'wp_template',
 	'wp_template_part',
