@@ -33,7 +33,7 @@ const getEffectiveTaxonomySlug = ( taxonomies = [], taxonomySlug = '' ) => {
 		return 'category';
 	}
 
-	return taxonomies[ 0 ]?.slug ?? '';
+	return taxonomies[ 0 ]?.slug ?? LATEST_ITEMS_VALUE;
 };
 
 function Edit( { props, postList, taxonomies } ) {
@@ -257,7 +257,7 @@ export default withSelect( ( select, ownProps ) => {
 
 	const postList = selectableTypes.flatMap( ( type ) => {
 		const records = getEntityRecords( 'postType', type.slug, {
-			per_page: 100,
+			per_page: 20,
 			exclude: [ currentPostId ],
 		} );
 		return ( records ?? [] ).map( ( post ) => ( {

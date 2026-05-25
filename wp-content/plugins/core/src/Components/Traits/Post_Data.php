@@ -79,14 +79,7 @@ trait Post_Data {
 			return;
 		}
 
-		$terms = get_the_terms( $this->post_id, $taxonomy );
-		if ( $terms && ! is_wp_error( $terms ) ) {
-			$this->display_term = reset( $terms ) ?: null;
-
-			return;
-		}
-
-		$this->display_term = null;
+		$this->display_term = $this->get_primary_term( $this->post_id, $taxonomy );
 	}
 
 	public function has_display_term(): bool {
