@@ -6,7 +6,8 @@ use Tribe\Plugin\Components\Blocks\Post_Card_Controller;
  * @var object $args
  */
 
-$post_id = $args['post_id'];
+$post_id       = $args['post_id'];
+$taxonomy_slug = $args['taxonomy_slug'] ?? '';
 
 // return if no post id
 if ( ! $post_id ) {
@@ -18,6 +19,7 @@ $attributes = $args['attributes'] ?? [];
 
 $c = Post_Card_Controller::factory( [
 	'post_id'       => $post_id,
+	'taxonomy_slug' => $taxonomy_slug,
 	'attributes'    => $attributes,
 	'block_classes' => 'c-post-card',
 ] );
@@ -30,8 +32,8 @@ $c = Post_Card_Controller::factory( [
 			</div>
 		<?php endif; ?>
 		<div class="c-post-card__content">
-			<?php if ( $c->has_primary_category() ) : ?>
-				<p class="c-post-card__primary-category t-category"><?php echo esc_html( $c->get_primary_category_name() ); ?></p>
+			<?php if ( $c->has_display_term() ) : ?>
+				<p class="c-post-card__primary-category t-category"><?php echo esc_html( $c->get_display_term_name() ); ?></p>
 			<?php endif; ?>
 			<div class="c-post-card__title-wrap">
 				<?php echo sprintf(
