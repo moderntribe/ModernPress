@@ -27,7 +27,7 @@ const getEffectiveTaxonomySlug = ( taxonomies = [], taxonomySlug = '' ) => {
 		return 'category';
 	}
 
-	return taxonomies[ 0 ]?.slug ?? '';
+	return taxonomies[ 0 ]?.slug ?? LATEST_ITEMS_VALUE;
 };
 
 export default function Edit( { attributes, isSelected, setAttributes } ) {
