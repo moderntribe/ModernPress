@@ -11,6 +11,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - Updated: Announcement Renderer block adjusted to not be available in the inserter and attributes updated to actual values
 - Added: View Transitions plugin.
 - Updated: Related Posts now supports current post types, taxonomy-based matching, latest-item fallbacks, and mixed post type manual selection.
+- Fixed: Fixes an issue where `lando start` overwrites the host's `node_modules` with Linux binaries, causing `lefthook` to fail when making commits on macOS.
 
 ## [2026.04]
 
