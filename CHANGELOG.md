@@ -12,6 +12,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - Added: View Transitions plugin.
 - Updated: Related Posts now supports current post types, taxonomy-based matching, latest-item fallbacks, and mixed post type manual selection.
 - Updated: Related Posts block now uses Post Search Field component.
+- Fixed: Fixes an issue where `lando start` overwrites the host's `node_modules` with Linux binaries, causing `lefthook` to fail when making commits on macOS.
 
 ## [2026.04]
 
