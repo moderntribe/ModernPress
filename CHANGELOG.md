@@ -6,10 +6,15 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.05]
 
+- Updated: Prettier config to support `.pcss` files, ensuring PostCSS files use CSS formatting rules.
 - Fixed: Pagination breaking on mobile
 - Updated: Announcement Renderer block adjusted to not be available in the inserter and attributes updated to actual values
 - Added: View Transitions plugin.
 - Updated: clamp() values are now surrounded by a round() function that will round values down to the closest 2px to make these values more predictable.
+- Updated: `create-wp-controls.js` script wasn't properly applying class names to V3 core blocks.
+- Updated: Related Posts now supports current post types, taxonomy-based matching, latest-item fallbacks, and mixed post type manual selection.
+- Updated: Related Posts block now uses Post Search Field component.
+- Fixed: Fixes an issue where `lando start` overwrites the host's `node_modules` with Linux binaries, causing `lefthook` to fail when making commits on macOS.
 
 ## [2026.04]
 
