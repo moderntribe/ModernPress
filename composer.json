@@ -125,8 +125,7 @@
 		"php-di/php-di": "^7.1",
 		"vinkla/extended-acf": "^14.6",
 		"vlucas/phpdotenv": "^5.5",
-		"wp-cli/wp-cli-bundle": "^2.12",
-		"wpackagist-plugin/disable-emojis": "^1.7",
+		"wpackagist-plugin/disable-emojis": "^1.9",
 		"wpackagist-plugin/duplicate-post": "^4.5",
 		"wpackagist-plugin/safe-svg": "^2.4",
 		"wpackagist-plugin/social-sharing-block": "^1.0",
@@ -134,7 +133,7 @@
 		"wpengine/advanced-custom-fields-pro": "^6.4"
 	},
 	"extra": {
-		"wordpress-version": "6.9.4",
+		"wordpress-version": "7.0",
 		"installer-paths": {
 			"wp-content/plugins/{$name}": [
 				"type:wordpress-plugin"
