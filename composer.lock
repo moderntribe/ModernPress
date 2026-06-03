@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "98391cc21b45b90a0fb775755ccb6f2b",
+    "content-hash": "26f4fb1fde16659ef5d01a5e188cba3f",
     "packages": [
         {
             "name": "block-editor-custom-alignments/block-editor-custom-alignments",
@@ -1310,32 +1310,32 @@
         },
         {
             "name": "vinkla/extended-acf",
-            "version": "14.6.2",
+            "version": "15.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vinkla/extended-acf.git",
-                "reference": "0d8f9f93b3ac3b6e6ae2c8273218560f493dbc7c"
+                "reference": "ae586e594cefb308f51c2487ab2bec0137870408"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vinkla/extended-acf/zipball/0d8f9f93b3ac3b6e6ae2c8273218560f493dbc7c",
-                "reference": "0d8f9f93b3ac3b6e6ae2c8273218560f493dbc7c",
+                "url": "https://api.github.com/repos/vinkla/extended-acf/zipball/ae586e594cefb308f51c2487ab2bec0137870408",
+                "reference": "ae586e594cefb308f51c2487ab2bec0137870408",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.2"
+                "php": "^8.4"
             },
             "require-dev": {
-                "phpunit/phpunit": "^11.0 || ^12.0",
-                "symfony/var-dumper": "^7.0"
+                "phpunit/phpunit": "^12.0",
+                "symfony/var-dumper": "^8.0"
             },
             "suggest": {
-                "symfony/var-dumper": "Required to use the dump method (^7.0)."
+                "symfony/var-dumper": "Required to use the dump method (^8.0)."
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "14.7-dev"
+                    "dev-master": "15.0-dev"
                 }
             },
             "autoload": {
@@ -1367,9 +1367,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vinkla/extended-acf/issues",
-                "source": "https://github.com/vinkla/extended-acf/tree/14.6.2"
+                "source": "https://github.com/vinkla/extended-acf/tree/15.0.0"
             },
-            "time": "2026-01-22T13:29:00+00:00"
+            "time": "2026-03-05T19:02:18+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -3400,16 +3400,16 @@
         },
         {
             "name": "php-stubs/wordpress-tests-stubs",
-            "version": "v6.9.4",
+            "version": "v7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-stubs/wordpress-tests-stubs.git",
-                "reference": "51ea75d9d0f29059bc89c522186dac66a8f66545"
+                "reference": "5745979d58aebec7e7e659e9ffaf0a1b94785442"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-stubs/wordpress-tests-stubs/zipball/51ea75d9d0f29059bc89c522186dac66a8f66545",
-                "reference": "51ea75d9d0f29059bc89c522186dac66a8f66545",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-tests-stubs/zipball/5745979d58aebec7e7e659e9ffaf0a1b94785442",
+                "reference": "5745979d58aebec7e7e659e9ffaf0a1b94785442",
                 "shasum": ""
             },
             "require-dev": {
@@ -3434,9 +3434,9 @@
             ],
             "support": {
                 "issues": "https://github.com/php-stubs/wordpress-tests-stubs/issues",
-                "source": "https://github.com/php-stubs/wordpress-tests-stubs/tree/v6.9.4"
+                "source": "https://github.com/php-stubs/wordpress-tests-stubs/tree/v7.0.0"
             },
-            "time": "2026-05-25T08:18:54+00:00"
+            "time": "2026-05-25T08:19:01+00:00"
         },
         {
             "name": "php-webdriver/webdriver",
@@ -6923,6 +6923,71 @@
             "time": "2026-05-25T13:48:31+00:00"
         },
         {
+            "name": "symfony/process",
+            "version": "v7.4.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/process.git",
+                "reference": "f5804be144caceb570f6747519999636b664f24c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/process/zipball/f5804be144caceb570f6747519999636b664f24c",
+                "reference": "f5804be144caceb570f6747519999636b664f24c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Process\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Executes commands in sub-processes",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/process/tree/v7.4.13"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-05-23T16:05:06+00:00"
+        },
+        {
             "name": "symfony/service-contracts",
             "version": "v3.7.0",
             "source": {
@@ -7373,56 +7438,6 @@
                 }
             ],
             "time": "2025-11-17T20:03:58+00:00"
-        },
-        {
-            "name": "wp-cli/process",
-            "version": "v5.9.99",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/wp-cli/process.git",
-                "reference": "f0aec5ca26a702d3157e3a19982b662521ac2b81"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/wp-cli/process/zipball/f0aec5ca26a702d3157e3a19982b662521ac2b81",
-                "reference": "f0aec5ca26a702d3157e3a19982b662521ac2b81",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.5.9|>=7.0.8"
-            },
-            "replace": {
-                "symfony/process": "^5.4.47"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Process\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Process Component",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/wp-cli/process/tree/v5.9.99"
-            },
-            "time": "2025-05-06T21:26:50+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
