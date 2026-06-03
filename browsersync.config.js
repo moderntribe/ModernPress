@@ -19,6 +19,7 @@ const pkg = require( './package.json' );
 function moduleExists( name ) {
 	try {
 		return require.resolve( name );
+		// eslint-disable-next-line no-unused-vars
 	} catch ( e ) {
 		console.warn(
 			'Warning: local-config.json is missing. Did you create one?\n'
