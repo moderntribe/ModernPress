@@ -15,13 +15,13 @@ $c = Comparison_Table_Block_Controller::factory( [
 	'block_classes' => 'wp-block-tribe-comparison-table',
 ] );
 
-$wrapper_attrs     = get_block_wrapper_attributes(
+$wrapper_attrs   = get_block_wrapper_attributes(
 	[
 		'class' => $c->get_block_classes(),
 		'style' => $c->get_block_styles(),
 	]
 );
-$row_controllers   = $c->has_columns() ? $c->get_row_controllers() : [];
+$row_controllers = $c->has_columns() ? $c->get_row_controllers() : [];
 ?>
 <figure <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="b-comparison-table__desktop">

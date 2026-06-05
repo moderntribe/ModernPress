@@ -33,14 +33,15 @@ if ( $c->is_category_row() ) :
 		</th>
 	</tr>
 	<?php
-	return;
+else :
+	?>
+	<tr <?php echo $row_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+		<th scope="row" class="b-comparison-table__feature-label t-body-small">
+			<?php echo esc_html( $c->get_label() ); ?>
+		</th>
+		<?php foreach ( $c->get_cells() as $index => $cell ) : ?>
+			<?php echo $c->render_cell( $index, $cell ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		<?php endforeach; ?>
+	</tr>
+	<?php
 endif;
-?>
-<tr <?php echo $row_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
-	<th scope="row" class="b-comparison-table__feature-label t-body-small">
-		<?php echo esc_html( $c->get_label() ); ?>
-	</th>
-	<?php foreach ( $c->get_cells() as $index => $cell ) : ?>
-		<?php echo $c->render_cell( $index, $cell ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-	<?php endforeach; ?>
-</tr>

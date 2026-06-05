@@ -59,35 +59,18 @@ class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
 		return ! empty( $this->columns[ $index ]['isHighlighted'] );
 	}
 
-	/**
-	 * @param array{type?: string, value?: string} $cell
-	 */
-	public static function get_cell_accessible_label( array $cell ): string {
-		$type = $cell['type'] ?? 'dash';
-
-		if ( 'check' === $type ) {
-			return __( 'Included', 'tribe' );
-		}
-
-		if ( 'text' === $type ) {
-			return $cell['value'] ?? '';
-		}
-
-		return __( 'Not included', 'tribe' );
-	}
-
 	public function render_cell( int $index, array $cell ): string {
 		$type            = $cell['type'] ?? 'dash';
 		$highlight_class = $this->is_column_highlighted( $index ) ? ' b-comparison-table__col--highlighted' : '';
 
 		if ( 'check' === $type ) {
 			$icon_picker = new Icon_Picker( [
-				'selectedIcon'     => 'icon-circle-check',
-				'selectedIconColor'=> 'currentColor',
-				'selectedBgColor'  => 'transparent',
-				'iconSize'         => 24,
-				'iconPadding'      => 0,
-				'iconLabel'        => __( 'Included', 'tribe' ),
+				'selectedIcon'      => 'icon-circle-check',
+				'selectedIconColor' => 'currentColor',
+				'selectedBgColor'   => 'transparent',
+				'iconSize'          => 24,
+				'iconPadding'       => 0,
+				'iconLabel'         => __( 'Included', 'tribe' ),
 			] );
 
 			return sprintf(
@@ -139,6 +122,23 @@ class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
 			esc_html( $this->get_label() ),
 			$cells_html
 		);
+	}
+
+	/**
+	 * @param array{type?: string, value?: string} $cell
+	 */
+	public static function get_cell_accessible_label( array $cell ): string {
+		$type = $cell['type'] ?? 'dash';
+
+		if ( 'check' === $type ) {
+			return __( 'Included', 'tribe' );
+		}
+
+		if ( 'text' === $type ) {
+			return $cell['value'] ?? '';
+		}
+
+		return __( 'Not included', 'tribe' );
 	}
 
 }

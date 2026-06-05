@@ -95,7 +95,7 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 	}
 
 	/**
-	 * @return array<int, Comparison_Row_Block_Controller>
+	 * @return array<int, \Tribe\Plugin\Components\Blocks\Comparison_Row_Block_Controller>
 	 */
 	public function get_row_controllers(): array {
 		$columns = $this->columns;
