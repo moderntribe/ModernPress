@@ -1,0 +1,38 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "tribe/comparison-row",
+	"version": "1.0.0",
+	"title": "Comparison Row",
+	"category": "theme",
+	"description": "A row in a comparison table.",
+	"parent": [ "tribe/comparison-table" ],
+	"attributes": {
+		"rowType": {
+			"type": "string",
+			"default": "feature",
+			"enum": [ "category", "feature" ]
+		},
+		"label": {
+			"type": "string",
+			"default": ""
+		},
+		"cells": {
+			"type": "array",
+			"default": []
+		}
+	},
+	"usesContext": [ "tribe/comparison-table/columns" ],
+	"supports": {
+		"html": false,
+		"spacing": {
+			"margin": false,
+			"padding": false
+		}
+	},
+	"textdomain": "tribe",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php"
+}

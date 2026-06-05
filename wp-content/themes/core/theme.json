@@ -17,6 +17,8 @@
 			"core/accordion-heading",
 			"core/accordion-panel",
 			"tribe/carousel-slide",
+			"tribe/comparison-row",
+			"tribe/comparison-table",
 			"tribe/horizontal-tab",
 			"tribe/logo-marquee",
 			"tribe/vertical-tab"

@@ -1,0 +1,214 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Comparison Table - FE / Editor Styles
+ *
+ * ------------------------------------------------------------------------- */
+
+@import './_variables.pcss';
+
+.b-comparison-table {
+	width: 100%;
+}
+
+.b-comparison-table__desktop {
+	display: block;
+}
+
+.b-comparison-table__mobile {
+	display: none;
+}
+
+.b-comparison-table__scroll {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+
+	&:focus-visible {
+		outline: 2px solid var(--color-blue);
+		outline-offset: 2px;
+	}
+}
+
+.b-comparison-table__table {
+	width: 100%;
+	min-width: 48rem;
+	position: relative;
+	border-collapse: collapse;
+}
+
+.b-comparison-table__head th,
+.b-comparison-table__body th,
+.b-comparison-table__body td,
+.b-comparison-table__foot td {
+	border-bottom: 1px solid var(--comparison-table-border-color);
+	padding: var(--spacer-20) var(--spacer-10);
+	vertical-align: middle;
+}
+
+.b-comparison-table__column-header {
+	background: var(--comparison-table-header-background);
+	text-align: center;
+}
+
+.b-comparison-table__badge {
+	display: inline-block;
+	margin-bottom: var(--spacer-10);
+	padding: 0.125rem 0.5rem;
+	border-radius: 999px;
+	background: var(--color-blue);
+	color: var(--color-white);
+}
+
+.b-comparison-table__column-label {
+	display: block;
+}
+
+.b-comparison-table__column-subtitle {
+	display: block;
+	margin-top: var(--spacer-10);
+	opacity: 0.8;
+}
+
+.b-comparison-table__feature-header,
+.b-comparison-table__feature-label {
+	text-align: left;
+}
+
+.b-comparison-table__feature-label,
+.b-comparison-table__category {
+	position: sticky;
+	left: 0;
+	z-index: 1;
+	background: var(--comparison-table-sticky-background);
+}
+
+.b-comparison-table__category {
+	background: var(--comparison-table-category-background);
+	font-weight: var(--font-weight-bold);
+	text-align: left;
+	text-transform: uppercase;
+}
+
+.b-comparison-table__cell {
+	text-align: center;
+}
+
+.b-comparison-table__cell-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--spacer-30);
+	height: var(--spacer-30);
+	color: var(--comparison-table-icon-color);
+
+	svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+}
+
+.b-comparison-table__col--highlighted {
+	background: var(--comparison-table-highlight-background);
+}
+
+.b-comparison-table__footer-cell {
+	text-align: center;
+}
+
+.b-comparison-table__footer-spacer {
+	border-bottom: 0;
+}
+
+.wp-block-tribe-comparison-table__rows {
+	margin-top: var(--spacer-20);
+}
+
+/* -------------------------------------------------------------------------
+ * Mobile card stack
+ * ------------------------------------------------------------------------- */
+
+@media (--mq-wp-small-max) {
+
+	.b-comparison-table__desktop {
+		display: none;
+	}
+
+	.b-comparison-table__mobile {
+		display: block;
+	}
+
+	.b-comparison-table__cards {
+		display: grid;
+		gap: var(--spacer-20);
+	}
+
+	.b-comparison-table__card {
+		border: 1px solid var(--comparison-table-border-color);
+		border-radius: 4px;
+		overflow: hidden;
+	}
+
+	.b-comparison-table__card--highlighted {
+		border-color: var(--color-blue);
+		box-shadow: 0 0 0 1px var(--color-blue);
+	}
+
+	.b-comparison-table__card-header {
+		padding: var(--spacer-20);
+		background: var(--comparison-table-header-background);
+		text-align: center;
+	}
+
+	.b-comparison-table__card--highlighted .b-comparison-table__card-header {
+		background: var(--comparison-table-highlight-background);
+	}
+
+	.b-comparison-table__card-title {
+		margin: 0;
+	}
+
+	.b-comparison-table__card-subtitle {
+		margin: var(--spacer-10) 0 0;
+		opacity: 0.8;
+	}
+
+	.b-comparison-table__card-features {
+		margin: 0;
+	}
+
+	.b-comparison-table__card-category {
+		padding: var(--spacer-10) var(--spacer-20);
+		background: var(--comparison-table-category-background);
+		font-weight: var(--font-weight-bold);
+		text-transform: uppercase;
+	}
+
+	.b-comparison-table__card-feature {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--spacer-20);
+		padding: var(--spacer-10) var(--spacer-20);
+		border-bottom: 1px solid var(--comparison-table-border-color);
+	}
+
+	.b-comparison-table__card-feature-label {
+		flex: 1 1 auto;
+	}
+
+	.b-comparison-table__card-feature-value {
+		flex: 0 0 auto;
+		text-align: right;
+	}
+
+	.b-comparison-table__card-check {
+		color: var(--color-blue);
+		font-weight: var(--font-weight-bold);
+	}
+
+	.b-comparison-table__card-footer {
+		padding: var(--spacer-20);
+		text-align: center;
+	}
+}

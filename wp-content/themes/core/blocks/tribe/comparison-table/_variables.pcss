@@ -1,0 +1,45 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Comparison Table - Variables
+ *
+ * ------------------------------------------------------------------------- */
+
+:root,
+:--light-themes {
+	--comparison-table-border-color: var(--color-neutral-30);
+	--comparison-table-header-background: var(--color-neutral-10);
+	--comparison-table-category-background: var(--color-neutral-10);
+	--comparison-table-highlight-background: color-mix(
+		in srgb,
+		var(--color-blue) 12%,
+		transparent
+	);
+	--comparison-table-sticky-background: var(--color-white);
+	--comparison-table-icon-color: var(--color-blue);
+}
+
+:--dark-themes {
+	--comparison-table-border-color: var(--color-neutral-70);
+	--comparison-table-header-background: var(--color-neutral-80);
+	--comparison-table-category-background: var(--color-neutral-80);
+	--comparison-table-highlight-background: color-mix(
+		in srgb,
+		var(--color-blue) 24%,
+		transparent
+	);
+	--comparison-table-sticky-background: var(--color-neutral-90);
+	--comparison-table-icon-color: var(--color-white);
+}
+
+:--brand-theme {
+	--comparison-table-border-color: var(--color-dark-blue);
+	--comparison-table-header-background: var(--color-dark-blue);
+	--comparison-table-category-background: var(--color-dark-blue);
+	--comparison-table-highlight-background: color-mix(
+		in srgb,
+		var(--color-white) 12%,
+		transparent
+	);
+	--comparison-table-sticky-background: var(--color-blue);
+	--comparison-table-icon-color: var(--color-white);
+}
