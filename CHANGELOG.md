@@ -15,6 +15,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - Updated: Related Posts now supports current post types, taxonomy-based matching, latest-item fallbacks, and mixed post type manual selection.
 - Updated: Related Posts block now uses Post Search Field component.
 - Fixed: Fixes an issue where `lando start` overwrites the host's `node_modules` with Linux binaries, causing `lefthook` to fail when making commits on macOS.
+- Updated: Open up the default block settings throughout ModernPress to allow more customization for design & client editors. New [Block Settings Support page](https://github.com/moderntribe/ModernPress/wiki/Block-Setting-Support) added to the GitHub Wiki.
 
 ## [2026.04]
 
