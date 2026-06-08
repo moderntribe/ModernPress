@@ -64,20 +64,10 @@ class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
 		$highlight_class = $this->is_column_highlighted( $index ) ? ' b-comparison-table__col--highlighted' : '';
 
 		if ( 'check' === $type ) {
-			$icon_picker = new Icon_Picker( [
-				'selectedIcon'      => 'icon-circle-check',
-				'selectedIconColor' => 'currentColor',
-				'selectedBgColor'   => 'transparent',
-				'iconSize'          => 24,
-				'iconPadding'       => 0,
-				'iconLabel'         => __( 'Included', 'tribe' ),
-			] );
-
 			return sprintf(
-				'<td class="b-comparison-table__cell b-comparison-table__cell--check%s"><span class="b-comparison-table__cell-icon" aria-label="%s">%s</span></td>',
+				'<td class="b-comparison-table__cell b-comparison-table__cell--check%s">%s</td>',
 				esc_attr( $highlight_class ),
-				esc_attr__( 'Included', 'tribe' ),
-				$icon_picker->get_svg()
+				self::get_check_icon_markup()
 			);
 		}
 
@@ -121,6 +111,23 @@ class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
 			esc_attr( $row_classes ),
 			esc_html( $this->get_label() ),
 			$cells_html
+		);
+	}
+
+	public static function get_check_icon_markup(): string {
+		$icon_picker = new Icon_Picker( [
+			'selectedIcon'      => 'icon-circle-check',
+			'selectedIconColor' => 'currentColor',
+			'selectedBgColor'   => 'transparent',
+			'iconSize'          => 24,
+			'iconPadding'       => 0,
+			'iconLabel'         => __( 'Included', 'tribe' ),
+		] );
+
+		return sprintf(
+			'<span class="b-comparison-table__cell-icon" aria-label="%s">%s</span>',
+			esc_attr__( 'Included', 'tribe' ),
+			$icon_picker->get_svg()
 		);
 	}
 

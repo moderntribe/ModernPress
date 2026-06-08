@@ -136,7 +136,7 @@ $row_controllers = $c->has_columns() ? $c->get_row_controllers() : [];
 									</span>
 									<span class="b-comparison-table__card-feature-value t-body-small">
 										<?php if ( 'check' === ( $cell['type'] ?? 'dash' ) ) : ?>
-											<span class="b-comparison-table__card-check" aria-label="<?php echo esc_attr( $cell_label ); ?>">✓</span>
+											<?php echo Comparison_Row_Block_Controller::get_check_icon_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 										<?php else : ?>
 											<?php echo esc_html( $cell_label ); ?>
 										<?php endif; ?>
