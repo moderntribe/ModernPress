@@ -1,15 +1,23 @@
 /* -------------------------------------------------------------------------
  *
- * Block - Comparison Table - Editor-only Styles
+ * Block - Comparison Table - Styles - Editor
  *
  * ------------------------------------------------------------------------- */
 
 @import './_editorVariables.pcss';
 
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Editor Root
+ * ----------------------------------------------------------------------- */
+
 .b-comparison-table-editor {
 	display: grid;
 	gap: var(--spacer-20);
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Editor Buttons
+ * ----------------------------------------------------------------------- */
 
 :--dark-themes .b-comparison-table-editor .components-button.is-secondary {
 	color: var(--comparison-table-editor-button-color);
@@ -27,6 +35,10 @@
 	}
 }
 
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Column Bar
+ * ----------------------------------------------------------------------- */
+
 .b-comparison-table-editor__columns-bar {
 	width: 100%;
 	border: 1px solid var(--comparison-table-editor-border-color);
@@ -39,6 +51,10 @@
 	flex-wrap: nowrap;
 	align-items: stretch;
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Column Chip
+ * ----------------------------------------------------------------------- */
 
 .b-comparison-table-editor__column-chip {
 	display: flex;
@@ -79,6 +95,10 @@
 	background: var(--comparison-table-editor-badge-background);
 }
 
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Column Controls
+ * ----------------------------------------------------------------------- */
+
 .b-comparison-table-editor__column-drag,
 .b-comparison-table-editor__column-delete {
 	padding: 0 !important;
@@ -99,6 +119,10 @@
 	padding: var(--spacer-10) var(--spacer-20);
 }
 
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Row List
+ * ----------------------------------------------------------------------- */
+
 .b-comparison-table-editor__rows {
 	display: grid;
 	gap: 0;
@@ -106,6 +130,10 @@
 	border-radius: 2px;
 	overflow: hidden;
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Row Wrapper
+ * ----------------------------------------------------------------------- */
 
 .b-comparison-table-editor__row-wrapper {
 	cursor: pointer;
@@ -154,6 +182,10 @@
 	}
 }
 
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Row
+ * ----------------------------------------------------------------------- */
+
 .b-comparison-table-editor__row {
 	background: var(--comparison-table-editor-surface);
 
@@ -165,6 +197,10 @@
 		box-shadow: var(--comparison-table-editor-preview-shadow);
 	}
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Row Toolbar
+ * ----------------------------------------------------------------------- */
 
 .b-comparison-table-editor__row-toolbar {
 	display: flex;
@@ -187,15 +223,6 @@
 	}
 }
 
-.b-comparison-table-editor__row-cells {
-	padding: 0 var(--spacer-20) var(--spacer-20);
-}
-
-.b-comparison-table-editor__row-wrapper.is-section-child
-	.b-comparison-table-editor__row-cells {
-	padding-left: calc(var(--spacer-20) + var(--spacer-20) + 3px);
-}
-
 .b-comparison-table-editor__row-label-text {
 	flex: 1 1 auto;
 	font-weight: 600;
@@ -210,6 +237,10 @@
 	}
 }
 
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Row Controls
+ * ----------------------------------------------------------------------- */
+
 .b-comparison-table-editor__row-drag,
 .b-comparison-table-editor__row-delete {
 	padding: 0 !important;
@@ -221,6 +252,19 @@
 	&:focus {
 		color: var(--comparison-table-editor-icon-hover-color) !important;
 	}
+}
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Cell Summary
+ * ----------------------------------------------------------------------- */
+
+.b-comparison-table-editor__row-cells {
+	padding: 0 var(--spacer-20) var(--spacer-20);
+}
+
+.b-comparison-table-editor__row-wrapper.is-section-child
+	.b-comparison-table-editor__row-cells {
+	padding-left: calc(var(--spacer-20) + var(--spacer-20) + 3px);
 }
 
 .b-comparison-table-editor__cell-summary {
@@ -269,10 +313,18 @@
 	color: var(--comparison-table-editor-check-color);
 }
 
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Drag Overlay
+ * ----------------------------------------------------------------------- */
+
 .b-comparison-table-editor__drag-overlay {
 	display: grid;
 	gap: 0;
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Row Actions
+ * ----------------------------------------------------------------------- */
 
 .b-comparison-table-editor__row-actions {
 	padding: var(--spacer-20);
@@ -280,10 +332,18 @@
 	background: var(--comparison-table-editor-surface-muted);
 }
 
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Preview
+ * ----------------------------------------------------------------------- */
+
 .b-comparison-table-editor__preview {
 	border-top: 1px dashed var(--comparison-table-editor-preview-border-color);
 	padding-top: var(--spacer-20);
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Inner Blocks
+ * ----------------------------------------------------------------------- */
 
 .wp-block-tribe-comparison-table__inner-blocks {
 	display: none;

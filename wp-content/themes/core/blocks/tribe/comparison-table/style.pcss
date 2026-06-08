@@ -1,15 +1,23 @@
 /* -------------------------------------------------------------------------
  *
- * Block - Comparison Table - FE / Editor Styles
+ * Block - Comparison Table - Styles - FE / Editor
  *
  * ------------------------------------------------------------------------- */
 
 @import './_variables.pcss';
 
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Root
+ * ----------------------------------------------------------------------- */
+
 .b-comparison-table {
 	width: 100%;
 	container: comparison-table / inline-size;
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Layout
+ * ----------------------------------------------------------------------- */
 
 .b-comparison-table__desktop {
 	display: none;
@@ -27,6 +35,10 @@
 	}
 }
 
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Desktop Scroll Region
+ * ----------------------------------------------------------------------- */
+
 .b-comparison-table__scroll {
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
@@ -36,6 +48,10 @@
 		outline-offset: 2px;
 	}
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Desktop Table
+ * ----------------------------------------------------------------------- */
 
 .b-comparison-table__table {
 	width: 100%;
@@ -52,6 +68,10 @@
 	padding: var(--spacer-20) var(--spacer-10);
 	vertical-align: middle;
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Column Header
+ * ----------------------------------------------------------------------- */
 
 .b-comparison-table__column-header {
 	background: var(--comparison-table-header-background);
@@ -77,6 +97,10 @@
 	opacity: 0.8;
 }
 
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Rows
+ * ----------------------------------------------------------------------- */
+
 .b-comparison-table__feature-header,
 .b-comparison-table__feature-label {
 	text-align: left;
@@ -88,6 +112,10 @@
 	text-align: left;
 	text-transform: uppercase;
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Cells
+ * ----------------------------------------------------------------------- */
 
 .b-comparison-table__cell {
 	text-align: center;
@@ -114,9 +142,17 @@
 	}
 }
 
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Highlighted Column
+ * ----------------------------------------------------------------------- */
+
 .b-comparison-table__col--highlighted {
 	background: var(--comparison-table-highlight-background);
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Footer
+ * ----------------------------------------------------------------------- */
 
 .b-comparison-table__footer-cell {
 	text-align: center;
@@ -126,18 +162,26 @@
 	border-bottom: 0;
 }
 
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Editor Inner Blocks
+ * ----------------------------------------------------------------------- */
+
 .wp-block-tribe-comparison-table__rows {
 	margin-top: var(--spacer-20);
 }
 
-/* -------------------------------------------------------------------------
- * Mobile card stack (default)
- * ------------------------------------------------------------------------- */
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Mobile Card Stack
+ * ----------------------------------------------------------------------- */
 
 .b-comparison-table__cards {
 	display: grid;
 	gap: var(--spacer-20);
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Mobile Card
+ * ----------------------------------------------------------------------- */
 
 .b-comparison-table__card {
 	border: 1px solid var(--comparison-table-border-color);
@@ -149,6 +193,10 @@
 	border-color: var(--color-blue);
 	box-shadow: 0 0 0 1px var(--color-blue);
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Mobile Card Header
+ * ----------------------------------------------------------------------- */
 
 .b-comparison-table__card-header {
 	padding: var(--spacer-20);
@@ -168,6 +216,10 @@
 	margin: var(--spacer-10) 0 0;
 	opacity: 0.8;
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Mobile Card Features
+ * ----------------------------------------------------------------------- */
 
 .b-comparison-table__card-features {
 	margin: 0;
@@ -197,6 +249,10 @@
 	flex: 0 0 auto;
 	text-align: right;
 }
+
+/* -----------------------------------------------------------------------
+ * Comparison Table Block - Mobile Card Footer
+ * ----------------------------------------------------------------------- */
 
 .b-comparison-table__card-footer {
 	padding: var(--spacer-20);

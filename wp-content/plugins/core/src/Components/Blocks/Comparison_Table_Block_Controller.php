@@ -26,8 +26,6 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 		$this->columns          = $this->attributes['columns'] ?? [];
 		$this->show_footer_ctas = ! empty( $this->attributes['showFooterCtas'] );
 		$this->rows             = $this->build_rows_from_inner_blocks();
-
-		$this->block_classes .= ' b-comparison-table';
 	}
 
 	/**

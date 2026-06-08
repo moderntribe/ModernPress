@@ -12,7 +12,7 @@ use Tribe\Plugin\Components\Blocks\Comparison_Table_Block_Controller;
 $c = Comparison_Table_Block_Controller::factory( [
 	'attributes'    => $attributes,
 	'block'         => $block,
-	'block_classes' => 'wp-block-tribe-comparison-table',
+	'block_classes' => 'b-comparison-table',
 ] );
 
 $wrapper_attrs   = get_block_wrapper_attributes(
@@ -27,7 +27,8 @@ $row_controllers = $c->has_columns() ? $c->get_row_controllers() : [];
 	<div class="b-comparison-table__desktop">
 		<div
 			class="b-comparison-table__scroll"
-			data-js="comparison-table"
+			role="region"
+			aria-label="<?php echo esc_attr__( 'Comparison table', 'tribe' ); ?>"
 			tabindex="0"
 		>
 			<table class="b-comparison-table__table">
@@ -96,7 +97,7 @@ $row_controllers = $c->has_columns() ? $c->get_row_controllers() : [];
 	</div>
 
 	<?php if ( $c->has_columns() ) : ?>
-		<div class="b-comparison-table__mobile" data-js="comparison-table-cards">
+		<div class="b-comparison-table__mobile">
 			<div class="b-comparison-table__cards">
 				<?php foreach ( $c->get_columns() as $column_index => $column ) : ?>
 					<article class="b-comparison-table__card<?php echo ! empty( $column['isHighlighted'] ) ? ' b-comparison-table__card--highlighted' : ''; ?>">
