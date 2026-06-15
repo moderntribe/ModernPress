@@ -105,7 +105,7 @@
 		"lucatume/wp-browser": "^4.5",
 		"moderntribe/coding-standards": "^3.2",
 		"php-stubs/acf-pro-stubs": "^6.0",
-		"php-stubs/wordpress-tests-stubs": "^6.2",
+		"php-stubs/wordpress-tests-stubs": "^7.0",
 		"phpstan/extension-installer": "^1.3",
 		"phpstan/phpstan": "^2.1",
 		"szepeviktor/phpstan-wordpress": "^2.0"
@@ -118,15 +118,15 @@
 		"ext-json": "*",
 		"block-editor-custom-alignments/block-editor-custom-alignments": "^1.0",
 		"composer/installers": "^2.2",
-		"gravity/gravityforms": "^2.9",
+		"gravity/gravityforms": "^2.10",
 		"johnbillion/extended-cpts": "^5.0",
 		"moderntribe/tribe-glomar": "dev-main",
 		"moderntribe/tribe_embed": "^1.1",
 		"php-di/php-di": "^7.1",
-		"vinkla/extended-acf": "^14.6",
+		"vinkla/extended-acf": "^15.0",
 		"vlucas/phpdotenv": "^5.5",
-		"wp-cli/wp-cli-bundle": "^2.12",
-		"wpackagist-plugin/disable-emojis": "^1.7",
+		"wp-cli/wp-cli-bundle": "*",
+		"wpackagist-plugin/disable-emojis": "^1.9",
 		"wpackagist-plugin/duplicate-post": "^4.5",
 		"wpackagist-plugin/safe-svg": "^2.4",
 		"wpackagist-plugin/social-sharing-block": "^1.0",
@@ -134,7 +134,7 @@
 		"wpengine/advanced-custom-fields-pro": "^6.4"
 	},
 	"extra": {
-		"wordpress-version": "6.9.4",
+		"wordpress-version": "7.0",
 		"installer-paths": {
 			"wp-content/plugins/{$name}": [
 				"type:wordpress-plugin"

@@ -16,11 +16,7 @@
 	"supports": {
 		"inserter": false,
 		"html": false,
-		"alignCustom": [
-			"wide",
-			"grid",
-			"full"
-		],
+		"alignCustom": [ "wide", "grid", "full" ],
 		"spacing": {
 			"margin": true,
 			"padding": true
