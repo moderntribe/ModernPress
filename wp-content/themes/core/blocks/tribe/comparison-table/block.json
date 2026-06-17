@@ -18,8 +18,7 @@
 					"badge": "",
 					"ctaLabel": "Get Started",
 					"ctaUrl": "#",
-					"ctaStyle": "outlined",
-					"isHighlighted": false
+					"ctaStyle": "outlined"
 				},
 				{
 					"id": "col-pro",
@@ -28,8 +27,7 @@
 					"badge": "Popular",
 					"ctaLabel": "Start free trial",
 					"ctaUrl": "#",
-					"ctaStyle": "outlined",
-					"isHighlighted": true
+					"ctaStyle": "outlined"
 				},
 				{
 					"id": "col-enterprise",
@@ -38,8 +36,7 @@
 					"badge": "",
 					"ctaLabel": "Contact sales",
 					"ctaUrl": "#",
-					"ctaStyle": "outlined",
-					"isHighlighted": false
+					"ctaStyle": "outlined"
 				}
 			]
 		},
@@ -57,9 +54,18 @@
 					"rowType": "feature",
 					"label": "Users",
 					"cells": [
-						{ "type": "text", "value": "5" },
-						{ "type": "text", "value": "25" },
-						{ "type": "text", "value": "Unlimited" }
+						{
+							"type": "text",
+							"value": "5"
+						},
+						{
+							"type": "text",
+							"value": "25"
+						},
+						{
+							"type": "text",
+							"value": "Unlimited"
+						}
 					]
 				}
 			},
@@ -69,9 +75,15 @@
 					"rowType": "feature",
 					"label": "Single sign-on (SSO)",
 					"cells": [
-						{ "type": "dash" },
-						{ "type": "check" },
-						{ "type": "check" }
+						{
+							"type": "dash"
+						},
+						{
+							"type": "check"
+						},
+						{
+							"type": "check"
+						}
 					]
 				}
 			}
@@ -86,6 +98,14 @@
 			"type": "boolean",
 			"default": true
 		},
+		"mobileCardView": {
+			"type": "boolean",
+			"default": false
+		},
+		"mobileCardCarousel": {
+			"type": "boolean",
+			"default": false
+		},
 		"previewRows": {
 			"type": "array",
 			"default": []
@@ -96,7 +116,11 @@
 	},
 	"supports": {
 		"html": false,
-		"alignCustom": [ "wide", "grid", "full" ],
+		"alignCustom": [
+			"wide",
+			"grid",
+			"full"
+		],
 		"spacing": {
 			"margin": true,
 			"padding": false
@@ -105,6 +129,10 @@
 	"textdomain": "tribe",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css",
+	"style": [
+		"file:./style-index.css",
+		"file:./view.css"
+	],
+	"viewScript": "file:./view.js",
 	"render": "file:./render.php"
 }

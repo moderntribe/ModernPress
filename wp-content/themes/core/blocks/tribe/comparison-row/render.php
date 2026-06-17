@@ -17,7 +17,7 @@ $c = Comparison_Row_Block_Controller::factory( [
 
 $row_attrs = get_block_wrapper_attributes(
 	[
-		'class' => trim( 'b-comparison-table__row ' . $c->get_block_classes() ),
+		'class' => trim( 'b-comparison-table__row ' . $c->get_row_type_classes() . ' ' . $c->get_block_classes() ),
 	]
 );
 
@@ -27,7 +27,7 @@ if ( $c->is_category_row() ) :
 		<th
 			scope="colgroup"
 			colspan="<?php echo esc_attr( (string) $c->get_colspan() ); ?>"
-			class="b-comparison-table__category t-body-small"
+			class="b-comparison-table__category t-body"
 		>
 			<?php echo esc_html( $c->get_label() ); ?>
 		</th>

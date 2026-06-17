@@ -59,7 +59,8 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 		[ clientId ]
 	);
 
-	const { columns, showFooterCtas } = attributes;
+	const { columns, showFooterCtas, mobileCardView, mobileCardCarousel } =
+		attributes;
 	const [ selectedColumnId, setSelectedColumnId ] = useState(
 		columns[ 0 ]?.id || ''
 	);
@@ -264,20 +265,8 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 	};
 
 	/**
-	 * Toggles highlight on one column and clears it on all others.
-	 *
-	 * @param {number} index Column index to highlight.
+	 * Adds a new column and matching cells on every row.
 	 */
-	const toggleHighlight = ( index ) => {
-		const nextColumns = columns.map( ( column, columnIndex ) => ( {
-			...column,
-			isHighlighted:
-				columnIndex === index ? ! column.isHighlighted : false,
-		} ) );
-
-		setAttributes( { columns: nextColumns } );
-	};
-
 	const addColumn = () => {
 		const nextColumn = createColumn( columns.length, {
 			label: __( 'New plan', 'tribe' ),
@@ -557,6 +546,17 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 					onChangeShowFooterCtas={ ( value ) =>
 						setAttributes( { showFooterCtas: value } )
 					}
+					mobileCardView={ mobileCardView }
+					onChangeMobileCardView={ ( value ) =>
+						setAttributes( {
+							mobileCardView: value,
+							...( ! value ? { mobileCardCarousel: false } : {} ),
+						} )
+					}
+					mobileCardCarousel={ mobileCardCarousel }
+					onChangeMobileCardCarousel={ ( value ) =>
+						setAttributes( { mobileCardCarousel: value } )
+					}
 				/>
 
 				<ColumnInspectorPanel
@@ -564,7 +564,6 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 					selectedColumnIndex={ selectedColumnIndex }
 					showFooterCtas={ showFooterCtas }
 					onUpdateColumn={ updateColumn }
-					onToggleHighlight={ toggleHighlight }
 				/>
 			</InspectorControls>
 		</div>

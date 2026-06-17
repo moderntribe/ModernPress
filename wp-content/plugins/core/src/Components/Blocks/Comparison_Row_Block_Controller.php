@@ -2,7 +2,6 @@
 
 namespace Tribe\Plugin\Components\Blocks;
 
-use Tribe\Plugin\Blocks\Helpers\Icon_Picker;
 use Tribe\Plugin\Components\Abstracts\Abstract_Block_Controller;
 
 class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
@@ -20,6 +19,8 @@ class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
 	 */
 	protected array $columns;
 
+	protected ?int $feature_row_index = null;
+
 	public function __construct( array $args = [] ) {
 		parent::__construct( $args );
 
@@ -27,6 +28,28 @@ class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
 		$this->label    = $this->attributes['label'] ?? '';
 		$this->cells    = $this->attributes['cells'] ?? [];
 		$this->columns  = $args['columns'] ?? [];
+
+		if ( isset( $args['feature_row_index'] ) ) {
+			$this->feature_row_index = (int) $args['feature_row_index'];
+		}
+	}
+
+	public function set_feature_row_index( int $index ): void {
+		$this->feature_row_index = $index;
+	}
+
+	public function get_row_type_classes(): string {
+		if ( $this->is_category_row() ) {
+			return 'b-comparison-table__row--category';
+		}
+
+		$classes = 'b-comparison-table__row--feature';
+
+		if ( null !== $this->feature_row_index && 1 === $this->feature_row_index % 2 ) {
+			$classes .= ' b-comparison-table__row--feature-alt';
+		}
+
+		return $classes;
 	}
 
 	public function is_category_row(): bool {
@@ -55,19 +78,13 @@ class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
 		return $cells;
 	}
 
-	public function is_column_highlighted( int $index ): bool {
-		return ! empty( $this->columns[ $index ]['isHighlighted'] );
-	}
-
 	public function render_cell( int $index, array $cell ): string {
-		$type            = $cell['type'] ?? 'dash';
-		$highlight_class = $this->is_column_highlighted( $index ) ? ' b-comparison-table__col--highlighted' : '';
+		$type = $cell['type'] ?? 'dash';
 
 		if ( 'check' === $type ) {
 			return sprintf(
-				'<td class="b-comparison-table__cell b-comparison-table__cell--check%s">%s</td>',
-				esc_attr( $highlight_class ),
-				self::get_check_icon_markup()
+				'<td class="b-comparison-table__cell b-comparison-table__cell--check">%s</td>',
+				$this->get_check_icon_markup()
 			);
 		}
 
@@ -75,25 +92,25 @@ class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
 			$value = $cell['value'] ?? '';
 
 			return sprintf(
-				'<td class="b-comparison-table__cell b-comparison-table__cell--text%s"><span class="b-comparison-table__cell-text t-body-small">%s</span></td>',
-				esc_attr( $highlight_class ),
+				'<td class="b-comparison-table__cell b-comparison-table__cell--text"><span class="b-comparison-table__cell-text t-body-small">%s</span></td>',
 				esc_html( $value )
 			);
 		}
 
 		return sprintf(
-			'<td class="b-comparison-table__cell b-comparison-table__cell--dash%s"><span class="b-comparison-table__cell-dash" aria-label="%s">&mdash;</span></td>',
-			esc_attr( $highlight_class ),
-			esc_attr__( 'Not included', 'tribe' )
+			'<td class="b-comparison-table__cell b-comparison-table__cell--dash">%s</td>',
+			$this->get_dash_icon_markup()
 		);
 	}
 
 	public function render_row(): string {
-		$row_classes = trim( 'b-comparison-table__row wp-block-tribe-comparison-row ' . $this->get_block_classes() );
+		$row_classes = trim(
+			'b-comparison-table__row ' . $this->get_row_type_classes() . ' wp-block-tribe-comparison-row ' . $this->get_block_classes()
+		);
 
 		if ( $this->is_category_row() ) {
 			return sprintf(
-				'<tr class="%1$s"><th scope="colgroup" colspan="%2$s" class="b-comparison-table__category t-body-small">%3$s</th></tr>',
+				'<tr class="%1$s"><th scope="colgroup" colspan="%2$s" class="b-comparison-table__category t-body">%3$s</th></tr>',
 				esc_attr( $row_classes ),
 				esc_attr( (string) $this->get_colspan() ),
 				esc_html( $this->get_label() )
@@ -114,27 +131,24 @@ class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
 		);
 	}
 
-	public static function get_check_icon_markup(): string {
-		$icon_picker = new Icon_Picker( [
-			'selectedIcon'      => 'icon-circle-check',
-			'selectedIconColor' => 'currentColor',
-			'selectedBgColor'   => 'transparent',
-			'iconSize'          => 24,
-			'iconPadding'       => 0,
-			'iconLabel'         => __( 'Included', 'tribe' ),
-		] );
-
+	public function get_check_icon_markup(): string {
 		return sprintf(
-			'<span class="b-comparison-table__cell-icon" aria-label="%s">%s</span>',
-			esc_attr__( 'Included', 'tribe' ),
-			$icon_picker->get_svg()
+			'<span class="b-comparison-table__cell-icon b-comparison-table__cell-icon--check" aria-label="%s"></span>',
+			esc_attr__( 'Included', 'tribe' )
+		);
+	}
+
+	public function get_dash_icon_markup(): string {
+		return sprintf(
+			'<span class="b-comparison-table__cell-icon b-comparison-table__cell-icon--dash" aria-label="%s"></span>',
+			esc_attr__( 'Not included', 'tribe' )
 		);
 	}
 
 	/**
 	 * @param array{type?: string, value?: string} $cell
 	 */
-	public static function get_cell_accessible_label( array $cell ): string {
+	public function get_cell_accessible_label( array $cell ): string {
 		$type = $cell['type'] ?? 'dash';
 
 		if ( 'check' === $type ) {

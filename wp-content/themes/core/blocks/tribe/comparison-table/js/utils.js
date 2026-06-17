@@ -181,7 +181,6 @@ export function createColumn( index, overrides = {} ) {
 		ctaUrl: '',
 		ctaOpensInNewTab: false,
 		ctaStyle: 'outlined',
-		isHighlighted: false,
 		...overrides,
 	};
 }
@@ -221,7 +220,6 @@ export function getDefaultColumns( columnCount = 3 ) {
 			label: 'Pro',
 			subtitle: '$79/mo',
 			badge: 'Popular',
-			isHighlighted: true,
 			ctaLabel: 'Start free trial',
 			ctaUrl: '#',
 		},

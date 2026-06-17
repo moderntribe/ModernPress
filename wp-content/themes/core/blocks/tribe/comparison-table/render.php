@@ -1,6 +1,5 @@
 <?php declare(strict_types=1);
 
-use Tribe\Plugin\Components\Blocks\Comparison_Row_Block_Controller;
 use Tribe\Plugin\Components\Blocks\Comparison_Table_Block_Controller;
 
 /**
@@ -21,7 +20,9 @@ $wrapper_attrs   = get_block_wrapper_attributes(
 		'style' => $c->get_block_styles(),
 	]
 );
-$row_controllers = $c->has_columns() ? $c->get_row_controllers() : [];
+$row_controllers = $c->has_columns()
+	? $c->prepare_row_controllers_for_render( $c->get_row_controllers() )
+	: [];
 ?>
 <figure <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="b-comparison-table__desktop">
@@ -62,12 +63,8 @@ $row_controllers = $c->has_columns() ? $c->get_row_controllers() : [];
 
 				<tbody class="b-comparison-table__body">
 					<?php
-					if ( '' !== trim( $content ) ) {
-						echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					} else {
-						foreach ( $row_controllers as $row_controller ) {
-							echo $row_controller->render_row(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-						}
+					foreach ( $row_controllers as $row_controller ) {
+						echo $row_controller->render_row(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					}
 					?>
 				</tbody>
@@ -77,7 +74,7 @@ $row_controllers = $c->has_columns() ? $c->get_row_controllers() : [];
 						<tr class="b-comparison-table__row b-comparison-table__row--footer">
 							<td class="b-comparison-table__footer-spacer"></td>
 							<?php foreach ( $c->get_columns() as $index => $column ) : ?>
-								<td class="b-comparison-table__footer-cell<?php echo ! empty( $column['isHighlighted'] ) ? ' b-comparison-table__col--highlighted' : ''; ?>">
+								<td class="b-comparison-table__footer-cell">
 									<?php if ( $c->has_column_cta( $index ) ) : ?>
 										<a
 											href="<?php echo esc_url( $c->get_column_cta_url( $index ) ); ?>"
@@ -96,11 +93,34 @@ $row_controllers = $c->has_columns() ? $c->get_row_controllers() : [];
 		</div>
 	</div>
 
-	<?php if ( $c->has_columns() ) : ?>
+	<?php if ( $c->has_columns() && $c->mobile_card_view() ) : ?>
 		<div class="b-comparison-table__mobile">
-			<div class="b-comparison-table__cards">
+			<?php
+			$cards_wrapper_class = 'b-comparison-table__cards';
+
+			if ( $c->mobile_card_carousel() ) {
+				$cards_wrapper_class .= ' swiper';
+			}
+			?>
+			<div
+				class="<?php echo esc_attr( $cards_wrapper_class ); ?>"
+				<?php if ( $c->mobile_card_carousel() ) : ?>
+					data-swiper-settings="<?php echo esc_attr( $c->get_mobile_carousel_swiper_settings() ); ?>"
+				<?php endif; ?>
+			>
+				<?php if ( $c->mobile_card_carousel() ) : ?>
+					<div class="swiper-wrapper">
+				<?php endif; ?>
+
 				<?php foreach ( $c->get_columns() as $column_index => $column ) : ?>
-					<article class="b-comparison-table__card<?php echo ! empty( $column['isHighlighted'] ) ? ' b-comparison-table__card--highlighted' : ''; ?>">
+					<?php
+					$card_class = 'b-comparison-table__card';
+
+					if ( $c->mobile_card_carousel() ) {
+						$card_class .= ' swiper-slide';
+					}
+					?>
+					<article class="<?php echo esc_attr( $card_class ); ?>">
 						<header class="b-comparison-table__card-header">
 							<?php if ( '' !== $c->get_column_badge( $column_index ) ) : ?>
 								<span class="b-comparison-table__badge t-body-small">
@@ -118,26 +138,35 @@ $row_controllers = $c->has_columns() ? $c->get_row_controllers() : [];
 						</header>
 
 						<div class="b-comparison-table__card-features">
-							<?php foreach ( $row_controllers as $row_controller ) : ?>
-								<?php if ( $row_controller->is_category_row() ) : ?>
-									<div class="b-comparison-table__card-category t-body-small">
+							<?php
+							$card_feature_row_index = 0;
+
+							foreach ( $row_controllers as $row_controller ) :
+								if ( $row_controller->is_category_row() ) :
+									$card_feature_row_index = 0;
+									?>
+									<div class="b-comparison-table__card-category t-body">
 										<?php echo esc_html( $row_controller->get_label() ); ?>
 									</div>
-									<?php continue; ?>
-								<?php endif; ?>
+									<?php
+									continue;
+								endif;
 
-								<?php
 								$cells      = $row_controller->get_cells();
 								$cell       = $cells[ $column_index ] ?? [ 'type' => 'dash' ];
-								$cell_label = Comparison_Row_Block_Controller::get_cell_accessible_label( $cell );
+								$cell_label = $row_controller->get_cell_accessible_label( $cell );
+								$is_alt     = 1 === $card_feature_row_index % 2;
+								$card_feature_row_index++;
 								?>
-								<div class="b-comparison-table__card-feature">
+								<div class="b-comparison-table__card-feature<?php echo $is_alt ? ' b-comparison-table__card-feature--alt' : ''; ?>">
 									<span class="b-comparison-table__card-feature-label t-body-small">
 										<?php echo esc_html( $row_controller->get_label() ); ?>
 									</span>
 									<span class="b-comparison-table__card-feature-value t-body-small">
 										<?php if ( 'check' === ( $cell['type'] ?? 'dash' ) ) : ?>
-											<?php echo Comparison_Row_Block_Controller::get_check_icon_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+											<?php echo $row_controller->get_check_icon_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+										<?php elseif ( 'dash' === ( $cell['type'] ?? 'dash' ) ) : ?>
+											<?php echo $row_controller->get_dash_icon_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 										<?php else : ?>
 											<?php echo esc_html( $cell_label ); ?>
 										<?php endif; ?>
@@ -159,6 +188,14 @@ $row_controllers = $c->has_columns() ? $c->get_row_controllers() : [];
 						<?php endif; ?>
 					</article>
 				<?php endforeach; ?>
+
+				<?php if ( $c->mobile_card_carousel() ) : ?>
+					</div>
+					<div
+						class="swiper-pagination"
+						data-clickable="true"
+					></div>
+				<?php endif; ?>
 			</div>
 		</div>
 	<?php endif; ?>

@@ -14,14 +14,12 @@ import {
  * @param {number}   root0.selectedColumnIndex Index of the selected column.
  * @param {boolean}  root0.showFooterCtas      Whether CTA fields should be shown.
  * @param {Function} root0.onUpdateColumn      Merges partial changes into a column.
- * @param {Function} root0.onToggleHighlight   Toggles highlight on the selected column.
  */
 export default function ColumnInspectorPanel( {
 	selectedColumn,
 	selectedColumnIndex,
 	showFooterCtas,
 	onUpdateColumn,
-	onToggleHighlight,
 } ) {
 	if ( ! selectedColumn ) {
 		return null;
@@ -55,12 +53,6 @@ export default function ColumnInspectorPanel( {
 				onChange={ ( value ) =>
 					onUpdateColumn( selectedColumnIndex, { badge: value } )
 				}
-			/>
-			<ToggleControl
-				__nextHasNoMarginBottom
-				label={ __( 'Highlight column', 'tribe' ) }
-				checked={ !! selectedColumn.isHighlighted }
-				onChange={ () => onToggleHighlight( selectedColumnIndex ) }
 			/>
 			{ showFooterCtas && (
 				<>

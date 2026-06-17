@@ -44,8 +44,7 @@ export default function SortableColumnChip( {
 			tabIndex={ 0 }
 			className={
 				'b-comparison-table-editor__column-chip' +
-				( isSelected ? ' is-active' : '' ) +
-				( column.isHighlighted ? ' is-highlighted' : '' )
+				( isSelected ? ' is-active' : '' )
 			}
 			onClick={ () => onSelect( column.id ) }
 			onKeyDown={ ( event ) => {
