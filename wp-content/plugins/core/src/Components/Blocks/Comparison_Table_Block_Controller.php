@@ -24,12 +24,12 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 	public function __construct( array $args = [] ) {
 		parent::__construct( $args );
 
-		$this->block            = $args['block'] ?? new \WP_Block( [ 'blockName' => 'tribe/comparison-table' ] );
-		$this->columns          = $this->attributes['columns'] ?? [];
-		$this->show_footer_ctas      = ! empty( $this->attributes['showFooterCtas'] );
-		$this->mobile_card_view      = ! empty( $this->attributes['mobileCardView'] );
-		$this->mobile_card_carousel  = ! empty( $this->attributes['mobileCardCarousel'] );
-		$this->rows                  = $this->build_rows_from_inner_blocks();
+		$this->block                = $args['block'] ?? new \WP_Block( [ 'blockName' => 'tribe/comparison-table' ] );
+		$this->columns              = $this->attributes['columns'] ?? [];
+		$this->show_footer_ctas     = ! empty( $this->attributes['showFooterCtas'] );
+		$this->mobile_card_view     = ! empty( $this->attributes['mobileCardView'] );
+		$this->mobile_card_carousel = ! empty( $this->attributes['mobileCardCarousel'] );
+		$this->rows                 = $this->build_rows_from_inner_blocks();
 	}
 
 	public function get_block_classes(): string {
@@ -151,8 +151,9 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 	 * Feature rows alternate within each category section. The count resets whenever
 	 * a category row is encountered.
 	 *
-	 * @param array<int, Comparison_Row_Block_Controller> $row_controllers
-	 * @return array<int, Comparison_Row_Block_Controller>
+	 * @param array<int, \Tribe\Plugin\Components\Blocks\Comparison_Row_Block_Controller> $row_controllers
+	 *
+	 * @return array<int, \Tribe\Plugin\Components\Blocks\Comparison_Row_Block_Controller>
 	 */
 	public function prepare_row_controllers_for_render( array $row_controllers ): array {
 		$feature_row_index = 0;

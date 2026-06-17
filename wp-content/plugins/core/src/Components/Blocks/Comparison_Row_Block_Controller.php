@@ -29,9 +29,11 @@ class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
 		$this->cells    = $this->attributes['cells'] ?? [];
 		$this->columns  = $args['columns'] ?? [];
 
-		if ( isset( $args['feature_row_index'] ) ) {
-			$this->feature_row_index = (int) $args['feature_row_index'];
+		if ( ! isset( $args['feature_row_index'] ) ) {
+			return;
 		}
+
+		$this->feature_row_index = (int) $args['feature_row_index'];
 	}
 
 	public function set_feature_row_index( int $index ): void {
