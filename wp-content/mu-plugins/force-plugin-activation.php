@@ -43,11 +43,13 @@ final class ForcePluginActivation {
 	 * @var array<string, string[]> 'directory/file.php' => (WP_ENVIRONMENT_TYPE|'all')[]
 	 */
 	private array $plugins = [
-		'core/core.php'                      => [ 'all' ],
-		'advanced-custom-fields-pro/acf.php' => [ 'all' ],
-		'disable-emojis/disable-emojis.php'  => [ 'all' ],
-		'safe-svg/safe-svg.php'              => [ 'all' ],
-		'tribe-glomar/tribe-glomar.php'      => [ 'development', 'staging' ],
+		'block-editor-custom-alignments/block-editor-custom-alignments.php' => [ 'all' ],   // Required by Core plugin
+		'core/core.php'                                                     => [ 'all' ],
+		'advanced-custom-fields-pro/acf.php'                                => [ 'all' ],   // Required by Core plugin
+		'disable-emojis/disable-emojis.php'                                 => [ 'all' ],   // Required by Core plugin
+		'safe-svg/safe-svg.php'                                             => [ 'all' ],   // Required by Core plugin
+		'social-sharing-block/social-sharing-block.php'                     => [ 'all' ],   // Required by Core plugin
+		'tribe-glomar/tribe-glomar.php'                                     => [ 'development', 'staging' ],
 	];
 
 	/**

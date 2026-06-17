@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.06]
+- Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. Unpin react version (no longer needed), update ESLint config file format.
+
 ## [2026.05]
 
 - Updated: Prettier config to support `.pcss` files, ensuring PostCSS files use CSS formatting rules.
