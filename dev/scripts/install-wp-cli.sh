@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Simple bash script to check if WP-CLI is installed and install it if necessary.
 # This script is designed only to be run in our Dokku environment and no where else.
@@ -41,6 +41,7 @@ function install_wp_cli() {
     chmod +x "$HOME/.heroku/wp/bin/wp"
     "$HOME/.heroku/wp/bin/wp" --info
     export PATH=$PATH:$HOME/.heroku/wp/bin
+    echo $PATH
     # echo 'export PATH=$PATH:$HOME/.heroku/wp/bin' > "${HOME}/.profile.d/wp-cli.sh"
 }
 
