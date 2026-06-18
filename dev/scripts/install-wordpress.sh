@@ -1,6 +1,9 @@
 #!/bin/bash
 # Simple bash script to check the current version of WordPress and update it if necessary.
 
+# First install WP-CLI if we're in a Dokku env and it's not already installed.
+./dev/scripts/install-wp-cli.sh
+
 CURRENT_VERSION=$(wp core version)
 REQUESTED_VERSION=$(composer config extra.wordpress-version)
 
