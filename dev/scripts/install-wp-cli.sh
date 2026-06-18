@@ -13,19 +13,19 @@ set -o pipefail   # don't ignore exit codes when piping output
 # set -x          # enable debugging
 
 if [[ -z "${HEROKUISH_VERSION:-}" ]] || [[ "${DOMAIN_CURRENT_SITE:-}" != *"d1.moderntribe.qa" ]]; then
-    echo "-----> Not a Modern Tribe Dokku environment. Skipping WP-CLI install."
+    echo "Not a Modern Tribe Dokku environment. Skipping WP-CLI install."
     exit 0;
 fi
 
 if command -v wp &> /dev/null; then
-    echo "-----> WP-CLI already installed. Skipping."
+    echo "WP-CLI already installed. Skipping."
     exit 0;
 fi
 
-echo "-----> Installing WP-CLI for Dokku..."
+echo "Installing WP-CLI for Dokku..."
 
 function setup_profile() {
-    echo "-----> Setup Binary path"
+    echo "Setup Binary path"
     mkdir -p "${HOME}/.profile.d"
 }
 
@@ -36,19 +36,18 @@ function install_wp_cli() {
     echo "Build Directory: ${HOME}"
     mkdir -p "${HOME}/.heroku/wp/bin/"
 
-    echo "-----> Install WP-CLI"
+    echo "Install WP-CLI"
     curl --retry 2 --silent --max-time 60 --location https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o "${HOME}/.heroku/wp/bin/wp"
     chmod +x "$HOME/.heroku/wp/bin/wp"
     "$HOME/.heroku/wp/bin/wp" --info
-    export PATH=$PATH:$HOME/.heroku/wp/bin
-    echo $PATH
-    # echo 'export PATH=$PATH:$HOME/.heroku/wp/bin' > "${HOME}/.profile.d/wp-cli.sh"
+
+    echo 'export PATH=$PATH:$HOME/.heroku/wp/bin' > "${HOME}/.profile.d/wp-cli.sh"
+
+    which wp || echo "WP-CLI not found in PATH. Please check the installation."
 }
 
 install_wp_cli
 
-echo "----->"
-echo "----->"
-echo "-----> WP-CLI Installed."
+echo "WP-CLI Installed."
 
 exit 0;
