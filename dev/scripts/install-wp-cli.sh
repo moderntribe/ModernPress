@@ -41,7 +41,7 @@ function install_wp_cli() {
     chmod +x "$HOME/.heroku/wp/bin/wp"
     "$HOME/.heroku/wp/bin/wp" --info
 
-    echo 'export PATH=$PATH:$/.heroku/wp/bin' > "${HOME}/.profile.d/wpcli.sh"
+    echo 'export PATH=$PATH:$HOME/.heroku/wp/bin' > "${HOME}/.profile.d/wp-cli.sh"
 }
 
 install_wp_cli
