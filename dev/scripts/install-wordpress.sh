@@ -4,6 +4,10 @@
 # First install WP-CLI if we're in a Dokku env and it's not already installed.
 ./dev/scripts/install-wp-cli.sh
 
+echo 'Debugging...'
+echo $PATH
+which wp || echo "WP-CLI not found in PATH. Please check the installation."
+
 CURRENT_VERSION=$(wp core version)
 REQUESTED_VERSION=$(composer config extra.wordpress-version)
 
