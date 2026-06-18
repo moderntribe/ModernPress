@@ -12,17 +12,17 @@ set -eu           # fail fast
 set -o pipefail   # don't ignore exit codes when piping output
 # set -x          # enable debugging
 
-echo "-----> Install WP-CLI"
-
 if [[ -z "${HEROKUISH_VERSION:-}" ]] || [[ "${DOMAIN_CURRENT_SITE:-}" != *"d1.moderntribe.qa" ]]; then
-    echo "-----> Not a Modern Tribe Dokku environment. Skipping..."
+    echo "-----> Not a Modern Tribe Dokku environment. Skipping WP-CLI install."
     exit 0;
 fi
 
 if command -v wp &> /dev/null; then
-    echo "-----> WP-CLI already installed. Skipping..."
+    echo "-----> WP-CLI already installed. Skipping."
     exit 0;
 fi
+
+echo "-----> Installing WP-CLI for Dokku..."
 
 function setup_profile() {
     echo "-----> Setup Binary path"
@@ -48,6 +48,6 @@ install_wp_cli
 
 echo "----->"
 echo "----->"
-echo "-----> DONE"
+echo "-----> WP-CLI Installed."
 
 exit 0;
