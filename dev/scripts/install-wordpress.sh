@@ -19,7 +19,7 @@ if [[ -n "${HEROKUISH_VERSION:-}" ]] && [[ "${DOMAIN_CURRENT_SITE:-}" == *"d1.mo
     fi
 fi
 
-CURRENT_VERSION=$(wp core version)
+CURRENT_VERSION=$(wp core version 2>/dev/null || echo "")
 REQUESTED_VERSION=$(composer config extra.wordpress-version)
 
 if [ "$CURRENT_VERSION" == "$REQUESTED_VERSION" ]; then
@@ -27,7 +27,7 @@ if [ "$CURRENT_VERSION" == "$REQUESTED_VERSION" ]; then
     exit 0
 fi
 
-echo "Updating WordPress to version $REQUESTED_VERSION..."
+echo "Installing WordPress version $REQUESTED_VERSION..."
 wp core download --version=$REQUESTED_VERSION --skip-content --force
 
 exit 0
