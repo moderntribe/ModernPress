@@ -40,8 +40,8 @@ function install_wp_cli() {
     curl --retry 2 --silent --max-time 60 --location https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -o "${HOME}/.heroku/wp/bin/wp"
     chmod +x "$HOME/.heroku/wp/bin/wp"
     "$HOME/.heroku/wp/bin/wp" --info
-
-    echo 'export PATH=$PATH:$HOME/.heroku/wp/bin' > "${HOME}/.profile.d/wp-cli.sh"
+    export PATH=$PATH:$HOME/.heroku/wp/bin
+    # echo 'export PATH=$PATH:$HOME/.heroku/wp/bin' > "${HOME}/.profile.d/wp-cli.sh"
 }
 
 install_wp_cli
