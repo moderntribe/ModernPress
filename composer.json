@@ -111,7 +111,7 @@
 		"szepeviktor/phpstan-wordpress": "^2.0"
 	},
 	"require": {
-		"php": "~8.4",
+		"php": "~8.4.0",
 		"ext-exif": "*",
 		"ext-gd": "*",
 		"ext-intl": "*",
