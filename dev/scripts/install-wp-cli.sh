@@ -14,7 +14,7 @@ set -o pipefail   # don't ignore exit codes when piping output
 
 echo "-----> Install WP-CLI"
 
-if [[ ! -v HEROKUISH_VERSION ]] && [[ "${DOMAIN_CURRENT_SITE}" == *"d1.moderntribe.qa" ]]; then
+if [[ -z "${HEROKUISH_VERSION:-}" ]] || [[ "${DOMAIN_CURRENT_SITE:-}" != *"d1.moderntribe.qa" ]]; then
     echo "-----> Not a Modern Tribe Dokku environment. Skipping..."
     exit 0;
 fi
