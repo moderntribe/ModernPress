@@ -6,7 +6,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.06]
 - Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
-- Fix: Remove WP-CLI bundle as a composer dependency b/c some of the underlying pacakges aren't compatible with PHP8.4. Handle the WP-CLI installas a part of the WordPress install if we're on Dokku and WP-CLI isn't already installed.
+- Fix: Remove WP-CLI bundle as a composer dependency b/c some of the underlying packages aren't compatible with PHP8.4. Handle the WP-CLI install as a part of the WordPress install if we're on Dokku and WP-CLI isn't already installed.
 
 ## [2026.05]
 
