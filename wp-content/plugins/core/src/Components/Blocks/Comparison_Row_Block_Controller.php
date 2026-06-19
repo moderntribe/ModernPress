@@ -105,7 +105,7 @@ class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
 	}
 
 	public function render_cell( int $index, array $cell ): string {
-		$type = $cell['type'] ?? 'dash';
+		$type  = $cell['type'] ?? 'dash';
 		$class = match ( $type ) {
 			'check' => 'b-comparison-table__cell b-comparison-table__cell--check',
 			'text'  => 'b-comparison-table__cell b-comparison-table__cell--text',

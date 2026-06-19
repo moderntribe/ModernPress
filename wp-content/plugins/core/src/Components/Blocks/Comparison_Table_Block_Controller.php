@@ -182,7 +182,7 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 	}
 
 	/**
-	 * @param array<int, Comparison_Row_Block_Controller> $row_controllers
+	 * @param array<int, \Tribe\Plugin\Components\Blocks\Comparison_Row_Block_Controller> $row_controllers
 	 */
 	public function render_mobile_card_features( int $column_index, array $row_controllers ): string {
 		$html = '';
