@@ -104,16 +104,6 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 		return sprintf( '--location-map-height:%dpx;', $this->map_height );
 	}
 
-	private function get_map_height_mode(): string {
-		$mode = $this->attributes['mapHeightMode'] ?? self::HEIGHT_FIXED;
-
-		if ( ! in_array( $mode, [ self::HEIGHT_FIXED, self::HEIGHT_VIEWPORT ], true ) ) {
-			return self::HEIGHT_FIXED;
-		}
-
-		return $mode;
-	}
-
 	/**
 	 * @return array<string, mixed>
 	 */
@@ -173,6 +163,16 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 
 	public function should_render_initial_locations(): bool {
 		return self::SOURCE_ENDPOINT !== $this->location_source;
+	}
+
+	private function get_map_height_mode(): string {
+		$mode = $this->attributes['mapHeightMode'] ?? self::HEIGHT_FIXED;
+
+		if ( ! in_array( $mode, [ self::HEIGHT_FIXED, self::HEIGHT_VIEWPORT ], true ) ) {
+			return self::HEIGHT_FIXED;
+		}
+
+		return $mode;
 	}
 
 	private function get_locations_endpoint_url(): string {
