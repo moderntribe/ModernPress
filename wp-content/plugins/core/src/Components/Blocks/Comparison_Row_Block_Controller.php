@@ -80,28 +80,62 @@ class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
 		return $cells;
 	}
 
-	public function render_cell( int $index, array $cell ): string {
+	public function is_feature_row_alt(): bool {
+		return null !== $this->feature_row_index && 1 === $this->feature_row_index % 2;
+	}
+
+	/**
+	 * @param array{type?: string, value?: string} $cell
+	 */
+	public function render_cell_value_markup( array $cell ): string {
 		$type = $cell['type'] ?? 'dash';
 
 		if ( 'check' === $type ) {
-			return sprintf(
-				'<td class="b-comparison-table__cell b-comparison-table__cell--check">%s</td>',
-				$this->get_check_icon_markup()
-			);
+			return $this->get_check_icon_markup();
 		}
 
 		if ( 'text' === $type ) {
-			$value = $cell['value'] ?? '';
-
 			return sprintf(
-				'<td class="b-comparison-table__cell b-comparison-table__cell--text"><span class="b-comparison-table__cell-text t-body-small">%s</span></td>',
-				esc_html( $value )
+				'<span class="b-comparison-table__cell-text t-body-small">%s</span>',
+				esc_html( $cell['value'] ?? '' )
 			);
 		}
 
+		return $this->get_dash_icon_markup();
+	}
+
+	public function render_cell( int $index, array $cell ): string {
+		$type = $cell['type'] ?? 'dash';
+		$class = match ( $type ) {
+			'check' => 'b-comparison-table__cell b-comparison-table__cell--check',
+			'text'  => 'b-comparison-table__cell b-comparison-table__cell--text',
+			default => 'b-comparison-table__cell b-comparison-table__cell--dash',
+		};
+
 		return sprintf(
-			'<td class="b-comparison-table__cell b-comparison-table__cell--dash">%s</td>',
-			$this->get_dash_icon_markup()
+			'<td class="%s">%s</td>',
+			esc_attr( $class ),
+			$this->render_cell_value_markup( $cell )
+		);
+	}
+
+	public function render_mobile_card_category(): string {
+		return sprintf(
+			'<div class="b-comparison-table__card-category t-body">%s</div>',
+			esc_html( $this->get_label() )
+		);
+	}
+
+	public function render_mobile_card_feature( int $column_index ): string {
+		$cells = $this->get_cells();
+		$cell  = $cells[ $column_index ] ?? [ 'type' => 'dash' ];
+		$alt   = $this->is_feature_row_alt() ? ' b-comparison-table__card-feature--alt' : '';
+
+		return sprintf(
+			'<div class="b-comparison-table__card-feature%s"><span class="b-comparison-table__card-feature-label t-body-small">%s</span><span class="b-comparison-table__card-feature-value t-body-small">%s</span></div>',
+			$alt,
+			esc_html( $this->get_label() ),
+			$this->render_cell_value_markup( $cell )
 		);
 	}
 
@@ -145,23 +179,6 @@ class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
 			'<span class="b-comparison-table__cell-icon b-comparison-table__cell-icon--dash" aria-label="%s"></span>',
 			esc_attr__( 'Not included', 'tribe' )
 		);
-	}
-
-	/**
-	 * @param array{type?: string, value?: string} $cell
-	 */
-	public function get_cell_accessible_label( array $cell ): string {
-		$type = $cell['type'] ?? 'dash';
-
-		if ( 'check' === $type ) {
-			return __( 'Included', 'tribe' );
-		}
-
-		if ( 'text' === $type ) {
-			return $cell['value'] ?? '';
-		}
-
-		return __( 'Not included', 'tribe' );
 	}
 
 }

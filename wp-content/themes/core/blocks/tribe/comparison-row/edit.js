@@ -1,6 +1,9 @@
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 
-import { syncCellsToColumnCount } from '../comparison-table/js/utils';
+import {
+	syncCellsToColumnCount,
+	isCategoryRow,
+} from '../comparison-table/js/utils';
 import ColumnValuesPanel from './components/ColumnValuesPanel';
 import RowSettingsPanel from './components/RowSettingsPanel';
 
@@ -58,9 +61,17 @@ export default function Edit( { attributes, setAttributes, context } ) {
 				<RowSettingsPanel
 					rowType={ rowType }
 					label={ label }
-					onChangeRowType={ ( value ) =>
-						setAttributes( { rowType: value } )
-					}
+					onChangeRowType={ ( value ) => {
+						if ( isCategoryRow( value ) ) {
+							setAttributes( { rowType: value, cells: [] } );
+							return;
+						}
+
+						setAttributes( {
+							rowType: value,
+							cells: syncCellsToColumnCount( cells, columnCount ),
+						} );
+					} }
 					onChangeLabel={ ( value ) =>
 						setAttributes( { label: value } )
 					}

@@ -38,24 +38,7 @@ $row_controllers = $c->has_columns()
 						<tr class="b-comparison-table__row b-comparison-table__row--header">
 							<th scope="col" class="b-comparison-table__feature-header"></th>
 							<?php foreach ( $c->get_columns() as $index => $column ) : ?>
-								<th
-									scope="col"
-									class="<?php echo esc_attr( $c->get_column_header_class( $index ) ); ?>"
-								>
-									<?php if ( '' !== $c->get_column_badge( $index ) ) : ?>
-										<span class="b-comparison-table__badge t-body-small">
-											<?php echo esc_html( $c->get_column_badge( $index ) ); ?>
-										</span>
-									<?php endif; ?>
-									<span class="b-comparison-table__column-label t-display-x-small">
-										<?php echo esc_html( $c->get_column_label( $index ) ); ?>
-									</span>
-									<?php if ( '' !== $c->get_column_subtitle( $index ) ) : ?>
-										<span class="b-comparison-table__column-subtitle t-body-small">
-											<?php echo esc_html( $c->get_column_subtitle( $index ) ); ?>
-										</span>
-									<?php endif; ?>
-								</th>
+								<?php echo $c->render_table_column_header( $index ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 							<?php endforeach; ?>
 						</tr>
 					</thead>
@@ -75,15 +58,7 @@ $row_controllers = $c->has_columns()
 							<td class="b-comparison-table__footer-spacer"></td>
 							<?php foreach ( $c->get_columns() as $index => $column ) : ?>
 								<td class="b-comparison-table__footer-cell">
-									<?php if ( $c->has_column_cta( $index ) ) : ?>
-										<a
-											href="<?php echo esc_url( $c->get_column_cta_url( $index ) ); ?>"
-											class="<?php echo esc_attr( 'a-btn-' . $c->get_column_cta_style( $index ) ); ?>"
-											<?php echo $c->get_column_cta_opens_in_new_tab( $index ) ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
-										>
-											<?php echo esc_html( $c->get_column_cta_label( $index ) ); ?>
-										</a>
-									<?php endif; ?>
+									<?php echo $c->render_column_cta_link( $index ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 								</td>
 							<?php endforeach; ?>
 						</tr>
@@ -121,69 +96,15 @@ $row_controllers = $c->has_columns()
 					}
 					?>
 					<article class="<?php echo esc_attr( $card_class ); ?>">
-						<header class="b-comparison-table__card-header">
-							<?php if ( '' !== $c->get_column_badge( $column_index ) ) : ?>
-								<span class="b-comparison-table__badge t-body-small">
-									<?php echo esc_html( $c->get_column_badge( $column_index ) ); ?>
-								</span>
-							<?php endif; ?>
-							<h3 class="b-comparison-table__card-title t-display-x-small">
-								<?php echo esc_html( $c->get_column_label( $column_index ) ); ?>
-							</h3>
-							<?php if ( '' !== $c->get_column_subtitle( $column_index ) ) : ?>
-								<p class="b-comparison-table__card-subtitle t-body-small">
-									<?php echo esc_html( $c->get_column_subtitle( $column_index ) ); ?>
-								</p>
-							<?php endif; ?>
-						</header>
+						<?php echo $c->render_card_header( $column_index ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
 						<div class="b-comparison-table__card-features">
-							<?php
-							$card_feature_row_index = 0;
-
-							foreach ( $row_controllers as $row_controller ) :
-								if ( $row_controller->is_category_row() ) :
-									$card_feature_row_index = 0;
-									?>
-									<div class="b-comparison-table__card-category t-body">
-										<?php echo esc_html( $row_controller->get_label() ); ?>
-									</div>
-									<?php
-									continue;
-								endif;
-
-								$cells      = $row_controller->get_cells();
-								$cell       = $cells[ $column_index ] ?? [ 'type' => 'dash' ];
-								$cell_label = $row_controller->get_cell_accessible_label( $cell );
-								$is_alt     = 1 === $card_feature_row_index % 2;
-								$card_feature_row_index++;
-								?>
-								<div class="b-comparison-table__card-feature<?php echo $is_alt ? ' b-comparison-table__card-feature--alt' : ''; ?>">
-									<span class="b-comparison-table__card-feature-label t-body-small">
-										<?php echo esc_html( $row_controller->get_label() ); ?>
-									</span>
-									<span class="b-comparison-table__card-feature-value t-body-small">
-										<?php if ( 'check' === ( $cell['type'] ?? 'dash' ) ) : ?>
-											<?php echo $row_controller->get_check_icon_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-										<?php elseif ( 'dash' === ( $cell['type'] ?? 'dash' ) ) : ?>
-											<?php echo $row_controller->get_dash_icon_markup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-										<?php else : ?>
-											<?php echo esc_html( $cell_label ); ?>
-										<?php endif; ?>
-									</span>
-								</div>
-							<?php endforeach; ?>
+							<?php echo $c->render_mobile_card_features( $column_index, $row_controllers ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						</div>
 
 						<?php if ( $c->show_footer_ctas() && $c->has_column_cta( $column_index ) ) : ?>
 							<footer class="b-comparison-table__card-footer">
-								<a
-									href="<?php echo esc_url( $c->get_column_cta_url( $column_index ) ); ?>"
-									class="<?php echo esc_attr( 'a-btn-' . $c->get_column_cta_style( $column_index ) ); ?>"
-									<?php echo $c->get_column_cta_opens_in_new_tab( $column_index ) ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>
-								>
-									<?php echo esc_html( $c->get_column_cta_label( $column_index ) ); ?>
-								</a>
+								<?php echo $c->render_column_cta_link( $column_index ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 							</footer>
 						<?php endif; ?>
 					</article>

@@ -2,6 +2,62 @@
 export const DEFAULT_CELL = { type: 'dash' };
 
 /**
+ * Whether a row is a category section header.
+ *
+ * @param {string} rowType Row type attribute value.
+ * @return {boolean} True when the row is a category section header.
+ */
+export function isCategoryRow( rowType ) {
+	return rowType === 'category';
+}
+
+/**
+ * Whether two cell arrays are equivalent.
+ *
+ * @param {Array} a First cells array.
+ * @param {Array} b Second cells array.
+ * @return {boolean} True when the cells are equivalent.
+ */
+export function cellsEqual( a, b ) {
+	if ( ! a && ! b ) {
+		return true;
+	}
+
+	if ( ! a || ! b || a.length !== b.length ) {
+		return false;
+	}
+
+	return a.every( ( cell, index ) => {
+		const other = b[ index ];
+
+		return (
+			( cell?.type || 'dash' ) === ( other?.type || 'dash' ) &&
+			( cell?.value || '' ) === ( other?.value || '' )
+		);
+	} );
+}
+
+/**
+ * Maps an inner comparison-row block to the editor row list shape.
+ *
+ * @param {Object} block       Inner block instance.
+ * @param {number} columnCount Current column count.
+ * @return {Object} Editor row object.
+ */
+export function mapRowBlockToEditorRow( block, columnCount ) {
+	const { rowType, label, cells } = block.attributes;
+
+	return {
+		clientId: block.clientId,
+		rowType,
+		label,
+		cells: isCategoryRow( rowType )
+			? []
+			: syncCellsToColumnCount( cells, columnCount ),
+	};
+}
+
+/**
  * Returns the inclusive index range for a category section, or the category
  * that owns a feature row at the given index.
  *
@@ -145,26 +201,6 @@ export function reorderCategorySection(
 }
 
 /**
- * Advances a cell through dash → check → text → dash for inline editing.
- *
- * @param {Object} cell Current cell with optional `type` and `value`.
- * @return {Object} Next cell state for the cycle.
- */
-export function cycleCellType( cell ) {
-	const type = cell?.type || 'dash';
-
-	if ( type === 'dash' ) {
-		return { type: 'check' };
-	}
-
-	if ( type === 'check' ) {
-		return { type: 'text', value: '' };
-	}
-
-	return { type: 'dash' };
-}
-
-/**
  * Builds a new column object with sensible defaults and a unique id.
  *
  * @param {number} index     Column position used in the generated id.
@@ -243,18 +279,12 @@ export function getDefaultColumns( columnCount = 3 ) {
  * @return {Array<[string, Object]>} Block name and attribute pairs for `createBlock`.
  */
 export function getDefaultRowTemplate( columnCount = 3 ) {
-	const dashCells = () =>
-		syncCellsToColumnCount( [], columnCount ).map( () => ( {
-			...DEFAULT_CELL,
-		} ) );
-
 	return [
 		[
 			'tribe/comparison-row',
 			{
 				rowType: 'category',
 				label: 'Core Features',
-				cells: dashCells(),
 			},
 		],
 		[
@@ -292,7 +322,6 @@ export function getDefaultRowTemplate( columnCount = 3 ) {
 			{
 				rowType: 'category',
 				label: 'Security',
-				cells: dashCells(),
 			},
 		],
 		[
@@ -311,7 +340,6 @@ export function getDefaultRowTemplate( columnCount = 3 ) {
 			{
 				rowType: 'category',
 				label: 'Support',
-				cells: dashCells(),
 			},
 		],
 		[

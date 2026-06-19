@@ -24,9 +24,12 @@ import TablePreviewPanel from './components/TablePreviewPanel';
 import TableSettingsPanel from './components/TableSettingsPanel';
 import {
 	createColumn,
+	cellsEqual,
 	getDefaultColumns,
 	getDefaultRowTemplate,
 	getSectionBounds,
+	isCategoryRow,
+	mapRowBlockToEditorRow,
 	reorderCategorySection,
 	syncCellsToColumnCount,
 } from './js/utils';
@@ -57,6 +60,13 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 	const innerBlocks = useSelect(
 		( select ) => select( 'core/block-editor' ).getBlocks( clientId ),
 		[ clientId ]
+	);
+	const rowBlocks = useMemo(
+		() =>
+			innerBlocks.filter(
+				( block ) => block.name === 'tribe/comparison-row'
+			),
+		[ innerBlocks ]
 	);
 
 	const { columns, showFooterCtas, mobileCardView, mobileCardCarousel } =
@@ -106,11 +116,11 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 		}
 
 		if ( needsRows ) {
-			const rowBlocks = getDefaultRowTemplate( columnCount ).map(
+			const initialRowBlocks = getDefaultRowTemplate( columnCount ).map(
 				( [ blockName, blockAttributes ] ) =>
 					createBlock( blockName, blockAttributes )
 			);
-			replaceInnerBlocks( clientId, rowBlocks, false );
+			replaceInnerBlocks( clientId, initialRowBlocks, false );
 		}
 
 		hasInitialized.current = true;
@@ -131,8 +141,8 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 
 		previousColumnCount.current = columnCount;
 
-		innerBlocks.forEach( ( block ) => {
-			if ( block.name !== 'tribe/comparison-row' ) {
+		rowBlocks.forEach( ( block ) => {
+			if ( isCategoryRow( block.attributes.rowType ) ) {
 				return;
 			}
 
@@ -141,31 +151,20 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 				columnCount
 			);
 
-			if (
-				JSON.stringify( nextCells ) !==
-				JSON.stringify( block.attributes.cells )
-			) {
+			if ( ! cellsEqual( nextCells, block.attributes.cells ) ) {
 				updateBlockAttributes( block.clientId, {
 					cells: nextCells,
 				} );
 			}
 		} );
-	}, [ columns.length, innerBlocks, updateBlockAttributes ] );
+	}, [ columns.length, rowBlocks, updateBlockAttributes ] );
 
 	const rows = useMemo(
 		() =>
-			innerBlocks
-				.filter( ( block ) => block.name === 'tribe/comparison-row' )
-				.map( ( block ) => ( {
-					clientId: block.clientId,
-					rowType: block.attributes.rowType,
-					label: block.attributes.label,
-					cells: syncCellsToColumnCount(
-						block.attributes.cells,
-						columns.length
-					),
-				} ) ),
-		[ innerBlocks, columns.length ]
+			rowBlocks.map( ( block ) =>
+				mapRowBlockToEditorRow( block, columns.length )
+			),
+		[ rowBlocks, columns.length ]
 	);
 
 	const previewRows = useMemo(
@@ -173,7 +172,7 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 			rows.map( ( { rowType, label, cells } ) => ( {
 				rowType,
 				label,
-				cells,
+				...( isCategoryRow( rowType ) ? {} : { cells } ),
 			} ) ),
 		[ rows ]
 	);
@@ -241,8 +240,8 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 			return;
 		}
 
-		innerBlocks.forEach( ( block ) => {
-			if ( block.name !== 'tribe/comparison-row' ) {
+		rowBlocks.forEach( ( block ) => {
+			if ( isCategoryRow( block.attributes.rowType ) ) {
 				return;
 			}
 
@@ -292,12 +291,12 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 			const [ moved ] = nextColumns.splice( fromIndex, 1 );
 			nextColumns.splice( toIndex, 0, moved );
 
-			innerBlocks.forEach( ( block ) => {
-				if ( block.name !== 'tribe/comparison-row' ) {
+			rowBlocks.forEach( ( block ) => {
+				if ( isCategoryRow( block.attributes.rowType ) ) {
 					return;
 				}
 
-				const cells = [ ...block.attributes.cells ];
+				const cells = [ ...( block.attributes.cells || [] ) ];
 				const [ movedCell ] = cells.splice( fromIndex, 1 );
 				cells.splice( toIndex, 0, movedCell || { type: 'dash' } );
 
@@ -308,7 +307,7 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 
 			setAttributes( { columns: nextColumns } );
 		},
-		[ columns, innerBlocks, setAttributes, updateBlockAttributes ]
+		[ columns, rowBlocks, setAttributes, updateBlockAttributes ]
 	);
 
 	const handleColumnDragEnd = useCallback(
@@ -337,14 +336,25 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 
 	const addRow = useCallback(
 		( rowType = 'feature' ) => {
-			const newRow = createBlock( 'tribe/comparison-row', {
+			const newRowAttributes = {
 				rowType,
 				label:
 					rowType === 'category'
 						? __( 'New category', 'tribe' )
 						: __( 'New feature', 'tribe' ),
-				cells: syncCellsToColumnCount( [], columns.length ),
-			} );
+			};
+
+			if ( ! isCategoryRow( rowType ) ) {
+				newRowAttributes.cells = syncCellsToColumnCount(
+					[],
+					columns.length
+				);
+			}
+
+			const newRow = createBlock(
+				'tribe/comparison-row',
+				newRowAttributes
+			);
 
 			insertBlock( newRow, innerBlocks.length, clientId, false );
 			selectBlock( newRow.clientId );
@@ -405,9 +415,6 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 				return;
 			}
 
-			const rowBlocks = innerBlocks.filter(
-				( block ) => block.name === 'tribe/comparison-row'
-			);
 			const block = rowBlocks[ fromIndex ];
 
 			if ( ! block ) {
@@ -416,7 +423,7 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 
 			moveBlockToPosition( block.clientId, toIndex, clientId );
 		},
-		[ clientId, innerBlocks, moveBlockToPosition ]
+		[ clientId, moveBlockToPosition, rowBlocks ]
 	);
 
 	const handleRowDragStart = useCallback(
