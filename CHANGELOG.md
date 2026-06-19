@@ -5,7 +5,8 @@ on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entr
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.06]
-- Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. Unpin react version (no longer needed), update ESLint config file format.
+- Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
+- Fix: Remove WP-CLI bundle as a composer dependency b/c some of the underlying pacakges aren't compatible with PHP8.4. Handle the WP-CLI installas a part of the WordPress install if we're on Dokku and WP-CLI isn't already installed.
 
 ## [2026.05]
 
