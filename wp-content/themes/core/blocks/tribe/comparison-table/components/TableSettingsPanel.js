@@ -1,12 +1,14 @@
 import { __ } from '@wordpress/i18n';
-import { PanelBody, ToggleControl } from '@wordpress/components';
+import { PanelBody, SelectControl, ToggleControl } from '@wordpress/components';
 
 /**
  * Sidebar panel for table-wide settings.
  *
  * @param {Object}   root0
- * @param {boolean}  root0.showFooterCtas             Whether footer CTA rows are rendered.
- * @param {Function} root0.onChangeShowFooterCtas     Updates the footer CTA visibility flag.
+ * @param {boolean}  root0.showFooterCtas             Whether CTA rows are rendered.
+ * @param {Function} root0.onChangeShowFooterCtas     Updates the CTA visibility flag.
+ * @param {string}   root0.ctaPlacement               Where column CTAs are rendered.
+ * @param {Function} root0.onChangeCtaPlacement       Updates the CTA placement.
  * @param {boolean}  root0.mobileCardView             Whether mobile card layout is enabled.
  * @param {Function} root0.onChangeMobileCardView     Updates the mobile card layout flag.
  * @param {boolean}  root0.mobileCardCarousel         Whether mobile cards render as a carousel.
@@ -15,6 +17,8 @@ import { PanelBody, ToggleControl } from '@wordpress/components';
 export default function TableSettingsPanel( {
 	showFooterCtas,
 	onChangeShowFooterCtas,
+	ctaPlacement,
+	onChangeCtaPlacement,
 	mobileCardView,
 	onChangeMobileCardView,
 	mobileCardCarousel,
@@ -24,10 +28,29 @@ export default function TableSettingsPanel( {
 		<PanelBody title={ __( 'Table Settings', 'tribe' ) }>
 			<ToggleControl
 				__nextHasNoMarginBottom
-				label={ __( 'Show footer CTAs', 'tribe' ) }
+				label={ __( 'Show CTAs', 'tribe' ) }
 				checked={ showFooterCtas }
 				onChange={ onChangeShowFooterCtas }
 			/>
+			{ showFooterCtas && (
+				<SelectControl
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+					label={ __( 'CTA placement', 'tribe' ) }
+					value={ ctaPlacement }
+					options={ [
+						{
+							label: __( 'Table footer', 'tribe' ),
+							value: 'footer',
+						},
+						{
+							label: __( 'Table header', 'tribe' ),
+							value: 'header',
+						},
+					] }
+					onChange={ onChangeCtaPlacement }
+				/>
+			) }
 			<ToggleControl
 				__nextHasNoMarginBottom
 				label={ __( 'Mobile card layout', 'tribe' ) }

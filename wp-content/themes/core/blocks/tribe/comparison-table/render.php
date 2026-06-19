@@ -52,7 +52,7 @@ $row_controllers = $c->has_columns()
 					?>
 				</tbody>
 
-				<?php if ( $c->show_footer_ctas() && $c->has_columns() ) : ?>
+				<?php if ( $c->ctas_in_footer() && $c->has_columns() ) : ?>
 					<tfoot class="b-comparison-table__foot">
 						<tr class="b-comparison-table__row b-comparison-table__row--footer">
 							<td class="b-comparison-table__footer-spacer"></td>
@@ -102,7 +102,7 @@ $row_controllers = $c->has_columns()
 							<?php echo $c->render_mobile_card_features( $column_index, $row_controllers ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						</div>
 
-						<?php if ( $c->show_footer_ctas() && $c->has_column_cta( $column_index ) ) : ?>
+						<?php if ( $c->ctas_in_footer() && $c->has_column_cta( $column_index ) ) : ?>
 							<footer class="b-comparison-table__card-footer">
 								<?php echo $c->render_column_cta_link( $column_index ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 							</footer>

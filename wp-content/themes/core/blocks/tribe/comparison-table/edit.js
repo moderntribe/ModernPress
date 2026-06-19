@@ -69,8 +69,13 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 		[ innerBlocks ]
 	);
 
-	const { columns, showFooterCtas, mobileCardView, mobileCardCarousel } =
-		attributes;
+	const {
+		columns,
+		showFooterCtas,
+		ctaPlacement,
+		mobileCardView,
+		mobileCardCarousel,
+	} = attributes;
 	const [ selectedColumnId, setSelectedColumnId ] = useState(
 		columns[ 0 ]?.id || ''
 	);
@@ -552,6 +557,10 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 					showFooterCtas={ showFooterCtas }
 					onChangeShowFooterCtas={ ( value ) =>
 						setAttributes( { showFooterCtas: value } )
+					}
+					ctaPlacement={ ctaPlacement || 'footer' }
+					onChangeCtaPlacement={ ( value ) =>
+						setAttributes( { ctaPlacement: value } )
 					}
 					mobileCardView={ mobileCardView }
 					onChangeMobileCardView={ ( value ) =>
