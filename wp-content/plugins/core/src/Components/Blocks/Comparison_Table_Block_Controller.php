@@ -173,16 +173,10 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 		);
 
 		if ( $this->ctas_in_header() ) {
-			$content = sprintf(
-				'<div class="b-comparison-table__column-header-content">%s</div>',
-				$content
-			);
+			$content = sprintf( '<div class="b-comparison-table__column-header-content">%s</div>', $content );
 		}
 
-		return sprintf(
-			'<th scope="col" class="b-comparison-table__column-header">%s</th>',
-			$content
-		);
+		return sprintf( '<th scope="col" class="b-comparison-table__column-header">%s</th>', $content );
 	}
 
 	public function render_card_header( int $index ): string {
