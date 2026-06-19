@@ -1,0 +1,85 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "tribe/location-map",
+	"version": "0.1.0",
+	"title": "Location Map",
+	"category": "theme",
+	"icon": "location",
+	"description": "Display locations on an interactive map with optional search and list sidebar.",
+	"attributes": {
+		"locationSource": {
+			"type": "string",
+			"enum": [ "manual", "all", "endpoint" ],
+			"default": "manual"
+		},
+		"chosenLocations": {
+			"type": "array",
+			"default": []
+		},
+		"endpointUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"showSidebar": {
+			"type": "boolean",
+			"default": true
+		},
+		"showSearch": {
+			"type": "boolean",
+			"default": true
+		},
+		"showLocationList": {
+			"type": "boolean",
+			"default": true
+		},
+		"searchRadius": {
+			"type": "number",
+			"default": 30
+		},
+		"defaultLat": {
+			"type": "number",
+			"default": 39.10015
+		},
+		"defaultLng": {
+			"type": "number",
+			"default": -94.58327
+		},
+		"defaultZoom": {
+			"type": "number",
+			"default": 11
+		},
+		"fitBounds": {
+			"type": "boolean",
+			"default": true
+		},
+		"clusterMarkers": {
+			"type": "boolean",
+			"default": true
+		},
+		"mapHeightMode": {
+			"type": "string",
+			"enum": [ "fixed", "viewport" ],
+			"default": "fixed"
+		},
+		"mapHeight": {
+			"type": "number",
+			"default": 600
+		}
+	},
+	"supports": {
+		"html": false,
+		"alignCustom": [ "wide", "grid", "full" ],
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"textdomain": "tribe",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js",
+	"viewStyle": "file:./view.css",
+	"render": "file:./render.php"
+}
