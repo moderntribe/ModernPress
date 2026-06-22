@@ -24,6 +24,8 @@ class Nominatim_Geocoder implements Geocoder_Interface {
 			];
 		}
 
+		( new Nominatim_Rate_Limiter() )->wait_before_request();
+
 		$url = add_query_arg(
 			[
 				'q'              => $address,
