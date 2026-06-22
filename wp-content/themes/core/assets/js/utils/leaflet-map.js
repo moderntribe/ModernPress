@@ -4,6 +4,11 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
+const OSM_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+const OSM_TILE_ATTRIBUTION =
+	'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
 const DEFAULT_ICON = L.divIcon( {
 	className: 'b-location-map__marker',
 	html: '<span class="b-location-map__marker-pin"></span>',
@@ -37,8 +42,8 @@ export const createMap = ( container, settings ) => {
  * @param {import('leaflet').Map} map
  */
 export const addTileLayer = ( map ) => {
-	L.tileLayer( 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		attribution: '&copy; OpenStreetMap contributors',
+	L.tileLayer( OSM_TILE_URL, {
+		attribution: OSM_TILE_ATTRIBUTION,
 		maxZoom: 19,
 	} ).addTo( map );
 };
