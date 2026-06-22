@@ -337,7 +337,12 @@ const handleMarkerClick = ( block, index ) => {
  * @param {string}                                    [locationName=''] Label for search result messaging.
  * @param {{ lat: number, lng: number }|null}         [searchCenter]    Map center when a search returns no locations.
  */
-const renderLocations = ( block, locations, locationName = '', searchCenter = null ) => {
+const renderLocations = (
+	block,
+	locations,
+	locationName = '',
+	searchCenter = null
+) => {
 	const blockState = getBlockState( block );
 
 	blockState.locations = locations;
