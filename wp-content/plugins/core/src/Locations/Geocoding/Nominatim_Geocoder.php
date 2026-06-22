@@ -8,7 +8,7 @@ class Nominatim_Geocoder implements Geocoder_Interface {
 	private const int CACHE_TTL   = DAY_IN_SECONDS;
 
 	public function __construct(
-		private Geocode_Rate_Limiter $rate_limiter,
+		private Nominatim_Rate_Limiter $rate_limiter,
 	) {
 	}
 
@@ -29,8 +29,6 @@ class Nominatim_Geocoder implements Geocoder_Interface {
 			];
 		}
 
-		$this->rate_limiter->wait_before_outbound_request();
-
 		$url = add_query_arg(
 			[
 				'q'              => $address,
@@ -41,48 +39,52 @@ class Nominatim_Geocoder implements Geocoder_Interface {
 			self::ENDPOINT
 		);
 
-		$response = wp_remote_get(
-			$url,
-			[
-				'timeout' => 10,
-				'headers' => [
-					'User-Agent' => $this->get_user_agent(),
-					'Referer'    => home_url( '/' ),
-				],
-			]
+		return $this->rate_limiter->run_throttled(
+			function () use ( $url, $cache_key ): ?array {
+				$response = wp_remote_get(
+					$url,
+					[
+						'timeout' => 10,
+						'headers' => [
+							'User-Agent' => $this->get_user_agent(),
+							'Referer'    => home_url( '/' ),
+						],
+					]
+				);
+
+				if ( is_wp_error( $response ) ) {
+					return null;
+				}
+
+				$status_code = (int) wp_remote_retrieve_response_code( $response );
+
+				if ( $status_code < 200 || $status_code >= 300 ) {
+					return null;
+				}
+
+				$body = json_decode( (string) wp_remote_retrieve_body( $response ), true );
+
+				$lat = $body[0]['lat'] ?? null;
+				$lon = $body[0]['lon'] ?? null;
+
+				if (
+					! is_array( $body )
+					|| ! is_numeric( $lat )
+					|| ! is_numeric( $lon )
+				) {
+					return null;
+				}
+
+				$coordinates = [
+					'lat' => (float) $lat,
+					'lng' => (float) $lon,
+				];
+
+				set_transient( $cache_key, $coordinates, self::CACHE_TTL );
+
+				return $coordinates;
+			}
 		);
-
-		if ( is_wp_error( $response ) ) {
-			return null;
-		}
-
-		$status_code = (int) wp_remote_retrieve_response_code( $response );
-
-		if ( $status_code < 200 || $status_code >= 300 ) {
-			return null;
-		}
-
-		$body = json_decode( (string) wp_remote_retrieve_body( $response ), true );
-
-		$lat = $body[0]['lat'] ?? null;
-		$lon = $body[0]['lon'] ?? null;
-
-		if (
-			! is_array( $body )
-			|| ! is_numeric( $lat )
-			|| ! is_numeric( $lon )
-		) {
-			return null;
-		}
-
-		$coordinates = [
-			'lat' => (float) $lat,
-			'lng' => (float) $lon,
-		];
-
-		set_transient( $cache_key, $coordinates, self::CACHE_TTL );
-
-		return $coordinates;
 	}
 
 	private function get_user_agent(): string {

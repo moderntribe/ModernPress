@@ -38,6 +38,7 @@ class Geocode_Endpoint extends Abstract_Route {
 	}
 
 	public function route_callback( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		// Per-IP limits apply to all geocoders (Google and Nominatim).
 		if ( ! $this->rate_limiter->is_allowed() ) {
 			return new WP_Error(
 				'tribe_geocode_rate_limited',

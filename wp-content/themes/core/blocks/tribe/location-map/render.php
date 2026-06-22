@@ -42,7 +42,7 @@ $search_input_id = wp_unique_id( 'location-map-search-' );
 								class="b-location-map__search-input t-body"
 								name="location-search"
 								data-js="location-map-search"
-								placeholder="<?php echo esc_attr__( 'Search by city or state', 'tribe' ); ?>"
+								placeholder="<?php echo esc_attr__( 'Search by address', 'tribe' ); ?>"
 							/>
 							<button
 								type="button"

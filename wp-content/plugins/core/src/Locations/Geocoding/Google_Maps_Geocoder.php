@@ -4,6 +4,12 @@ namespace Tribe\Plugin\Locations\Geocoding;
 
 use Tribe\Plugin\Settings\Tribe_Settings;
 
+/**
+ * Google Geocoding API provider.
+ *
+ * Per-IP rate limits are enforced by Geocode_Endpoint via Geocode_Rate_Limiter before this
+ * class is invoked. Unlike Nominatim, Google has no site-wide outbound spacing requirement.
+ */
 class Google_Maps_Geocoder implements Geocoder_Interface {
 
 	private const string ENDPOINT = 'https://maps.googleapis.com/maps/api/geocode/json';
@@ -11,7 +17,6 @@ class Google_Maps_Geocoder implements Geocoder_Interface {
 
 	public function __construct(
 		private Tribe_Settings $settings,
-		private Geocode_Rate_Limiter $rate_limiter,
 	) {
 	}
 
@@ -32,8 +37,6 @@ class Google_Maps_Geocoder implements Geocoder_Interface {
 				'lng' => (float) $cached['lng'],
 			];
 		}
-
-		$this->rate_limiter->wait_before_outbound_request();
 
 		$url = add_query_arg(
 			[
