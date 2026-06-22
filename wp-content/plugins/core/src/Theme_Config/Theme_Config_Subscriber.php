@@ -20,6 +20,10 @@ class Theme_Config_Subscriber extends Abstract_Subscriber {
 			return '...';
 		});
 
+		add_action( 'after_setup_theme', function (): void {
+			$this->container->get( Google_Maps::class )->register();
+		}, 10, 0 );
+
 		// Handle admin functions for disabling comments
 		add_action( 'admin_init', function (): void {
 			$this->container->get( Comment_Support::class )->admin_comment_page_redirect();
