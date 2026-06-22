@@ -9,11 +9,11 @@ namespace Tribe\Plugin\Locations\Geocoding;
  */
 class Nominatim_Rate_Limiter {
 
-	private const float MIN_REQUEST_INTERVAL = 1.0;
-	private const string LOCK_NAME           = 'tribe_nominatim_geocode';
-	private const string LAST_REQUEST_OPTION = 'tribe_nominatim_last_request';
-	private const int LOCK_TIMEOUT_SECONDS   = 30;
-	private const int LOCK_RETRY_MICROSECONDS  = 100_000;
+	private const float MIN_REQUEST_INTERVAL  = 1.0;
+	private const string LOCK_NAME            = 'tribe_nominatim_geocode';
+	private const string LAST_REQUEST_OPTION  = 'tribe_nominatim_last_request';
+	private const int LOCK_TIMEOUT_SECONDS    = 30;
+	private const int LOCK_RETRY_MICROSECONDS = 100_000;
 
 	/**
 	 * Runs a Nominatim API request with site-wide throttling.
@@ -22,7 +22,9 @@ class Nominatim_Rate_Limiter {
 	 * cannot overlap, and records the completion time after the callback returns.
 	 *
 	 * @template T
+	 *
 	 * @param callable(): T $callback Outbound Nominatim request callback.
+	 *
 	 * @return T
 	 */
 	public function run_throttled( callable $callback ) {
