@@ -1,14 +1,22 @@
+/**
+ * @module utils/leaflet-map
+ *
+ * @description Shared Leaflet helpers for the location map block.
+ */
+
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
+/** @see https://operations.osmfoundation.org/policies/tiles/ */
 const OSM_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 const OSM_TILE_ATTRIBUTION =
 	'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
+/** Default marker icon shown for each location pin. */
 const DEFAULT_ICON = L.divIcon( {
 	className: 'b-location-map__marker',
 	html: '<span class="b-location-map__marker-pin"></span>',
@@ -16,6 +24,7 @@ const DEFAULT_ICON = L.divIcon( {
 	iconAnchor: [ 12, 32 ],
 } );
 
+/** Marker icon for the currently selected location. */
 const ACTIVE_ICON = L.divIcon( {
 	className: 'b-location-map__marker is-active',
 	html: '<span class="b-location-map__marker-pin"></span>',
@@ -24,29 +33,10 @@ const ACTIVE_ICON = L.divIcon( {
 } );
 
 /**
- * @param {HTMLElement} container Map container element.
- * @param {Object}      settings  Map settings from block attributes.
- * @return {import('leaflet').Map} Leaflet map instance.
+ * @typedef {Object} MapSettings
+ * @property {{ lat: number, lng: number }} [defaultCenter] Default map center.
+ * @property {number}                       [defaultZoom]   Default zoom level.
  */
-export const createMap = ( container, settings ) => {
-	const center = settings.defaultCenter || { lat: 39.10015, lng: -94.58327 };
-
-	return L.map( container, {
-		center: [ center.lat, center.lng ],
-		zoom: settings.defaultZoom || 11,
-		scrollWheelZoom: false,
-	} );
-};
-
-/**
- * @param {import('leaflet').Map} map
- */
-export const addTileLayer = ( map ) => {
-	L.tileLayer( OSM_TILE_URL, {
-		attribution: OSM_TILE_ATTRIBUTION,
-		maxZoom: 19,
-	} ).addTo( map );
-};
 
 /**
  * @typedef {Object} MapLocation
@@ -63,11 +53,47 @@ export const addTileLayer = ( map ) => {
  */
 
 /**
- * @param {import('leaflet').Map}                                                            map
- * @param {MapLocation[]}                                                                    locations
- * @param {Object}                                                                           options
- * @param {boolean}                                                                          options.clusterMarkers
- * @param {(marker: import('leaflet').Marker, index: number, location: MapLocation) => void} [options.onMarkerClick]
+ * @typedef {Object} SetMarkersOptions
+ * @property {boolean}                                                                          clusterMarkers  Whether to cluster overlapping markers.
+ * @property {(marker: import('leaflet').Marker, index: number, location: MapLocation) => void} [onMarkerClick] Marker click callback.
+ */
+
+/**
+ * Creates a Leaflet map instance inside the block canvas.
+ *
+ * @param {HTMLElement} container Map container element.
+ * @param {MapSettings} settings  Map settings from block attributes.
+ * @return {import('leaflet').Map} Leaflet map instance.
+ */
+export const createMap = ( container, settings ) => {
+	const center = settings.defaultCenter || { lat: 39.10015, lng: -94.58327 };
+
+	return L.map( container, {
+		center: [ center.lat, center.lng ],
+		zoom: settings.defaultZoom || 11,
+		scrollWheelZoom: false,
+	} );
+};
+
+/**
+ * Adds the OpenStreetMap raster tile layer required by the location map.
+ *
+ * @param {import('leaflet').Map} map Leaflet map instance.
+ */
+export const addTileLayer = ( map ) => {
+	L.tileLayer( OSM_TILE_URL, {
+		attribution: OSM_TILE_ATTRIBUTION,
+		maxZoom: 19,
+	} ).addTo( map );
+};
+
+/**
+ * Renders location markers and optionally clusters them.
+ *
+ * @param {import('leaflet').Map} map       Leaflet map instance.
+ * @param {MapLocation[]}         locations Normalized location data.
+ * @param {SetMarkersOptions}     [options] Marker rendering options.
+ * @return {import('leaflet').Marker[]} Created marker instances.
  */
 export const setMarkers = ( map, locations, options = {} ) => {
 	const { clusterMarkers = true, onMarkerClick } = options;
@@ -115,8 +141,10 @@ export const setMarkers = ( map, locations, options = {} ) => {
 };
 
 /**
- * @param {import('leaflet').Map} map
- * @param {MapLocation[]}         locations
+ * Fits the map viewport to the provided locations.
+ *
+ * @param {import('leaflet').Map} map       Leaflet map instance.
+ * @param {MapLocation[]}         locations Normalized location data.
  */
 export const fitMapToLocations = ( map, locations ) => {
 	const validLocations = locations.filter(
@@ -140,8 +168,10 @@ export const fitMapToLocations = ( map, locations ) => {
 };
 
 /**
- * @param {import('leaflet').Map} map
- * @param {number}                index
+ * Updates marker icons to reflect the active list item.
+ *
+ * @param {import('leaflet').Map} map   Leaflet map instance.
+ * @param {number}                index Active location index.
  */
 export const setActiveMarker = ( map, index ) => {
 	const markers = map.__locationMapMarkers || [];
@@ -152,10 +182,12 @@ export const setActiveMarker = ( map, index ) => {
 };
 
 /**
- * @param {import('leaflet').Map} map
- * @param {number}                lat
- * @param {number}                lng
- * @param {number}                [zoom=14]
+ * Centers the map on a specific coordinate.
+ *
+ * @param {import('leaflet').Map} map       Leaflet map instance.
+ * @param {number}                lat       Target latitude.
+ * @param {number}                lng       Target longitude.
+ * @param {number}                [zoom=14] Target zoom level.
  */
 export const focusMap = ( map, lat, lng, zoom = 14 ) => {
 	map.setView( [ lat, lng ], zoom );

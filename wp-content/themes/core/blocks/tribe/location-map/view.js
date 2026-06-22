@@ -17,6 +17,7 @@ import {
 } from 'utils/leaflet-map';
 import { locationCard } from './templates';
 
+/** @type {Object<string, string>} DOM selectors used by the block script. */
 const selectors = {
 	block: '.b-location-map',
 	canvas: '[data-js="location-map-canvas"]',
@@ -32,6 +33,26 @@ const selectors = {
 	locationCard: '.b-location-map__location',
 };
 
+/**
+ * @typedef {Object} LocationMapSettings
+ * @property {string}  [locationSource] Location data source mode.
+ * @property {string}  [endpointUrl]    REST endpoint for location data.
+ * @property {string}  [geocodeUrl]     REST endpoint for geocoding searches.
+ * @property {number}  [searchRadius]   Search radius in miles.
+ * @property {boolean} [fitBounds]      Whether to fit the map to markers.
+ * @property {boolean} [clusterMarkers] Whether to cluster overlapping markers.
+ */
+
+/**
+ * Shared runtime state for the active block instance.
+ *
+ * @type {{
+ *   map: import('leaflet').Map|null,
+ *   settings: LocationMapSettings,
+ *   locations: import('utils/leaflet-map').MapLocation[],
+ *   locationName: string,
+ * }}
+ */
 const state = {
 	map: null,
 	settings: {},
@@ -39,6 +60,14 @@ const state = {
 	locationName: '',
 };
 
+/**
+ * Parses a JSON-encoded data attribute from the block wrapper.
+ *
+ * @param {HTMLElement} element   Block wrapper element.
+ * @param {string}      attribute Data attribute name.
+ * @param {*}           fallback  Value returned when parsing fails.
+ * @return {*} Parsed attribute value.
+ */
 const parseJsonAttribute = ( element, attribute, fallback ) => {
 	try {
 		return JSON.parse( element.getAttribute( attribute ) || '' );
@@ -47,6 +76,11 @@ const parseJsonAttribute = ( element, attribute, fallback ) => {
 	}
 };
 
+/**
+ * Toggles the global loading overlay used during async requests.
+ *
+ * @param {boolean} isLoading Whether loading UI should be visible.
+ */
 const setLoading = ( isLoading ) => {
 	const overlay = document.querySelector( selectors.loading );
 
@@ -58,6 +92,11 @@ const setLoading = ( isLoading ) => {
 	overlay.classList.toggle( 'is-loading', isLoading );
 };
 
+/**
+ * Clears any visible search result messages.
+ *
+ * @param {HTMLElement} block Block wrapper element.
+ */
 const hideResultMessages = ( block ) => {
 	const results = block.querySelector( selectors.results );
 	const noResults = block.querySelector( selectors.noResults );
@@ -73,6 +112,13 @@ const hideResultMessages = ( block ) => {
 	}
 };
 
+/**
+ * Displays the successful search results message.
+ *
+ * @param {HTMLElement} block        Block wrapper element.
+ * @param {number}      count        Number of locations found.
+ * @param {string}      locationName Searched place name.
+ */
 const showResultsMessage = ( block, count, locationName ) => {
 	const results = block.querySelector( selectors.results );
 
@@ -92,7 +138,13 @@ const showResultsMessage = ( block, count, locationName ) => {
 	results.hidden = false;
 };
 
-const showNoResultsMessage = ( block, locationName ) => {
+/**
+ * Displays the empty search results message.
+ *
+ * @param {HTMLElement} block             Block wrapper element.
+ * @param {string}      [locationName=''] Searched place name.
+ */
+const showNoResultsMessage = ( block, locationName = '' ) => {
 	const noResults = block.querySelector( selectors.noResults );
 
 	if ( ! noResults ) {
@@ -113,6 +165,12 @@ const showNoResultsMessage = ( block, locationName ) => {
 	noResults.hidden = false;
 };
 
+/**
+ * Renders the sidebar location list markup.
+ *
+ * @param {HTMLElement}                               block     Block wrapper element.
+ * @param {import('utils/leaflet-map').MapLocation[]} locations Normalized location data.
+ */
 const renderLocationList = ( block, locations ) => {
 	const list = block.querySelector( selectors.list );
 
@@ -125,6 +183,12 @@ const renderLocationList = ( block, locations ) => {
 		.join( '' );
 };
 
+/**
+ * Syncs the active marker and list card when a map pin is clicked.
+ *
+ * @param {HTMLElement} block Block wrapper element.
+ * @param {number}      index Active location index.
+ */
 const handleMarkerClick = ( block, index ) => {
 	setActiveMarker( state.map, index );
 
@@ -141,6 +205,13 @@ const handleMarkerClick = ( block, index ) => {
 	}
 };
 
+/**
+ * Updates the map markers, list, and optional search status message.
+ *
+ * @param {HTMLElement}                               block             Block wrapper element.
+ * @param {import('utils/leaflet-map').MapLocation[]} locations         Normalized location data.
+ * @param {string}                                    [locationName=''] Label for search result messaging.
+ */
 const renderLocations = ( block, locations, locationName = '' ) => {
 	state.locations = locations;
 	hideResultMessages( block );
@@ -162,6 +233,12 @@ const renderLocations = ( block, locations, locationName = '' ) => {
 	}
 };
 
+/**
+ * Fetches normalized locations from the configured REST endpoint.
+ *
+ * @param {Object<string, string|number>} [params={}] Query parameters.
+ * @return {Promise<import('utils/leaflet-map').MapLocation[]>} Location results.
+ */
 const fetchLocations = async ( params = {} ) => {
 	const response = await fetch(
 		addQueryArgs( state.settings.endpointUrl, params )
@@ -176,6 +253,12 @@ const fetchLocations = async ( params = {} ) => {
 	return Array.isArray( data ) ? data : data.locations || [];
 };
 
+/**
+ * Geocodes a free-text search query through the server-side proxy.
+ *
+ * @param {string} query User-entered search text.
+ * @return {Promise<{ lat: number, lng: number, name?: string }>} Geocoded coordinates.
+ */
 const geocodeSearchQuery = async ( query ) => {
 	const response = await fetch(
 		addQueryArgs( state.settings.geocodeUrl, { q: query } )
@@ -188,6 +271,14 @@ const geocodeSearchQuery = async ( query ) => {
 	return response.json();
 };
 
+/**
+ * Loads nearby locations for a coordinate and updates the map UI.
+ *
+ * @param {HTMLElement} block             Block wrapper element.
+ * @param {number}      lat               Search latitude.
+ * @param {number}      lng               Search longitude.
+ * @param {string}      [locationName=''] Label for search result messaging.
+ */
 const loadNearbyLocations = async ( block, lat, lng, locationName = '' ) => {
 	setLoading( true );
 
@@ -207,6 +298,12 @@ const loadNearbyLocations = async ( block, lat, lng, locationName = '' ) => {
 	}
 };
 
+/**
+ * Handles sidebar search form submission.
+ *
+ * @param {HTMLElement} block Block wrapper element.
+ * @param {string}      query Raw search input value.
+ */
 const handleSearchSubmit = async ( block, query ) => {
 	const trimmedQuery = query.trim();
 
@@ -231,6 +328,11 @@ const handleSearchSubmit = async ( block, query ) => {
 	}
 };
 
+/**
+ * Uses the browser geolocation API to search near the visitor.
+ *
+ * @param {HTMLElement} block Block wrapper element.
+ */
 const handleUseMyLocation = ( block ) => {
 	if ( ! navigator.geolocation ) {
 		return;
@@ -251,6 +353,12 @@ const handleUseMyLocation = ( block ) => {
 	);
 };
 
+/**
+ * Focuses the map when a list item's "Show on map" action is clicked.
+ *
+ * @param {HTMLElement} block Block wrapper element.
+ * @param {Event}       event Click event.
+ */
 const handleShowOnMapClick = ( block, event ) => {
 	const button = event.target.closest(
 		'[data-js="location-map-show-on-map"]'
@@ -289,6 +397,11 @@ const handleShowOnMapClick = ( block, event ) => {
 	}
 };
 
+/**
+ * Binds interactive events for a single block instance.
+ *
+ * @param {HTMLElement} block Block wrapper element.
+ */
 const bindEvents = ( block ) => {
 	const form = block.querySelector( selectors.form );
 	const searchInput = block.querySelector( selectors.searchInput );
@@ -331,6 +444,11 @@ const bindEvents = ( block ) => {
 	);
 };
 
+/**
+ * Initializes map rendering and data loading for one block instance.
+ *
+ * @param {HTMLElement} block Block wrapper element.
+ */
 const initBlock = ( block ) => {
 	const canvas = block.querySelector( selectors.canvas );
 
@@ -364,6 +482,9 @@ const initBlock = ( block ) => {
 	}
 };
 
+/**
+ * Initializes every location map block present on the page.
+ */
 const init = () => {
 	document.querySelectorAll( selectors.block ).forEach( initBlock );
 };

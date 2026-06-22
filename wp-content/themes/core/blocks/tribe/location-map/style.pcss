@@ -1,6 +1,17 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Location Map - Styles - FE / Editor
+ *
+ * ------------------------------------------------------------------------- */
+
 .b-location-map {
 	--location-map-height: 600px;
+	container: locationmap / inline-size;
 }
+
+/* -------------------------------------------------------------------------
+ * Location Map - Viewport Height
+ * ------------------------------------------------------------------------- */
 
 .b-location-map--viewport-height {
 	--location-map-viewport-height: calc(
@@ -37,13 +48,24 @@
 	min-height: 0;
 }
 
+/* -------------------------------------------------------------------------
+ * Location Map - Grid
+ * ------------------------------------------------------------------------- */
+
 .b-location-map__grid {
 	display: grid;
 }
 
 .b-location-map--has-sidebar .b-location-map__grid {
-	grid-template-columns: minmax(300px, 625px) minmax(0, 1fr);
+
+	@container locationmap (min-width: 781px) {
+		grid-template-columns: minmax(300px, 625px) minmax(0, 1fr);
+	}
 }
+
+/* -------------------------------------------------------------------------
+ * Location Map - Sidebar
+ * ------------------------------------------------------------------------- */
 
 .b-location-map__sidebar {
 	display: flex;
@@ -52,6 +74,10 @@
 	min-height: 0;
 	background-color: var(--color-neutral-10);
 }
+
+/* -------------------------------------------------------------------------
+ * Location Map - Search
+ * ------------------------------------------------------------------------- */
 
 .b-location-map__search {
 	position: sticky;
@@ -129,6 +155,10 @@
 	}
 }
 
+/* -------------------------------------------------------------------------
+ * Location Map - Location List
+ * ------------------------------------------------------------------------- */
+
 .b-location-map__locations {
 	display: flex;
 	flex-direction: column;
@@ -138,6 +168,26 @@
 .b-location-map__locations-wrap {
 	max-height: var(--location-map-height);
 	overflow: auto;
+
+	.b-location-map__locations:not(.is-mobile-open) & {
+
+		@container locationmap (max-width: 780px) {
+			display: none;
+		}
+	}
+}
+
+.b-location-map__locations-mobile-wrap {
+	display: block;
+
+	@container locationmap (min-width: 781px) {
+		display: none;
+	}
+}
+
+.b-location-map__locations-mobile-toggle {
+	width: 100%;
+	margin-bottom: var(--spacer-10);
 }
 
 .b-location-map__list {
@@ -148,6 +198,10 @@
 	padding: var(--spacer-20) var(--spacer-30);
 	list-style: none;
 }
+
+/* -------------------------------------------------------------------------
+ * Location Map - Location Card
+ * ------------------------------------------------------------------------- */
 
 .b-location-map__location {
 	padding: var(--spacer-20);
@@ -190,6 +244,10 @@
 	text-decoration: none;
 }
 
+/* -------------------------------------------------------------------------
+ * Location Map - Map Canvas
+ * ------------------------------------------------------------------------- */
+
 .b-location-map__map-column,
 .b-location-map__map {
 	min-height: var(--location-map-height);
@@ -205,6 +263,10 @@
 	width: 100%;
 	height: 100%;
 }
+
+/* -------------------------------------------------------------------------
+ * Location Map - Markers
+ * ------------------------------------------------------------------------- */
 
 .b-location-map__marker {
 	background: transparent;
@@ -225,10 +287,18 @@
 	background-color: var(--color-dark-blue);
 }
 
+/* -------------------------------------------------------------------------
+ * Location Map - Attribution
+ * ------------------------------------------------------------------------- */
+
 .b-location-map__attribution {
 	margin-top: var(--spacer-10);
 	font-size: var(--font-size-10);
 }
+
+/* -------------------------------------------------------------------------
+ * Location Map - Loading Overlay
+ * ------------------------------------------------------------------------- */
 
 .b-location-map__loading-overlay {
 	align-items: center;
@@ -261,34 +331,11 @@
 	}
 }
 
+/* -------------------------------------------------------------------------
+ * Location Map - Utilities
+ * ------------------------------------------------------------------------- */
+
 .hidden,
 [hidden] {
 	display: none !important;
-}
-
-@media (max-width: 780px) {
-
-	.b-location-map--has-sidebar .b-location-map__grid {
-		grid-template-columns: 1fr;
-	}
-
-	.b-location-map__locations-mobile-wrap {
-		display: block;
-	}
-
-	.b-location-map__locations:not(.is-mobile-open) .b-location-map__locations-wrap {
-		display: none;
-	}
-
-	.b-location-map__locations-mobile-toggle {
-		width: 100%;
-		margin-bottom: var(--spacer-10);
-	}
-}
-
-@media (min-width: 781px) {
-
-	.b-location-map__locations-mobile-wrap {
-		display: none;
-	}
 }

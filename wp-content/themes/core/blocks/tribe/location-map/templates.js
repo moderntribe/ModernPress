@@ -2,7 +2,23 @@ import { __ } from '@wordpress/i18n';
 import { escapeAttribute, escapeHTML } from '@wordpress/escape-html';
 
 /**
- * @param {Object} data Normalized location data.
+ * @typedef {Object} LocationCardData
+ * @property {number|string} id              Location post ID.
+ * @property {string}        title           Location title.
+ * @property {number}        lat             Latitude coordinate.
+ * @property {number}        lng             Longitude coordinate.
+ * @property {string}        [address]       Formatted street address.
+ * @property {string}        [phone]         Contact phone number.
+ * @property {string}        [email]         Contact email address.
+ * @property {string}        [hours]         Display hours text.
+ * @property {string}        [url]           Permalink URL.
+ * @property {string}        [directionsUrl] Google Maps directions URL.
+ */
+
+/**
+ * Builds the markup for a single location card in the sidebar list.
+ *
+ * @param {LocationCardData} data Normalized location data.
  * @return {string} Location card HTML markup.
  */
 export const locationCard = ( data ) => `

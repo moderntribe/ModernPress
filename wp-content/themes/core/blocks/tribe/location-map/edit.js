@@ -1,3 +1,9 @@
+/**
+ * @module location-map/edit
+ *
+ * @description Block editor controls for the location map block.
+ */
+
 import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
@@ -14,6 +20,7 @@ import './editor.pcss';
 
 const LOCATION_POST_TYPE = 'location';
 
+/** @type {import('@wordpress/components').SelectControlOption[]} */
 const MAP_HEIGHT_MODE_OPTIONS = [
 	{
 		label: __( 'Fixed (px)', 'tribe' ),
@@ -25,6 +32,7 @@ const MAP_HEIGHT_MODE_OPTIONS = [
 	},
 ];
 
+/** @type {import('@wordpress/components').SelectControlOption[]} */
 const LOCATION_SOURCE_OPTIONS = [
 	{
 		label: __( 'Manual selection', 'tribe' ),
@@ -40,6 +48,15 @@ const LOCATION_SOURCE_OPTIONS = [
 	},
 ];
 
+/**
+ * Location Map block editor UI.
+ *
+ * @param {Object}   props               Component props.
+ * @param {Object}   props.attributes    Block attributes.
+ * @param {boolean}  props.isSelected    Whether the block is selected.
+ * @param {Function} props.setAttributes Updates block attributes.
+ * @return {import('react').JSX.Element} Block editor markup.
+ */
 export default function Edit( { attributes, isSelected, setAttributes } ) {
 	const blockProps = useBlockProps();
 	const {
