@@ -37,12 +37,11 @@ class Location_Geocoder {
 
 		$coordinates = $this->geocoder->geocode( $address );
 
-		update_post_meta( $post_id, Location_Meta::ADDRESS_HASH, $hash );
-
 		if ( null === $coordinates ) {
 			return;
 		}
 
+		update_post_meta( $post_id, Location_Meta::ADDRESS_HASH, $hash );
 		$this->update_coordinates( $post_id, $coordinates['lat'], $coordinates['lng'] );
 	}
 

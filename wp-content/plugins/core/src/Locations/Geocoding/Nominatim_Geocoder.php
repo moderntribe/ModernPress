@@ -7,6 +7,11 @@ class Nominatim_Geocoder implements Geocoder_Interface {
 	private const string ENDPOINT = 'https://nominatim.openstreetmap.org/search';
 	private const int CACHE_TTL   = DAY_IN_SECONDS;
 
+	public function __construct(
+		private Geocode_Rate_Limiter $rate_limiter,
+	) {
+	}
+
 	public function geocode( string $address ): ?array {
 		$address = trim( $address );
 
@@ -24,7 +29,7 @@ class Nominatim_Geocoder implements Geocoder_Interface {
 			];
 		}
 
-		( new Nominatim_Rate_Limiter() )->wait_before_request();
+		$this->rate_limiter->wait_before_outbound_request();
 
 		$url = add_query_arg(
 			[
@@ -59,15 +64,20 @@ class Nominatim_Geocoder implements Geocoder_Interface {
 
 		$body = json_decode( (string) wp_remote_retrieve_body( $response ), true );
 
-		if ( ! is_array( $body ) || empty( $body[0]['lat'] ) || empty( $body[0]['lon'] ) ) {
-			set_transient( $cache_key, [], self::CACHE_TTL );
+		$lat = $body[0]['lat'] ?? null;
+		$lon = $body[0]['lon'] ?? null;
 
+		if (
+			! is_array( $body )
+			|| ! is_numeric( $lat )
+			|| ! is_numeric( $lon )
+		) {
 			return null;
 		}
 
 		$coordinates = [
-			'lat' => (float) $body[0]['lat'],
-			'lng' => (float) $body[0]['lon'],
+			'lat' => (float) $lat,
+			'lng' => (float) $lon,
 		];
 
 		set_transient( $cache_key, $coordinates, self::CACHE_TTL );

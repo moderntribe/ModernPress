@@ -59,6 +59,19 @@ const ACTIVE_ICON = L.divIcon( {
  */
 
 /**
+ * Returns whether a location has finite latitude and longitude values.
+ *
+ * @param {MapLocation} location Normalized location data.
+ * @return {boolean} Whether coordinates are valid.
+ */
+const hasValidCoordinates = ( location ) => {
+	const lat = Number( location?.lat );
+	const lng = Number( location?.lng );
+
+	return Number.isFinite( lat ) && Number.isFinite( lng );
+};
+
+/**
  * Creates a Leaflet map instance inside the block canvas.
  *
  * @param {HTMLElement} container Map container element.
@@ -96,17 +109,24 @@ export const addTileLayer = ( map ) => {
  * @return {import('leaflet').Marker[]} Created marker instances.
  */
 export const setMarkers = ( map, locations, options = {} ) => {
-	const { clusterMarkers = true, onMarkerClick } = options;
-	const markers = [];
-
 	const clearTarget = map.__locationMapLayer;
 
 	if ( clearTarget ) {
 		map.removeLayer( clearTarget );
 	}
 
+	if ( ! locations.length ) {
+		map.__locationMapLayer = null;
+		map.__locationMapMarkers = [];
+
+		return [];
+	}
+
+	const { clusterMarkers = true, onMarkerClick } = options;
+	const markers = [];
+
 	locations.forEach( ( location, index ) => {
-		if ( ! location?.lat || ! location?.lng ) {
+		if ( ! hasValidCoordinates( location ) ) {
 			return;
 		}
 
@@ -147,9 +167,7 @@ export const setMarkers = ( map, locations, options = {} ) => {
  * @param {MapLocation[]}         locations Normalized location data.
  */
 export const fitMapToLocations = ( map, locations ) => {
-	const validLocations = locations.filter(
-		( location ) => location?.lat && location?.lng
-	);
+	const validLocations = locations.filter( hasValidCoordinates );
 
 	if ( ! validLocations.length ) {
 		return;
@@ -191,4 +209,15 @@ export const setActiveMarker = ( map, index ) => {
  */
 export const focusMap = ( map, lat, lng, zoom = 14 ) => {
 	map.setView( [ lat, lng ], zoom );
+};
+
+/**
+ * Recalculates map dimensions after container size changes.
+ *
+ * @param {import('leaflet').Map|null} map Leaflet map instance.
+ */
+export const invalidateMapSize = ( map ) => {
+	if ( map ) {
+		map.invalidateSize();
+	}
 };

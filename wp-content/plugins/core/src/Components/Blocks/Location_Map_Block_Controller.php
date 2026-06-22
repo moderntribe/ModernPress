@@ -111,7 +111,7 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 		return [
 			'locationSource'   => $this->location_source,
 			'endpointUrl'      => $this->get_locations_endpoint_url(),
-			'geocodeUrl'       => rest_url( 'tribe/v1/geocode' ),
+			'geocodeUrl'       => $this->get_rest_url( 'tribe/v1/geocode' ),
 			'defaultCenter'    => [
 				'lat' => $this->default_lat,
 				'lng' => $this->default_lng,
@@ -146,7 +146,7 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 			$query = new \WP_Query( [
 				'post_type'      => Location::NAME,
 				'post_status'    => 'publish',
-				'posts_per_page' => 100,
+				'posts_per_page' => -1,
 				'fields'         => 'ids',
 				'no_found_rows'  => true,
 			] );
@@ -180,7 +180,14 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 			return $this->endpoint_url;
 		}
 
-		return rest_url( 'tribe/v1/locations' );
+		return $this->get_rest_url( 'tribe/v1/locations' );
+	}
+
+	private function get_rest_url( string $route ): string {
+		$url      = rest_url( $route );
+		$relative = wp_make_link_relative( $url );
+
+		return is_string( $relative ) && $relative !== '' ? $relative : $url;
 	}
 
 }

@@ -155,9 +155,15 @@ export default function Edit( { attributes, isSelected, setAttributes } ) {
 									__nextHasNoMarginBottom
 									label={ __( 'Show search', 'tribe' ) }
 									checked={ showSearch }
-									onChange={ ( value ) =>
-										setAttributes( { showSearch: value } )
-									}
+									onChange={ ( value ) => {
+										const next = { showSearch: value };
+
+										if ( value && ! showLocationList ) {
+											next.showLocationList = true;
+										}
+
+										setAttributes( next );
+									} }
 								/>
 								<ToggleControl
 									__nextHasNoMarginBottom
@@ -166,6 +172,15 @@ export default function Edit( { attributes, isSelected, setAttributes } ) {
 										'tribe'
 									) }
 									checked={ showLocationList }
+									disabled={ showSearch }
+									help={
+										showSearch
+											? __(
+													'The location list is required when search is enabled.',
+													'tribe'
+											  )
+											: undefined
+									}
 									onChange={ ( value ) =>
 										setAttributes( {
 											showLocationList: value,
@@ -230,11 +245,13 @@ export default function Edit( { attributes, isSelected, setAttributes } ) {
 							label={ __( 'Default latitude', 'tribe' ) }
 							type="number"
 							value={ String( defaultLat ) }
-							onChange={ ( value ) =>
-								setAttributes( {
-									defaultLat: parseFloat( value ) || 0,
-								} )
-							}
+							onChange={ ( value ) => {
+								const parsed = parseFloat( value );
+
+								if ( ! Number.isNaN( parsed ) ) {
+									setAttributes( { defaultLat: parsed } );
+								}
+							} }
 						/>
 						<TextControl
 							__next40pxDefaultSize
@@ -242,11 +259,13 @@ export default function Edit( { attributes, isSelected, setAttributes } ) {
 							label={ __( 'Default longitude', 'tribe' ) }
 							type="number"
 							value={ String( defaultLng ) }
-							onChange={ ( value ) =>
-								setAttributes( {
-									defaultLng: parseFloat( value ) || 0,
-								} )
-							}
+							onChange={ ( value ) => {
+								const parsed = parseFloat( value );
+
+								if ( ! Number.isNaN( parsed ) ) {
+									setAttributes( { defaultLng: parsed } );
+								}
+							} }
 						/>
 						<ToggleControl
 							__nextHasNoMarginBottom

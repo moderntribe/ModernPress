@@ -14,6 +14,8 @@ $c = Location_Map_Block_Controller::factory( [
 if ( $c->should_bail_early() ) {
 	return;
 }
+
+$search_input_id = wp_unique_id( 'location-map-search-' );
 ?>
 <section
 	<?php
@@ -31,17 +33,16 @@ if ( $c->should_bail_early() ) {
 				<?php if ( $c->should_show_search() ) : ?>
 					<div class="b-location-map__search">
 						<form class="b-location-map__search-form" data-js="location-map-form">
-							<label class="screen-reader-text" for="location-map-search">
+							<label class="screen-reader-text" for="<?php echo esc_attr( $search_input_id ); ?>">
 								<?php esc_html_e( 'Search locations', 'tribe' ); ?>
 							</label>
 							<input
-								type="search"
-								id="location-map-search"
+								type="text"
+								id="<?php echo esc_attr( $search_input_id ); ?>"
 								class="b-location-map__search-input t-body"
 								name="location-search"
 								data-js="location-map-search"
-								placeholder="<?php echo esc_attr__( 'Search by city, state, or ZIP code', 'tribe' ); ?>"
-								autocomplete="off"
+								placeholder="<?php echo esc_attr__( 'Search by city or state', 'tribe' ); ?>"
 							/>
 							<button
 								type="button"
@@ -79,8 +80,9 @@ if ( $c->should_bail_early() ) {
 							</button>
 						</div>
 						<div class="b-location-map__locations-wrap">
-							<p class="b-location-map__results t-body hidden" data-js="location-map-results" hidden></p>
-							<p class="b-location-map__no-results t-body hidden" data-js="location-map-no-results" hidden></p>
+							<p class="b-location-map__results t-body" data-js="location-map-results" hidden></p>
+							<p class="b-location-map__no-results t-body" data-js="location-map-no-results" hidden></p>
+							<p class="b-location-map__error t-body" data-js="location-map-error" hidden></p>
 							<ul class="b-location-map__list" data-js="location-map-list"></ul>
 						</div>
 					</div>
@@ -92,8 +94,8 @@ if ( $c->should_bail_early() ) {
 			<div class="b-location-map__map" data-js="location-map-canvas" role="region" aria-label="<?php esc_attr_e( 'Location map', 'tribe' ); ?>"></div>
 		</div>
 	</div>
-</section>
 
-<div class="b-location-map__loading-overlay" data-js="location-map-loading" aria-hidden="true" hidden>
-	<span class="b-location-map__loading-spinner" aria-hidden="true"></span>
-</div>
+	<div class="b-location-map__loading-overlay" data-js="location-map-loading" aria-hidden="true" hidden>
+		<span class="b-location-map__loading-spinner" aria-hidden="true"></span>
+	</div>
+</section>

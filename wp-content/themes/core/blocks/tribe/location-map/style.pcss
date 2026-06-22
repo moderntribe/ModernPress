@@ -4,8 +4,9 @@
  *
  * ------------------------------------------------------------------------- */
 
+@import '_variables.pcss';
+
 .b-location-map {
-	--location-map-height: 600px;
 	container: locationmap / inline-size;
 }
 
@@ -14,9 +15,6 @@
  * ------------------------------------------------------------------------- */
 
 .b-location-map--viewport-height {
-	--location-map-viewport-height: calc(
-		100dvh - var(--header-height, 0px) - var(--wp-admin--admin-bar--height, 0px)
-	);
 	height: var(--location-map-viewport-height);
 	min-height: var(--location-map-viewport-height);
 }
@@ -70,9 +68,8 @@
 .b-location-map__sidebar {
 	display: flex;
 	flex-direction: column;
-	gap: var(--spacer-20);
 	min-height: 0;
-	background-color: var(--color-neutral-10);
+	background-color: var(--location-map-sidebar-background);
 }
 
 /* -------------------------------------------------------------------------
@@ -81,15 +78,14 @@
 
 .b-location-map__search {
 	position: sticky;
-	background-color: var(--color-neutral-10);
+	background-color: var(--location-map-sidebar-background);
 	top: 0;
 	z-index: 1;
-	padding: var(--spacer-20) var(--spacer-30);
-	border-bottom: 1px solid var(--color-border-secondary);
+	padding: var(--spacer-30);
+	border-bottom: 1px solid var(--location-map-search-border-color);
 }
 
 .b-location-map__search-form {
-	--action-button-size: 38px;
 	display: flex;
 	flex-direction: column;
 	gap: var(--spacer-20);
@@ -98,8 +94,8 @@
 
 .b-location-map__search-input {
 	width: 100%;
-	padding: var(--spacer-20) calc(var(--spacer-20) + var(--action-button-size) + var(--spacer-20));
-	border: 1px solid var(--color-border-secondary);
+	padding: var(--spacer-20) calc(var(--spacer-20) + var(--location-map-search-action-button-size) + var(--spacer-20));
+	border: 1px solid var(--location-map-search-border-color);
 	border-radius: 4px;
 }
 
@@ -107,8 +103,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: var(--action-button-size);
-	height: var(--action-button-size);
+	width: var(--location-map-search-action-button-size);
+	height: var(--location-map-search-action-button-size);
 	position: absolute;
 	top: 50%;
 	right: var(--spacer-20);
@@ -117,7 +113,7 @@
 	margin: 0;
 	border: 0;
 	border-radius: 100%;
-	background-color: var(--color-neutral-20);
+	background-color: var(--location-map-search-button-background);
 	cursor: pointer;
 
 	.icon {
@@ -125,7 +121,7 @@
 		width: 100%;
 		height: 100%;
 		mask: var(--icon-my-location) center / contain no-repeat;
-		background-color: var(--color-black);
+		background-color: var(--location-map-search-icon-color);
 	}
 }
 
@@ -133,8 +129,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: var(--action-button-size);
-	height: var(--action-button-size);
+	width: var(--location-map-search-action-button-size);
+	height: var(--location-map-search-action-button-size);
 	position: absolute;
 	top: 50%;
 	left: var(--spacer-20);
@@ -151,7 +147,7 @@
 		width: 100%;
 		height: 100%;
 		mask: var(--icon-search) center / contain no-repeat;
-		background-color: var(--color-black);
+		background-color: var(--location-map-search-icon-color);
 	}
 }
 
@@ -190,12 +186,19 @@
 	margin-bottom: var(--spacer-10);
 }
 
+.b-location-map__results,
+.b-location-map__no-results,
+.b-location-map__error {
+	margin-top: 0 !important;
+	padding: var(--spacer-30) var(--spacer-30) 0;
+}
+
 .b-location-map__list {
 	display: flex;
 	flex-direction: column;
 	gap: var(--spacer-20);
 	margin: 0;
-	padding: var(--spacer-20) var(--spacer-30);
+	padding: var(--spacer-30);
 	list-style: none;
 }
 
@@ -205,14 +208,14 @@
 
 .b-location-map__location {
 	padding: var(--spacer-20);
-	border: 1px solid var(--color-border-secondary);
+	border: 1px solid var(--location-map-location-border-color);
 	border-radius: 4px;
-	background-color: var(--color-white);
+	background-color: var(--location-map-location-background);
 }
 
 .b-location-map__location.is-active {
-	border-color: var(--color-blue);
-	box-shadow: 0 0 0 1px var(--color-blue);
+	border-color: var(--location-map-location-active-border-color);
+	box-shadow: 0 0 0 1px var(--location-map-location-active-shadow-color);
 }
 
 .b-location-map__location-title {
@@ -235,8 +238,8 @@
 
 .b-location-map__location-action {
 	appearance: none;
-	border: 1px solid var(--color-border-secondary);
-	background: var(--color-white);
+	border: 1px solid var(--location-map-location-action-border-color);
+	background: var(--location-map-location-action-background);
 	border-radius: 4px;
 	color: inherit;
 	cursor: pointer;
@@ -277,23 +280,12 @@
 	display: block;
 	width: 24px;
 	height: 32px;
-	background-color: var(--color-blue);
+	background-color: var(--location-map-marker-color);
 	mask: var(--icon-map-pin) center / contain no-repeat;
 }
 
 .b-location-map__marker.is-active .b-location-map__marker-pin {
-	width: 30px;
-	height: 40px;
-	background-color: var(--color-dark-blue);
-}
-
-/* -------------------------------------------------------------------------
- * Location Map - Attribution
- * ------------------------------------------------------------------------- */
-
-.b-location-map__attribution {
-	margin-top: var(--spacer-10);
-	font-size: var(--font-size-10);
+	background-color: var(--location-map-marker-active-color);
 }
 
 /* -------------------------------------------------------------------------
@@ -302,12 +294,16 @@
 
 .b-location-map__loading-overlay {
 	align-items: center;
-	background: color-mix(in srgb, var(--color-black) 45%, transparent);
+	background: var(--location-map-loading-overlay-background);
 	display: none;
+	height: 100dvh;
 	inset: 0;
 	justify-content: center;
+	left: 0;
 	pointer-events: none;
 	position: fixed;
+	top: 0;
+	width: 100dvw;
 	z-index: 100000;
 }
 
@@ -318,8 +314,8 @@
 .b-location-map__loading-spinner {
 	width: 40px;
 	height: 40px;
-	border: 3px solid color-mix(in srgb, var(--color-white) 30%, transparent);
-	border-top-color: var(--color-white);
+	border: 3px solid var(--location-map-loading-spinner-border-color);
+	border-top-color: var(--location-map-loading-spinner-active-border-color);
 	border-radius: 50%;
 	animation: b-location-map-spin 0.9s linear infinite;
 }
@@ -335,7 +331,7 @@
  * Location Map - Utilities
  * ------------------------------------------------------------------------- */
 
-.hidden,
-[hidden] {
+.b-location-map .hidden,
+.b-location-map [hidden] {
 	display: none !important;
 }

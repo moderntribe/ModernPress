@@ -107,12 +107,29 @@ class Location_Data {
 	 * @return array<int, array<string, mixed>>
 	 */
 	public static function get_locations_nearby( float $lat, float $lng, float $radius_miles = 30.0 ): array {
+		$bounds = self::get_bounding_box( $lat, $lng, $radius_miles );
+
 		$query = new \WP_Query( [
 			'post_type'      => Location::NAME,
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
 			'fields'         => 'ids',
 			'no_found_rows'  => true,
+			'meta_query'     => [
+				'relation' => 'AND',
+				[
+					'key'     => Location_Meta::LATITUDE,
+					'value'   => [ $bounds['min_lat'], $bounds['max_lat'] ],
+					'type'    => 'DECIMAL',
+					'compare' => 'BETWEEN',
+				],
+				[
+					'key'     => Location_Meta::LONGITUDE,
+					'value'   => [ $bounds['min_lng'], $bounds['max_lng'] ],
+					'type'    => 'DECIMAL',
+					'compare' => 'BETWEEN',
+				],
+			],
 		] );
 
 		$locations = [];
@@ -169,6 +186,21 @@ class Location_Data {
 		}
 
 		return get_post_meta( $post_id, $key, true );
+	}
+
+	/**
+	 * @return array{min_lat: float, max_lat: float, min_lng: float, max_lng: float}
+	 */
+	private static function get_bounding_box( float $lat, float $lng, float $radius_miles ): array {
+		$lat_delta = $radius_miles / 69.0;
+		$lng_delta = $radius_miles / max( 69.0 * cos( deg2rad( $lat ) ), 0.0001 );
+
+		return [
+			'min_lat' => $lat - $lat_delta,
+			'max_lat' => $lat + $lat_delta,
+			'min_lng' => $lng - $lng_delta,
+			'max_lng' => $lng + $lng_delta,
+		];
 	}
 
 	private static function get_coordinate( int $post_id, string $key ): ?float {

@@ -11,6 +11,7 @@ class Google_Maps_Geocoder implements Geocoder_Interface {
 
 	public function __construct(
 		private Tribe_Settings $settings,
+		private Geocode_Rate_Limiter $rate_limiter,
 	) {
 	}
 
@@ -31,6 +32,8 @@ class Google_Maps_Geocoder implements Geocoder_Interface {
 				'lng' => (float) $cached['lng'],
 			];
 		}
+
+		$this->rate_limiter->wait_before_outbound_request();
 
 		$url = add_query_arg(
 			[
@@ -57,15 +60,21 @@ class Google_Maps_Geocoder implements Geocoder_Interface {
 			return null;
 		}
 
-		$body = json_decode( (string) wp_remote_retrieve_body( $response ), true );
+		$body   = json_decode( (string) wp_remote_retrieve_body( $response ), true );
+		$status = (string) ( $body['status'] ?? '' );
+
+		$lat = $body['results'][0]['geometry']['location']['lat'] ?? null;
+		$lng = $body['results'][0]['geometry']['location']['lng'] ?? null;
 
 		if (
 			! is_array( $body )
-			|| 'OK' !== ( $body['status'] ?? '' )
-			|| empty( $body['results'][0]['geometry']['location']['lat'] )
-			|| empty( $body['results'][0]['geometry']['location']['lng'] )
+			|| 'OK' !== $status
+			|| ! is_numeric( $lat )
+			|| ! is_numeric( $lng )
 		) {
-			set_transient( $cache_key, [], self::CACHE_TTL );
+			if ( 'ZERO_RESULTS' === $status ) {
+				set_transient( $cache_key, [], self::CACHE_TTL );
+			}
 
 			return null;
 		}

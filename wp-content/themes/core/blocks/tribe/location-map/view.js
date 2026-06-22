@@ -4,6 +4,8 @@
  * @description Leaflet-powered location map with optional search sidebar.
  */
 
+/* global requestAnimationFrame */
+
 import { __, sprintf } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
 import { ready } from 'utils/events';
@@ -12,6 +14,7 @@ import {
 	createMap,
 	fitMapToLocations,
 	focusMap,
+	invalidateMapSize,
 	setActiveMarker,
 	setMarkers,
 } from 'utils/leaflet-map';
@@ -28,6 +31,7 @@ const selectors = {
 	list: '[data-js="location-map-list"]',
 	results: '[data-js="location-map-results"]',
 	noResults: '[data-js="location-map-no-results"]',
+	error: '[data-js="location-map-error"]',
 	mobileToggle: '[data-js="location-map-mobile-toggle"]',
 	loading: '[data-js="location-map-loading"]',
 	locationCard: '.b-location-map__location',
@@ -44,20 +48,34 @@ const selectors = {
  */
 
 /**
- * Shared runtime state for the active block instance.
- *
- * @type {{
- *   map: import('leaflet').Map|null,
- *   settings: LocationMapSettings,
- *   locations: import('utils/leaflet-map').MapLocation[],
- *   locationName: string,
- * }}
+ * @typedef {Object} BlockState
+ * @property {import('leaflet').Map|null}                map       Leaflet map instance.
+ * @property {LocationMapSettings}                       settings  Block settings from SSR.
+ * @property {import('utils/leaflet-map').MapLocation[]} locations Normalized location data.
  */
-const state = {
-	map: null,
-	settings: {},
-	locations: [],
-	locationName: '',
+
+/** @type {WeakMap<HTMLElement, BlockState>} Per-block runtime state. */
+const blockStates = new WeakMap();
+
+/** @type {WeakMap<HTMLElement, HTMLElement>} Block wrapper to loading overlay. */
+const loadingOverlays = new WeakMap();
+
+/**
+ * Returns runtime state for a block instance, creating it when needed.
+ *
+ * @param {HTMLElement} block Block wrapper element.
+ * @return {BlockState} Block runtime state.
+ */
+const getBlockState = ( block ) => {
+	if ( ! blockStates.has( block ) ) {
+		blockStates.set( block, {
+			map: null,
+			settings: {},
+			locations: [],
+		} );
+	}
+
+	return blockStates.get( block );
 };
 
 /**
@@ -77,19 +95,98 @@ const parseJsonAttribute = ( element, attribute, fallback ) => {
 };
 
 /**
- * Toggles the global loading overlay used during async requests.
+ * Returns the loading overlay for a block instance.
  *
- * @param {boolean} isLoading Whether loading UI should be visible.
+ * @param {HTMLElement} block Block wrapper element.
+ * @return {HTMLElement|null} Loading overlay element.
  */
-const setLoading = ( isLoading ) => {
-	const overlay = document.querySelector( selectors.loading );
+const getLoadingOverlay = ( block ) => {
+	if ( loadingOverlays.has( block ) ) {
+		return loadingOverlays.get( block ) ?? null;
+	}
+
+	const overlay = block.querySelector( selectors.loading );
+
+	if ( overlay ) {
+		loadingOverlays.set( block, overlay );
+	}
+
+	return overlay;
+};
+
+/**
+ * Moves the overlay to the document body so fixed positioning covers the viewport.
+ *
+ * @param {HTMLElement} overlay Loading overlay element.
+ * @param {HTMLElement} block   Block wrapper element.
+ */
+const mountLoadingOverlay = ( overlay, block ) => {
+	loadingOverlays.set( block, overlay );
+
+	if ( overlay.parentElement !== document.body ) {
+		document.body.appendChild( overlay );
+	}
+};
+
+/**
+ * Toggles the loading overlay used during async requests.
+ *
+ * @param {HTMLElement} block     Block wrapper element.
+ * @param {boolean}     isLoading Whether loading UI should be visible.
+ */
+const setLoading = ( block, isLoading ) => {
+	const overlay = getLoadingOverlay( block );
 
 	if ( ! overlay ) {
 		return;
 	}
 
+	if ( isLoading ) {
+		mountLoadingOverlay( overlay, block );
+	}
+
 	overlay.hidden = ! isLoading;
 	overlay.classList.toggle( 'is-loading', isLoading );
+	overlay.setAttribute( 'aria-hidden', isLoading ? 'false' : 'true' );
+};
+
+/**
+ * Sets visibility of a message element.
+ *
+ * @param {HTMLElement|null} element Message element.
+ * @param {boolean}          visible Whether the message should be visible.
+ */
+const setMessageVisibility = ( element, visible ) => {
+	if ( ! element ) {
+		return;
+	}
+
+	element.hidden = ! visible;
+	element.classList.toggle( 'hidden', ! visible );
+};
+
+/**
+ * Ensures the location list panel is visible on narrow layouts.
+ *
+ * @param {HTMLElement} block Block wrapper element.
+ */
+const openMobileLocationList = ( block ) => {
+	const locations = block.querySelector( selectors.locations );
+
+	if ( ! locations || locations.classList.contains( 'is-mobile-open' ) ) {
+		return;
+	}
+
+	locations.classList.add( 'is-mobile-open' );
+
+	const mobileToggle = block.querySelector( selectors.mobileToggle );
+	const label = mobileToggle?.querySelector(
+		'.b-location-map__locations-mobile-toggle-text'
+	);
+
+	if ( label && mobileToggle ) {
+		label.textContent = mobileToggle.getAttribute( 'data-on-text' ) || '';
+	}
 };
 
 /**
@@ -100,16 +197,17 @@ const setLoading = ( isLoading ) => {
 const hideResultMessages = ( block ) => {
 	const results = block.querySelector( selectors.results );
 	const noResults = block.querySelector( selectors.noResults );
+	const error = block.querySelector( selectors.error );
 
-	if ( results ) {
-		results.hidden = true;
-		results.textContent = '';
-	}
+	[ results, noResults, error ].forEach( ( element ) => {
+		if ( element ) {
+			element.textContent = '';
+		}
+	} );
 
-	if ( noResults ) {
-		noResults.hidden = true;
-		noResults.textContent = '';
-	}
+	setMessageVisibility( results, false );
+	setMessageVisibility( noResults, false );
+	setMessageVisibility( error, false );
 };
 
 /**
@@ -126,16 +224,19 @@ const showResultsMessage = ( block, count, locationName ) => {
 		return;
 	}
 
+	const { settings } = getBlockState( block );
+
 	const label = locationName || __( 'your location', 'tribe' );
 
 	results.textContent = sprintf(
 		/* translators: 1: location count, 2: search radius in miles, 3: searched place name */
 		__( 'Found %1$d locations within %2$d miles of %3$s.', 'tribe' ),
 		count,
-		state.settings.searchRadius || 30,
+		settings.searchRadius || 30,
 		label
 	);
-	results.hidden = false;
+	openMobileLocationList( block );
+	setMessageVisibility( results, true );
 };
 
 /**
@@ -151,6 +252,8 @@ const showNoResultsMessage = ( block, locationName = '' ) => {
 		return;
 	}
 
+	const { settings } = getBlockState( block );
+
 	const label = locationName || __( 'your location', 'tribe' );
 
 	noResults.textContent = sprintf(
@@ -159,10 +262,29 @@ const showNoResultsMessage = ( block, locationName = '' ) => {
 			'Sorry, no locations were found within %1$d miles of %2$s.',
 			'tribe'
 		),
-		state.settings.searchRadius || 30,
+		settings.searchRadius || 30,
 		label
 	);
-	noResults.hidden = false;
+	openMobileLocationList( block );
+	setMessageVisibility( noResults, true );
+};
+
+/**
+ * Displays a general error message in the sidebar.
+ *
+ * @param {HTMLElement} block   Block wrapper element.
+ * @param {string}      message Error message text.
+ */
+const showErrorMessage = ( block, message ) => {
+	const error = block.querySelector( selectors.error );
+
+	if ( ! error ) {
+		return;
+	}
+
+	error.textContent = message;
+	openMobileLocationList( block );
+	setMessageVisibility( error, true );
 };
 
 /**
@@ -190,7 +312,9 @@ const renderLocationList = ( block, locations ) => {
  * @param {number}      index Active location index.
  */
 const handleMarkerClick = ( block, index ) => {
-	setActiveMarker( state.map, index );
+	const { map } = getBlockState( block );
+
+	setActiveMarker( map, index );
 
 	const cards = block.querySelectorAll( selectors.locationCard );
 
@@ -211,19 +335,28 @@ const handleMarkerClick = ( block, index ) => {
  * @param {HTMLElement}                               block             Block wrapper element.
  * @param {import('utils/leaflet-map').MapLocation[]} locations         Normalized location data.
  * @param {string}                                    [locationName=''] Label for search result messaging.
+ * @param {{ lat: number, lng: number }|null}         [searchCenter]    Map center when a search returns no locations.
  */
-const renderLocations = ( block, locations, locationName = '' ) => {
-	state.locations = locations;
+const renderLocations = ( block, locations, locationName = '', searchCenter = null ) => {
+	const blockState = getBlockState( block );
+
+	blockState.locations = locations;
 	hideResultMessages( block );
 	renderLocationList( block, locations );
 
-	setMarkers( state.map, locations, {
-		clusterMarkers: state.settings.clusterMarkers,
+	setMarkers( blockState.map, locations, {
+		clusterMarkers: blockState.settings.clusterMarkers,
 		onMarkerClick: ( _marker, index ) => handleMarkerClick( block, index ),
 	} );
 
-	if ( state.settings.fitBounds ) {
-		fitMapToLocations( state.map, locations );
+	if ( locations.length ) {
+		if ( blockState.settings.fitBounds ) {
+			fitMapToLocations( blockState.map, locations );
+		} else if ( searchCenter ) {
+			focusMap( blockState.map, searchCenter.lat, searchCenter.lng, 11 );
+		}
+	} else if ( searchCenter ) {
+		focusMap( blockState.map, searchCenter.lat, searchCenter.lng, 11 );
 	}
 
 	if ( locations.length && locationName ) {
@@ -231,17 +364,21 @@ const renderLocations = ( block, locations, locationName = '' ) => {
 	} else if ( ! locations.length && locationName ) {
 		showNoResultsMessage( block, locationName );
 	}
+
+	invalidateMapSize( blockState.map );
 };
 
 /**
  * Fetches normalized locations from the configured REST endpoint.
  *
+ * @param {HTMLElement}                   block       Block wrapper element.
  * @param {Object<string, string|number>} [params={}] Query parameters.
  * @return {Promise<import('utils/leaflet-map').MapLocation[]>} Location results.
  */
-const fetchLocations = async ( params = {} ) => {
+const fetchLocations = async ( block, params = {} ) => {
+	const { settings } = getBlockState( block );
 	const response = await fetch(
-		addQueryArgs( state.settings.endpointUrl, params )
+		addQueryArgs( settings.endpointUrl, params )
 	);
 
 	if ( ! response.ok ) {
@@ -254,18 +391,41 @@ const fetchLocations = async ( params = {} ) => {
 };
 
 /**
+ * Parses a failed geocode response into a throwable error.
+ *
+ * @param {Response} response Fetch response object.
+ * @return {Promise<Error>} Error with status and optional REST code.
+ */
+const parseGeocodeError = async ( response ) => {
+	const error = new Error( 'Unable to geocode search query.' );
+	error.status = response.status;
+
+	try {
+		const data = await response.json();
+		error.code = data?.code;
+		error.message = data?.message || error.message;
+	} catch {
+		// Response body was not JSON.
+	}
+
+	return error;
+};
+
+/**
  * Geocodes a free-text search query through the server-side proxy.
  *
- * @param {string} query User-entered search text.
+ * @param {HTMLElement} block Block wrapper element.
+ * @param {string}      query User-entered search text.
  * @return {Promise<{ lat: number, lng: number, name?: string }>} Geocoded coordinates.
  */
-const geocodeSearchQuery = async ( query ) => {
+const geocodeSearchQuery = async ( block, query ) => {
+	const { settings } = getBlockState( block );
 	const response = await fetch(
-		addQueryArgs( state.settings.geocodeUrl, { q: query } )
+		addQueryArgs( settings.geocodeUrl, { q: query } )
 	);
 
 	if ( ! response.ok ) {
-		throw new Error( 'Unable to geocode search query.' );
+		throw await parseGeocodeError( response );
 	}
 
 	return response.json();
@@ -280,21 +440,26 @@ const geocodeSearchQuery = async ( query ) => {
  * @param {string}      [locationName=''] Label for search result messaging.
  */
 const loadNearbyLocations = async ( block, lat, lng, locationName = '' ) => {
-	setLoading( true );
+	const blockState = getBlockState( block );
+
+	setLoading( block, true );
 
 	try {
-		const locations = await fetchLocations( {
+		const locations = await fetchLocations( block, {
 			lat,
 			lng,
-			r: state.settings.searchRadius,
+			r: blockState.settings.searchRadius,
 		} );
 
-		focusMap( state.map, lat, lng, 11 );
-		renderLocations( block, locations, locationName );
+		renderLocations( block, locations, locationName, { lat, lng } );
 	} catch {
-		renderLocations( block, [], locationName );
+		renderLocations( block, [] );
+		showErrorMessage(
+			block,
+			__( 'Unable to load locations. Please try again.', 'tribe' )
+		);
 	} finally {
-		setLoading( false );
+		setLoading( block, false );
 	}
 };
 
@@ -311,20 +476,48 @@ const handleSearchSubmit = async ( block, query ) => {
 		return;
 	}
 
-	setLoading( true );
+	setLoading( block, true );
+	hideResultMessages( block );
 
 	try {
-		const geocoded = await geocodeSearchQuery( trimmedQuery );
+		const geocoded = await geocodeSearchQuery( block, trimmedQuery );
+		setLoading( block, false );
 		await loadNearbyLocations(
 			block,
 			geocoded.lat,
 			geocoded.lng,
 			geocoded.name || trimmedQuery
 		);
-	} catch {
-		showNoResultsMessage( block, trimmedQuery );
-	} finally {
-		setLoading( false );
+	} catch ( error ) {
+		setLoading( block, false );
+
+		if ( error?.status === 429 ) {
+			showErrorMessage(
+				block,
+				__(
+					'Too many searches. Please wait a moment and try again.',
+					'tribe'
+				)
+			);
+			return;
+		}
+
+		if (
+			error?.code === 'tribe_geocode_not_found' ||
+			error?.status === 422
+		) {
+			showNoResultsMessage( block, trimmedQuery );
+			return;
+		}
+
+		showErrorMessage(
+			block,
+			error?.message ||
+				__(
+					'Unable to search for that location. Please try again.',
+					'tribe'
+				)
+		);
 	}
 };
 
@@ -335,19 +528,32 @@ const handleSearchSubmit = async ( block, query ) => {
  */
 const handleUseMyLocation = ( block ) => {
 	if ( ! navigator.geolocation ) {
+		showErrorMessage(
+			block,
+			__( 'Your browser does not support location access.', 'tribe' )
+		);
 		return;
 	}
+
+	hideResultMessages( block );
 
 	navigator.geolocation.getCurrentPosition(
 		( position ) => {
 			loadNearbyLocations(
 				block,
 				position.coords.latitude,
-				position.coords.longitude
+				position.coords.longitude,
+				__( 'your location', 'tribe' )
 			);
 		},
 		() => {
-			showNoResultsMessage( block );
+			showErrorMessage(
+				block,
+				__(
+					'Unable to access your location. Please check browser permissions or search by address.',
+					'tribe'
+				)
+			);
 		},
 		{ timeout: 10000 }
 	);
@@ -360,6 +566,7 @@ const handleUseMyLocation = ( block ) => {
  * @param {Event}       event Click event.
  */
 const handleShowOnMapClick = ( block, event ) => {
+	const { map, locations } = getBlockState( block );
 	const button = event.target.closest(
 		'[data-js="location-map-show-on-map"]'
 	);
@@ -375,17 +582,17 @@ const handleShowOnMapClick = ( block, event ) => {
 		return;
 	}
 
-	const index = state.locations.findIndex(
+	const index = locations.findIndex(
 		( location ) =>
 			parseFloat( location.lat ) === lat &&
 			parseFloat( location.lng ) === lng
 	);
 
 	if ( index >= 0 ) {
-		setActiveMarker( state.map, index );
+		setActiveMarker( map, index );
 	}
 
-	focusMap( state.map, lat, lng, 16 );
+	focusMap( map, lat, lng, 16 );
 
 	const card = button.closest( selectors.locationCard );
 
@@ -436,6 +643,8 @@ const bindEvents = ( block ) => {
 					? mobileToggle.getAttribute( 'data-on-text' )
 					: mobileToggle.getAttribute( 'data-off-text' );
 			}
+
+			invalidateMapSize( getBlockState( block ).map );
 		} );
 	}
 
@@ -456,30 +665,41 @@ const initBlock = ( block ) => {
 		return;
 	}
 
-	state.settings = parseJsonAttribute( block, 'data-map-settings', {} );
+	const blockState = getBlockState( block );
+
+	blockState.settings = parseJsonAttribute( block, 'data-map-settings', {} );
 	const initialLocations = parseJsonAttribute(
 		block,
 		'data-map-locations',
 		[]
 	);
 
-	state.map = createMap( canvas, state.settings );
-	addTileLayer( state.map );
+	blockState.map = createMap( canvas, blockState.settings );
+	addTileLayer( blockState.map );
 
 	bindEvents( block );
 
 	if ( initialLocations.length ) {
 		renderLocations( block, initialLocations );
+		requestAnimationFrame( () => invalidateMapSize( blockState.map ) );
 		return;
 	}
 
-	if ( state.settings.locationSource === 'endpoint' ) {
-		setLoading( true );
-		fetchLocations()
+	if ( blockState.settings.locationSource === 'endpoint' ) {
+		setLoading( block, true );
+		fetchLocations( block )
 			.then( ( locations ) => renderLocations( block, locations ) )
-			.catch( () => renderLocations( block, [] ) )
-			.finally( () => setLoading( false ) );
+			.catch( () => {
+				renderLocations( block, [] );
+				showErrorMessage(
+					block,
+					__( 'Unable to load locations. Please try again.', 'tribe' )
+				);
+			} )
+			.finally( () => setLoading( block, false ) );
 	}
+
+	requestAnimationFrame( () => invalidateMapSize( blockState.map ) );
 };
 
 /**
