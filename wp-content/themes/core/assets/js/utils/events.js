@@ -31,7 +31,7 @@ const triggerCustomEvent = ( type, el = document, detail = {} ) => {
 	}
 
 	// Create new event
-	// eslint-disable-next-line no-undef
+
 	const event = new CustomEvent( type, {
 		bubbles: true,
 		cancelable: true,

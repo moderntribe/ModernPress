@@ -19,7 +19,8 @@ if ( $c->should_bail_early() || ! $c->get_query()->have_posts() ) {
 	<?php while ( $c->get_query()->have_posts() ) : ?>
 		<?php $c->get_query()->the_post(); ?>
 		<?php get_template_part( 'components/cards/post', null, [
-			'post_id' => get_the_ID(),
+			'post_id'       => get_the_ID(),
+			'taxonomy_slug' => $c->get_card_taxonomy_slug(),
 		] ); ?>
 	<?php endwhile; ?>
 </div>
