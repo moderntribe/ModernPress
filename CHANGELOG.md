@@ -5,6 +5,8 @@ on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entr
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.06]
+- Fix: Animation classes accumulating in block "Additional CSS Class(es)" field.
+- Fix: Animation classes accumulating in block "Additional CSS Class(es)" field.
 - Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
 
 ## [2026.05]
