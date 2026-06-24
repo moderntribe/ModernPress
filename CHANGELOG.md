@@ -6,7 +6,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.06]
 - Fix: Animation classes accumulating in block "Additional CSS Class(es)" field.
-- Fix: Animation classes accumulating in block "Additional CSS Class(es)" field.
+- Fix: Search card excerpt visibility now correctly checks `has_post_excerpt()` instead of `has_post_date()`.
 - Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
 
 ## [2026.05]
