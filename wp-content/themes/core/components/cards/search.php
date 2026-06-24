@@ -48,7 +48,7 @@ $c = Search_Card_Controller::factory( [
 				<?php endif; ?>
 			</p>
 		<?php endif; ?>
-		<?php if ( $c->has_post_date() ) : ?>
+		<?php if ( $c->has_post_excerpt() ) : ?>
 			<p class="c-search-card__excerpt t-body-small"><?php echo esc_html( $c->get_post_excerpt() ); ?></p>
 		<?php endif; ?>
 		<p class="c-search-card__visible-permalink t-body-small"><?php echo esc_html( $c->get_post_permalink() ); ?></p>
