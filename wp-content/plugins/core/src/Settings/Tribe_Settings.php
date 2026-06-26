@@ -84,7 +84,7 @@ class Tribe_Settings extends Settings_Sub_Page {
 				->default( self::DEFAULT_GOOGLE_MAPS_MAP_ID )
 				->helperText(
 					esc_html__(
-						'Map ID for Advanced Markers. Create one in Google Cloud Console under Map Management, or use DEMO_MAP_ID for testing.',
+						'Map ID for Advanced Markers. Create one in Google Cloud Console under Map Management, or use `DEMO_MAP_ID` for testing.',
 						'tribe'
 					)
 				),
