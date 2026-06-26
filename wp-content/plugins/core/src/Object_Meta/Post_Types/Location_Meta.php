@@ -2,9 +2,11 @@
 
 namespace Tribe\Plugin\Object_Meta\Post_Types;
 
+use Extended\ACF\Fields\Select;
 use Extended\ACF\Fields\Text;
 use Extended\ACF\Fields\Textarea;
 use Extended\ACF\Location as ACFLocation;
+use Tribe\Plugin\Locations\Us_States;
 use Tribe\Plugin\Object_Meta\Meta_Object;
 use Tribe\Plugin\Post_Types\Location\Location as Location_Post_Type;
 
@@ -23,6 +25,11 @@ class Location_Meta extends Meta_Object {
 	public const string LONGITUDE      = 'longitude';
 	public const string ADDRESS_HASH   = 'address_geocode_hash';
 
+	public function __construct(
+		private Us_States $us_states,
+	) {
+	}
+
 	public function get_slug(): string {
 		return self::GROUP_SLUG;
 	}
@@ -38,7 +45,8 @@ class Location_Meta extends Meta_Object {
 			Text::make( esc_html__( 'Address Line 2', 'tribe' ), self::ADDRESS_LINE_2 ),
 			Text::make( esc_html__( 'City', 'tribe' ), self::ADDRESS_CITY )
 				->required(),
-			Text::make( esc_html__( 'State / Province', 'tribe' ), self::ADDRESS_STATE )
+			Select::make( esc_html__( 'State', 'tribe' ), self::ADDRESS_STATE )
+				->choices( $this->us_states->get_choices() )
 				->required(),
 			Text::make( esc_html__( 'ZIP / Postal Code', 'tribe' ), self::ADDRESS_ZIP )
 				->required(),

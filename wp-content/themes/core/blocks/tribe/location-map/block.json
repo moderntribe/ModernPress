@@ -6,7 +6,7 @@
 	"title": "Location Map",
 	"category": "theme",
 	"icon": "location",
-	"description": "Display locations on an interactive map with optional search and list sidebar.",
+	"description": "Display locations on a Google Maps interactive map with optional search and list sidebar.",
 	"attributes": {
 		"locationSource": {
 			"type": "string",
@@ -80,6 +80,5 @@
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",
 	"viewScript": "file:./view.js",
-	"viewStyle": "file:./view.css",
 	"render": "file:./render.php"
 }

@@ -15,7 +15,9 @@ if ( $c->should_bail_early() ) {
 	return;
 }
 
-$search_input_id = wp_unique_id( 'location-map-search-' );
+$search_input_id      = wp_unique_id( 'location-map-search-' );
+$autocomplete_list_id = wp_unique_id( 'location-map-autocomplete-' );
+$show_autocomplete    = $c->should_show_autocomplete();
 ?>
 <section
 	<?php
@@ -36,14 +38,6 @@ $search_input_id = wp_unique_id( 'location-map-search-' );
 							<label class="screen-reader-text" for="<?php echo esc_attr( $search_input_id ); ?>">
 								<?php esc_html_e( 'Search locations', 'tribe' ); ?>
 							</label>
-							<input
-								type="text"
-								id="<?php echo esc_attr( $search_input_id ); ?>"
-								class="b-location-map__search-input t-body"
-								name="location-search"
-								data-js="location-map-search"
-								placeholder="<?php echo esc_attr__( 'Search by address', 'tribe' ); ?>"
-							/>
 							<button
 								type="button"
 								class="b-location-map__search-location"
@@ -52,6 +46,30 @@ $search_input_id = wp_unique_id( 'location-map-search-' );
 								<span class="icon"></span>
 								<span class="screen-reader-text"><?php esc_html_e( 'Use my location', 'tribe' ); ?></span>
 							</button>
+							<input
+								type="text"
+								id="<?php echo esc_attr( $search_input_id ); ?>"
+								class="b-location-map__search-input t-body"
+								name="location-search"
+								data-js="location-map-search"
+								placeholder="<?php echo esc_attr__( 'Search by address', 'tribe' ); ?>"
+								autocomplete="off"
+								<?php if ( $show_autocomplete ) : ?>
+								role="combobox"
+								aria-autocomplete="list"
+								aria-expanded="false"
+								aria-controls="<?php echo esc_attr( $autocomplete_list_id ); ?>"
+								<?php endif; ?>
+							/>
+							<?php if ( $show_autocomplete ) : ?>
+							<ul
+								id="<?php echo esc_attr( $autocomplete_list_id ); ?>"
+								class="b-location-map__autocomplete"
+								data-js="location-map-autocomplete"
+								role="listbox"
+								hidden
+							></ul>
+							<?php endif; ?>
 							<button
 								type="submit"
 								class="b-location-map__search-submit"

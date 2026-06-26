@@ -2,13 +2,12 @@
 
 namespace Tribe\Plugin\Locations\Geocoding;
 
+use Tribe\Plugin\Locations\Google_Maps_Config;
+use Tribe\Plugin\Locations\Location_Search_Resolver;
 use Tribe\Plugin\Settings\Tribe_Settings;
 
 /**
- * Google Geocoding API provider.
- *
- * Per-IP rate limits are enforced by Geocode_Endpoint via Geocode_Rate_Limiter before this
- * class is invoked. Unlike Nominatim, Google has no site-wide outbound spacing requirement.
+ * Google Geocoding API provider with transient caching.
  */
 class Google_Maps_Geocoder implements Geocoder_Interface {
 
@@ -17,6 +16,8 @@ class Google_Maps_Geocoder implements Geocoder_Interface {
 
 	public function __construct(
 		private Tribe_Settings $settings,
+		private Google_Maps_Config $maps_config,
+		private Location_Search_Resolver $search_resolver,
 	) {
 	}
 
@@ -32,16 +33,19 @@ class Google_Maps_Geocoder implements Geocoder_Interface {
 		$cached    = get_transient( $cache_key );
 
 		if ( is_array( $cached ) && isset( $cached['lat'], $cached['lng'] ) ) {
-			return [
-				'lat' => (float) $cached['lat'],
-				'lng' => (float) $cached['lng'],
-			];
+			return $cached;
+		}
+
+		if ( is_array( $cached ) && empty( $cached ) ) {
+			return null;
 		}
 
 		$url = add_query_arg(
 			[
-				'address' => $address,
-				'key'     => $api_key,
+				'address'    => $address,
+				'key'        => $api_key,
+				'region'     => $this->maps_config->get_region(),
+				'components' => $this->maps_config->get_geocode_components(),
 			],
 			self::ENDPOINT
 		);
@@ -66,12 +70,14 @@ class Google_Maps_Geocoder implements Geocoder_Interface {
 		$body   = json_decode( (string) wp_remote_retrieve_body( $response ), true );
 		$status = (string) ( $body['status'] ?? '' );
 
-		$lat = $body['results'][0]['geometry']['location']['lat'] ?? null;
-		$lng = $body['results'][0]['geometry']['location']['lng'] ?? null;
+		$result = $body['results'][0] ?? null;
+		$lat    = $result['geometry']['location']['lat'] ?? null;
+		$lng    = $result['geometry']['location']['lng'] ?? null;
 
 		if (
 			! is_array( $body )
 			|| 'OK' !== $status
+			|| ! is_array( $result )
 			|| ! is_numeric( $lat )
 			|| ! is_numeric( $lng )
 		) {
@@ -82,11 +88,10 @@ class Google_Maps_Geocoder implements Geocoder_Interface {
 			return null;
 		}
 
-		$location = $body['results'][0]['geometry']['location'];
-
 		$coordinates = [
-			'lat' => (float) $location['lat'],
-			'lng' => (float) $location['lng'],
+			'lat'    => (float) $lat,
+			'lng'    => (float) $lng,
+			'search' => $this->search_resolver->from_geocode_result( $result ),
 		];
 
 		set_transient( $cache_key, $coordinates, self::CACHE_TTL );

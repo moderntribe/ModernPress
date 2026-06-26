@@ -1,24 +1,25 @@
 /**
  * @module location-map
  *
- * @description Leaflet-powered location map with optional search sidebar.
+ * @description Google Maps-powered location map with optional search sidebar.
  */
 
-/* global requestAnimationFrame */
+/* global google, requestAnimationFrame */
 
 import { __, sprintf } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
 import { ready } from 'utils/events';
 import {
-	addTileLayer,
 	createMap,
 	fitMapToLocations,
 	focusMap,
 	invalidateMapSize,
 	setActiveMarker,
 	setMarkers,
-} from 'utils/leaflet-map';
+} from './js/google-maps-map';
 import { locationCard } from './templates';
+import { initSearchAutocomplete } from './js/search-autocomplete';
+import { getAreaSearchLabel, getAreaSearchParams } from './js/search-resolver';
 
 /** @type {Object<string, string>} DOM selectors used by the block script. */
 const selectors = {
@@ -39,19 +40,25 @@ const selectors = {
 
 /**
  * @typedef {Object} LocationMapSettings
- * @property {string}  [locationSource] Location data source mode.
- * @property {string}  [endpointUrl]    REST endpoint for location data.
- * @property {string}  [geocodeUrl]     REST endpoint for geocoding searches.
- * @property {number}  [searchRadius]   Search radius in miles.
- * @property {boolean} [fitBounds]      Whether to fit the map to markers.
- * @property {boolean} [clusterMarkers] Whether to cluster overlapping markers.
+ * @property {string}  [locationSource]       Location data source mode.
+ * @property {string}  [endpointUrl]          REST endpoint for location data.
+ * @property {string}  [geocodeUrl]           REST endpoint for geocoding searches.
+ * @property {number}  [searchRadius]         Search radius in miles.
+ * @property {boolean} [fitBounds]            Whether to fit the map to markers.
+ * @property {boolean} [clusterMarkers]       Whether to cluster overlapping markers.
+ * @property {string}  [mapId]                Google Maps Map ID for Advanced Markers.
+ * @property {number}  [autocompleteMinChars] Minimum characters before autocomplete activates.
+ * @property {number}  [autocompleteDebounce] Autocomplete debounce delay in milliseconds.
+ * @property {boolean} [autocompleteEnabled]  Whether Google Places autocomplete is enabled.
+ * @property {string}  [searchCountry]        ISO country code for Places restrictions.
+ * @property {boolean} [showSearch]           Whether the search field is visible.
  */
 
 /**
  * @typedef {Object} BlockState
- * @property {import('leaflet').Map|null}                map       Leaflet map instance.
- * @property {LocationMapSettings}                       settings  Block settings from SSR.
- * @property {import('utils/leaflet-map').MapLocation[]} locations Normalized location data.
+ * @property {Object|null}                                  map       Google Map instance.
+ * @property {LocationMapSettings}                          settings  Block settings from SSR.
+ * @property {import('./js/google-maps-map').MapLocation[]} locations Normalized location data.
  */
 
 /** @type {WeakMap<HTMLElement, BlockState>} Per-block runtime state. */
@@ -213,11 +220,17 @@ const hideResultMessages = ( block ) => {
 /**
  * Displays the successful search results message.
  *
- * @param {HTMLElement} block        Block wrapper element.
- * @param {number}      count        Number of locations found.
- * @param {string}      locationName Searched place name.
+ * @param {HTMLElement}                                   block        Block wrapper element.
+ * @param {number}                                        count        Number of locations found.
+ * @param {string}                                        locationName Searched place name.
+ * @param {import('./js/search-resolver').LocationSearch} [search]     Resolved search strategy.
  */
-const showResultsMessage = ( block, count, locationName ) => {
+const showResultsMessage = (
+	block,
+	count,
+	locationName,
+	search = { mode: 'radius' }
+) => {
 	const results = block.querySelector( selectors.results );
 
 	if ( ! results ) {
@@ -225,16 +238,34 @@ const showResultsMessage = ( block, count, locationName ) => {
 	}
 
 	const { settings } = getBlockState( block );
+	const label = locationName || getAreaSearchLabel( search );
 
-	const label = locationName || __( 'your location', 'tribe' );
+	if ( search.mode === 'area' ) {
+		if ( search.scope === 'zip' ) {
+			results.textContent = sprintf(
+				/* translators: 1: location count, 2: ZIP code */
+				__( 'Found %1$d locations in ZIP code %2$s.', 'tribe' ),
+				count,
+				label
+			);
+		} else {
+			results.textContent = sprintf(
+				/* translators: 1: location count, 2: searched place name */
+				__( 'Found %1$d locations in %2$s.', 'tribe' ),
+				count,
+				label
+			);
+		}
+	} else {
+		results.textContent = sprintf(
+			/* translators: 1: location count, 2: search radius in miles, 3: searched place name */
+			__( 'Found %1$d locations within %2$d miles of %3$s.', 'tribe' ),
+			count,
+			settings.searchRadius || 30,
+			label
+		);
+	}
 
-	results.textContent = sprintf(
-		/* translators: 1: location count, 2: search radius in miles, 3: searched place name */
-		__( 'Found %1$d locations within %2$d miles of %3$s.', 'tribe' ),
-		count,
-		settings.searchRadius || 30,
-		label
-	);
 	openMobileLocationList( block );
 	setMessageVisibility( results, true );
 };
@@ -242,10 +273,15 @@ const showResultsMessage = ( block, count, locationName ) => {
 /**
  * Displays the empty search results message.
  *
- * @param {HTMLElement} block             Block wrapper element.
- * @param {string}      [locationName=''] Searched place name.
+ * @param {HTMLElement}                                   block             Block wrapper element.
+ * @param {string}                                        [locationName=''] Searched place name.
+ * @param {import('./js/search-resolver').LocationSearch} [search]          Resolved search strategy.
  */
-const showNoResultsMessage = ( block, locationName = '' ) => {
+const showNoResultsMessage = (
+	block,
+	locationName = '',
+	search = { mode: 'radius' }
+) => {
 	const noResults = block.querySelector( selectors.noResults );
 
 	if ( ! noResults ) {
@@ -253,18 +289,26 @@ const showNoResultsMessage = ( block, locationName = '' ) => {
 	}
 
 	const { settings } = getBlockState( block );
+	const label = locationName || getAreaSearchLabel( search );
 
-	const label = locationName || __( 'your location', 'tribe' );
+	if ( search.mode === 'area' ) {
+		noResults.textContent = sprintf(
+			/* translators: %s: searched place name */
+			__( 'Sorry, no locations were found in %s.', 'tribe' ),
+			label
+		);
+	} else {
+		noResults.textContent = sprintf(
+			/* translators: 1: search radius in miles, 2: searched place name */
+			__(
+				'Sorry, no locations were found within %1$d miles of %2$s.',
+				'tribe'
+			),
+			settings.searchRadius || 30,
+			label
+		);
+	}
 
-	noResults.textContent = sprintf(
-		/* translators: 1: search radius in miles, 2: searched place name */
-		__(
-			'Sorry, no locations were found within %1$d miles of %2$s.',
-			'tribe'
-		),
-		settings.searchRadius || 30,
-		label
-	);
 	openMobileLocationList( block );
 	setMessageVisibility( noResults, true );
 };
@@ -290,8 +334,8 @@ const showErrorMessage = ( block, message ) => {
 /**
  * Renders the sidebar location list markup.
  *
- * @param {HTMLElement}                               block     Block wrapper element.
- * @param {import('utils/leaflet-map').MapLocation[]} locations Normalized location data.
+ * @param {HTMLElement}                                  block     Block wrapper element.
+ * @param {import('./js/google-maps-map').MapLocation[]} locations Normalized location data.
  */
 const renderLocationList = ( block, locations ) => {
 	const list = block.querySelector( selectors.list );
@@ -332,16 +376,18 @@ const handleMarkerClick = ( block, index ) => {
 /**
  * Updates the map markers, list, and optional search status message.
  *
- * @param {HTMLElement}                               block             Block wrapper element.
- * @param {import('utils/leaflet-map').MapLocation[]} locations         Normalized location data.
- * @param {string}                                    [locationName=''] Label for search result messaging.
- * @param {{ lat: number, lng: number }|null}         [searchCenter]    Map center when a search returns no locations.
+ * @param {HTMLElement}                                   block             Block wrapper element.
+ * @param {import('./js/google-maps-map').MapLocation[]}  locations         Normalized location data.
+ * @param {string}                                        [locationName=''] Label for search result messaging.
+ * @param {{ lat: number, lng: number }|null}             [searchCenter]    Map center when a search returns no locations.
+ * @param {import('./js/search-resolver').LocationSearch} [search]          Resolved search strategy.
  */
-const renderLocations = (
+const renderLocations = async (
 	block,
 	locations,
 	locationName = '',
-	searchCenter = null
+	searchCenter = null,
+	search = { mode: 'radius' }
 ) => {
 	const blockState = getBlockState( block );
 
@@ -349,7 +395,7 @@ const renderLocations = (
 	hideResultMessages( block );
 	renderLocationList( block, locations );
 
-	setMarkers( blockState.map, locations, {
+	await setMarkers( blockState.map, locations, {
 		clusterMarkers: blockState.settings.clusterMarkers,
 		onMarkerClick: ( _marker, index ) => handleMarkerClick( block, index ),
 	} );
@@ -365,9 +411,9 @@ const renderLocations = (
 	}
 
 	if ( locations.length && locationName ) {
-		showResultsMessage( block, locations.length, locationName );
+		showResultsMessage( block, locations.length, locationName, search );
 	} else if ( ! locations.length && locationName ) {
-		showNoResultsMessage( block, locationName );
+		showNoResultsMessage( block, locationName, search );
 	}
 
 	invalidateMapSize( blockState.map );
@@ -378,7 +424,7 @@ const renderLocations = (
  *
  * @param {HTMLElement}                   block       Block wrapper element.
  * @param {Object<string, string|number>} [params={}] Query parameters.
- * @return {Promise<import('utils/leaflet-map').MapLocation[]>} Location results.
+ * @return {Promise<import('./js/google-maps-map').MapLocation[]>} Location results.
  */
 const fetchLocations = async ( block, params = {} ) => {
 	const { settings } = getBlockState( block );
@@ -437,28 +483,38 @@ const geocodeSearchQuery = async ( block, query ) => {
 };
 
 /**
- * Loads nearby locations for a coordinate and updates the map UI.
+ * Loads locations for a search and updates the map UI.
  *
- * @param {HTMLElement} block             Block wrapper element.
- * @param {number}      lat               Search latitude.
- * @param {number}      lng               Search longitude.
- * @param {string}      [locationName=''] Label for search result messaging.
+ * @param {HTMLElement}                                   block                   Block wrapper element.
+ * @param {Object}                                        searchContext           Search coordinates and strategy.
+ * @param {number}                                        searchContext.lat       Search latitude.
+ * @param {number}                                        searchContext.lng       Search longitude.
+ * @param {string}                                        [searchContext.name=''] Label for search result messaging.
+ * @param {import('./js/search-resolver').LocationSearch} [searchContext.search]  Resolved search strategy.
  */
-const loadNearbyLocations = async ( block, lat, lng, locationName = '' ) => {
+const loadLocationsForSearch = async (
+	block,
+	{ lat, lng, name = '', search = { mode: 'radius' } }
+) => {
 	const blockState = getBlockState( block );
 
 	setLoading( block, true );
 
 	try {
-		const locations = await fetchLocations( block, {
-			lat,
-			lng,
-			r: blockState.settings.searchRadius,
-		} );
+		const params =
+			search.mode === 'area'
+				? getAreaSearchParams( search )
+				: {
+						lat,
+						lng,
+						r: blockState.settings.searchRadius,
+				  };
 
-		renderLocations( block, locations, locationName, { lat, lng } );
+		const locations = await fetchLocations( block, params );
+
+		await renderLocations( block, locations, name, { lat, lng }, search );
 	} catch {
-		renderLocations( block, [] );
+		await renderLocations( block, [] );
 		showErrorMessage(
 			block,
 			__( 'Unable to load locations. Please try again.', 'tribe' )
@@ -487,25 +543,14 @@ const handleSearchSubmit = async ( block, query ) => {
 	try {
 		const geocoded = await geocodeSearchQuery( block, trimmedQuery );
 		setLoading( block, false );
-		await loadNearbyLocations(
-			block,
-			geocoded.lat,
-			geocoded.lng,
-			geocoded.name || trimmedQuery
-		);
+		await loadLocationsForSearch( block, {
+			lat: geocoded.lat,
+			lng: geocoded.lng,
+			name: geocoded.name || trimmedQuery,
+			search: geocoded.search || { mode: 'radius' },
+		} );
 	} catch ( error ) {
 		setLoading( block, false );
-
-		if ( error?.status === 429 ) {
-			showErrorMessage(
-				block,
-				__(
-					'Too many searches. Please wait a moment and try again.',
-					'tribe'
-				)
-			);
-			return;
-		}
 
 		if (
 			error?.code === 'tribe_geocode_not_found' ||
@@ -544,12 +589,11 @@ const handleUseMyLocation = ( block ) => {
 
 	navigator.geolocation.getCurrentPosition(
 		( position ) => {
-			loadNearbyLocations(
-				block,
-				position.coords.latitude,
-				position.coords.longitude,
-				__( 'your location', 'tribe' )
-			);
+			loadLocationsForSearch( block, {
+				lat: position.coords.latitude,
+				lng: position.coords.longitude,
+				name: __( 'your location', 'tribe' ),
+			} );
 		},
 		() => {
 			showErrorMessage(
@@ -663,29 +707,53 @@ const bindEvents = ( block ) => {
  *
  * @param {HTMLElement} block Block wrapper element.
  */
-const initBlock = ( block ) => {
+const initBlock = async ( block ) => {
 	const canvas = block.querySelector( selectors.canvas );
 
-	if ( ! canvas ) {
+	if ( ! canvas || typeof google === 'undefined' ) {
 		return;
 	}
 
 	const blockState = getBlockState( block );
 
 	blockState.settings = parseJsonAttribute( block, 'data-map-settings', {} );
+
+	blockState.map = await createMap( canvas, blockState.settings );
+
+	if ( ! blockState.map ) {
+		return;
+	}
+
 	const initialLocations = parseJsonAttribute(
 		block,
 		'data-map-locations',
 		[]
 	);
 
-	blockState.map = createMap( canvas, blockState.settings );
-	addTileLayer( blockState.map );
-
 	bindEvents( block );
 
+	const searchInput = block.querySelector( selectors.searchInput );
+
+	if ( blockState.settings.showSearch && searchInput ) {
+		if ( blockState.settings.autocompleteEnabled !== false ) {
+			initSearchAutocomplete(
+				block,
+				searchInput,
+				blockState.map,
+				blockState.settings,
+				( place ) =>
+					loadLocationsForSearch( block, {
+						lat: place.lat,
+						lng: place.lng,
+						name: place.name,
+						search: place.search || { mode: 'radius' },
+					} )
+			);
+		}
+	}
+
 	if ( initialLocations.length ) {
-		renderLocations( block, initialLocations );
+		await renderLocations( block, initialLocations );
 		requestAnimationFrame( () => invalidateMapSize( blockState.map ) );
 		return;
 	}
@@ -711,7 +779,13 @@ const initBlock = ( block ) => {
  * Initializes every location map block present on the page.
  */
 const init = () => {
-	document.querySelectorAll( selectors.block ).forEach( initBlock );
+	if ( typeof google === 'undefined' ) {
+		return;
+	}
+
+	document.querySelectorAll( selectors.block ).forEach( ( block ) => {
+		initBlock( block ).catch( () => {} );
+	} );
 };
 
 ready( init );

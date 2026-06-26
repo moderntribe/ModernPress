@@ -69,7 +69,7 @@
 	display: flex;
 	flex-direction: column;
 	min-height: 0;
-	background-color: var(--location-map-sidebar-background);
+	background-color: var(--location-map-sidebar-background-color);
 }
 
 /* -------------------------------------------------------------------------
@@ -78,7 +78,7 @@
 
 .b-location-map__search {
 	position: sticky;
-	background-color: var(--location-map-sidebar-background);
+	background-color: var(--location-map-sidebar-background-color);
 	top: 0;
 	z-index: 1;
 	padding: var(--spacer-30);
@@ -97,6 +97,16 @@
 	padding: var(--spacer-20) calc(var(--spacer-20) + var(--location-map-search-action-button-size) + var(--spacer-20));
 	border: 1px solid var(--location-map-search-border-color);
 	border-radius: 4px;
+
+	.b-location-map__search-form:has(.b-location-map__autocomplete:not([hidden])) & {
+		border-bottom-right-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
 }
 
 .b-location-map__search-location {
@@ -113,7 +123,7 @@
 	margin: 0;
 	border: 0;
 	border-radius: 100%;
-	background-color: var(--location-map-search-button-background);
+	background-color: var(--location-map-search-button-background-color);
 	cursor: pointer;
 
 	.icon {
@@ -122,6 +132,11 @@
 		height: 100%;
 		mask: var(--icon-my-location) center / contain no-repeat;
 		background-color: var(--location-map-search-icon-color);
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
 	}
 }
 
@@ -149,6 +164,102 @@
 		mask: var(--icon-search) center / contain no-repeat;
 		background-color: var(--location-map-search-icon-color);
 	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Location Map - Search Autocomplete
+ * ------------------------------------------------------------------------- */
+
+.b-location-map__autocomplete {
+	max-height: 280px;
+	position: absolute;
+	top: calc(100% - 1px);
+	left: 0;
+	right: 0;
+	z-index: 2;
+	margin: 0;
+	padding: var(--spacer-10) 0;
+	list-style: none;
+	border: 1px solid var(--location-map-search-autocomplete-border-color);
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	background-color: var(--location-map-search-autocomplete-background-color);
+	box-shadow: var(--box-shadow-40);
+	overflow-y: auto;
+}
+
+.b-location-map__autocomplete-item {
+	list-style: none;
+	padding: 0;
+}
+
+.b-location-map__autocomplete-button {
+	appearance: none;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 100%;
+	padding: var(--spacer-10) calc(var(--spacer-20) * 2 + 24px) var(--spacer-10) calc(var(--spacer-20) * 2 + 24px);
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	text-align: left;
+	cursor: pointer;
+	position: relative;
+
+	&::before {
+		content: '';
+		display: block;
+		width: 24px;
+		height: 32px;
+		background-color: var(--location-map-search-autocomplete-icon-color);
+		mask: var(--icon-map-pin) center / contain no-repeat;
+		position: absolute;
+		top: var(--spacer-10);
+		left: var(--spacer-20);
+	}
+
+	&::after {
+		content: '';
+		display: block;
+		width: 24px;
+		height: 24px;
+		background-color: var(--location-map-search-autocomplete-icon-color);
+		mask: var(--icon-keyboard-return) center / contain no-repeat;
+		position: absolute;
+		top: 50%;
+		right: var(--spacer-20);
+		transform: translateY(-50%);
+		opacity: 0;
+		transition: opacity 0.15s ease;
+		pointer-events: none;
+	}
+
+	&:hover,
+	&:focus-visible,
+	&.is-active {
+		background-color: var(--location-map-search-autocomplete-item-active-background-color);
+		outline: none;
+
+		&::after {
+			opacity: 1;
+		}
+	}
+}
+
+.b-location-map__autocomplete-main {
+	color: var(--location-map-search-autocomplete-item-color);
+}
+
+.b-location-map__autocomplete-secondary {
+	color: var(--location-map-search-autocomplete-item-secondary-color);
+	font-size: var(--font-size-10);
 }
 
 /* -------------------------------------------------------------------------
@@ -210,7 +321,7 @@
 	padding: var(--spacer-20);
 	border: 1px solid var(--location-map-location-border-color);
 	border-radius: 4px;
-	background-color: var(--location-map-location-background);
+	background-color: var(--location-map-location-background-color);
 }
 
 .b-location-map__location.is-active {
@@ -239,7 +350,7 @@
 .b-location-map__location-action {
 	appearance: none;
 	border: 1px solid var(--location-map-location-action-border-color);
-	background: var(--location-map-location-action-background);
+	background: var(--location-map-location-action-background-color);
 	border-radius: 4px;
 	color: inherit;
 	cursor: pointer;
@@ -262,7 +373,7 @@
 	z-index: 0;
 }
 
-.b-location-map__map .leaflet-container {
+.b-location-map__map > div {
 	width: 100%;
 	height: 100%;
 }
@@ -288,13 +399,27 @@
 	background-color: var(--location-map-marker-active-color);
 }
 
+.b-location-map__cluster {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	border: 2px solid var(--location-map-marker-color);
+	background-color: var(--color-white);
+	color: var(--color-black);
+	font-size: 14px;
+	font-weight: 700;
+}
+
 /* -------------------------------------------------------------------------
  * Location Map - Loading Overlay
  * ------------------------------------------------------------------------- */
 
 .b-location-map__loading-overlay {
 	align-items: center;
-	background: var(--location-map-loading-overlay-background);
+	background: var(--location-map-loading-overlay-background-color);
 	display: none;
 	height: 100dvh;
 	inset: 0;

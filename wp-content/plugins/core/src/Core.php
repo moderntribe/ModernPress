@@ -39,6 +39,7 @@ class Core {
 		Post_Types\Location\Location_Subscriber::class,
 
 		Locations\Location_Geocode_Subscriber::class,
+		Locations\Location_Map_Subscriber::class,
 		Routes\Routes_Subscriber::class,
 	];
 

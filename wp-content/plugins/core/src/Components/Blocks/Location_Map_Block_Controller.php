@@ -3,8 +3,10 @@
 namespace Tribe\Plugin\Components\Blocks;
 
 use Tribe\Plugin\Components\Abstracts\Abstract_Block_Controller;
+use Tribe\Plugin\Locations\Google_Maps_Config;
 use Tribe\Plugin\Locations\Location_Data;
 use Tribe\Plugin\Post_Types\Location\Location;
+use Tribe\Plugin\Settings\Tribe_Settings;
 
 class Location_Map_Block_Controller extends Abstract_Block_Controller {
 
@@ -31,9 +33,21 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 	private bool $cluster_markers;
 	private string $map_height_mode;
 	private int $map_height;
+	private Tribe_Settings $settings;
+	private Location_Data $location_data;
+	private Google_Maps_Config $maps_config;
 
-	public function __construct( array $args = [] ) {
+	public function __construct(
+		Tribe_Settings $settings,
+		Location_Data $location_data,
+		Google_Maps_Config $maps_config,
+		array $args = [],
+	) {
 		parent::__construct( $args );
+
+		$this->settings      = $settings;
+		$this->location_data = $location_data;
+		$this->maps_config   = $maps_config;
 
 		$this->location_source    = $this->attributes['locationSource'] ?? self::SOURCE_MANUAL;
 		$this->chosen_locations   = $this->attributes['chosenLocations'] ?? [];
@@ -73,6 +87,10 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 	}
 
 	public function should_bail_early(): bool {
+		if ( ! $this->settings->has_google_maps_api_key() ) {
+			return true;
+		}
+
 		if ( self::SOURCE_MANUAL === $this->location_source ) {
 			return empty( $this->chosen_locations );
 		}
@@ -92,6 +110,10 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 		return $this->show_search;
 	}
 
+	public function should_show_autocomplete(): bool {
+		return $this->show_search && $this->settings->is_google_maps_autocomplete_enabled();
+	}
+
 	public function should_show_location_list(): bool {
 		return $this->show_location_list;
 	}
@@ -109,19 +131,24 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 	 */
 	public function get_map_settings(): array {
 		return [
-			'locationSource'   => $this->location_source,
-			'endpointUrl'      => $this->get_locations_endpoint_url(),
-			'geocodeUrl'       => $this->get_rest_url( 'tribe/v1/geocode' ),
-			'defaultCenter'    => [
+			'locationSource'       => $this->location_source,
+			'endpointUrl'          => $this->get_locations_endpoint_url(),
+			'geocodeUrl'           => $this->get_rest_url( 'tribe/v1/geocode' ),
+			'defaultCenter'        => [
 				'lat' => $this->default_lat,
 				'lng' => $this->default_lng,
 			],
-			'defaultZoom'      => $this->default_zoom,
-			'searchRadius'     => $this->search_radius,
-			'fitBounds'        => $this->fit_bounds,
-			'clusterMarkers'   => $this->cluster_markers,
-			'showSearch'       => $this->show_search,
-			'showLocationList' => $this->show_location_list,
+			'defaultZoom'          => $this->default_zoom,
+			'searchRadius'         => $this->search_radius,
+			'fitBounds'            => $this->fit_bounds,
+			'clusterMarkers'       => $this->cluster_markers,
+			'showSearch'           => $this->show_search,
+			'showLocationList'     => $this->show_location_list,
+			'mapId'                => $this->settings->get_google_maps_map_id(),
+			'autocompleteEnabled'  => $this->settings->is_google_maps_autocomplete_enabled(),
+			'autocompleteMinChars' => $this->settings->get_google_maps_autocomplete_min_chars(),
+			'autocompleteDebounce' => $this->settings->get_google_maps_autocomplete_debounce(),
+			'searchCountry'        => strtolower( $this->maps_config->get_country() ),
 		];
 	}
 
@@ -139,7 +166,7 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 				$this->chosen_locations
 			);
 
-			return Location_Data::get_locations_by_ids( $post_ids );
+			return $this->location_data->get_locations_by_ids( $post_ids );
 		}
 
 		if ( self::SOURCE_ALL === $this->location_source ) {
@@ -151,7 +178,7 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 				'no_found_rows'  => true,
 			] );
 
-			return Location_Data::get_locations_by_ids( $query->posts );
+			return $this->location_data->get_locations_by_ids( $query->posts );
 		}
 
 		return [];

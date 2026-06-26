@@ -6,7 +6,9 @@
 
 import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
+import { useSelect } from '@wordpress/data';
 import {
+	Notice,
 	PanelBody,
 	RangeControl,
 	SelectControl,
@@ -76,12 +78,38 @@ export default function Edit( { attributes, isSelected, setAttributes } ) {
 		mapHeight,
 	} = attributes;
 
+	const tribeLocationMap = useSelect(
+		( select ) =>
+			select( 'core/block-editor' ).getSettings()?.tribeLocationMap,
+		[]
+	);
+
+	const hasGoogleMapsApiKey = tribeLocationMap?.hasGoogleMapsApiKey ?? false;
+	const settingsUrl = tribeLocationMap?.settingsUrl ?? '';
+
 	return (
 		<div { ...blockProps }>
-			<ServerSideRender
-				block="tribe/location-map"
-				attributes={ attributes }
-			/>
+			{ ! hasGoogleMapsApiKey ? (
+				<Notice status="warning" isDismissible={ false }>
+					{ __(
+						'Please set your Google Maps API key in Tribe Settings.',
+						'tribe'
+					) }
+					{ settingsUrl ? (
+						<>
+							{ ' ' }
+							<a href={ settingsUrl }>
+								{ __( 'Open Tribe Settings', 'tribe' ) }
+							</a>
+						</>
+					) : null }
+				</Notice>
+			) : (
+				<ServerSideRender
+					block="tribe/location-map"
+					attributes={ attributes }
+				/>
+			) }
 			{ isSelected && (
 				<InspectorControls>
 					<PanelBody title={ __( 'Location Source', 'tribe' ) }>

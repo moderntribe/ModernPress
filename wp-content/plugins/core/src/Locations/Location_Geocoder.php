@@ -10,6 +10,7 @@ class Location_Geocoder {
 
 	public function __construct(
 		private Geocoder_Interface $geocoder,
+		private Location_Data $location_data,
 	) {
 	}
 
@@ -22,13 +23,13 @@ class Location_Geocoder {
 			return;
 		}
 
-		$address = Location_Data::get_formatted_address( $post_id );
+		$address = $this->location_data->get_formatted_address( $post_id );
 
 		if ( $address === '' ) {
 			return;
 		}
 
-		$hash      = Location_Data::get_address_hash( $post_id );
+		$hash      = $this->location_data->get_address_hash( $post_id );
 		$hash_prev = (string) get_post_meta( $post_id, Location_Meta::ADDRESS_HASH, true );
 
 		if ( $hash === $hash_prev ) {

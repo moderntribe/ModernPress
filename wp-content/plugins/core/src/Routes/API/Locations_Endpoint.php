@@ -11,6 +11,11 @@ use WP_REST_Response;
 
 class Locations_Endpoint extends Abstract_Route {
 
+	public function __construct(
+		private Location_Data $location_data,
+	) {
+	}
+
 	public function get_endpoint(): string {
 		return 'locations';
 	}
@@ -18,25 +23,40 @@ class Locations_Endpoint extends Abstract_Route {
 	public function register_rest_route( array $args = [] ): void {
 		parent::register_rest_route( wp_parse_args( $args, [
 			'args' => [
-				'ids' => [
+				'ids'   => [
 					'type'              => 'string',
 					'required'          => false,
 					'sanitize_callback' => 'sanitize_text_field',
 				],
-				'lat' => [
+				'lat'   => [
 					'type'     => 'number',
 					'required' => false,
 				],
-				'lng' => [
+				'lng'   => [
 					'type'     => 'number',
 					'required' => false,
 				],
-				'r'   => [
+				'r'     => [
 					'type'              => 'number',
 					'default'           => 30,
 					'minimum'           => 1,
 					'maximum'           => 100,
 					'sanitize_callback' => static fn( mixed $value ): float => max( 1.0, min( 100.0, (float) $value ) ),
+				],
+				'state' => [
+					'type'              => 'string',
+					'required'          => false,
+					'sanitize_callback' => 'sanitize_text_field',
+				],
+				'city'  => [
+					'type'              => 'string',
+					'required'          => false,
+					'sanitize_callback' => 'sanitize_text_field',
+				],
+				'zip'   => [
+					'type'              => 'string',
+					'required'          => false,
+					'sanitize_callback' => 'sanitize_text_field',
 				],
 			],
 		] ) );
@@ -49,7 +69,30 @@ class Locations_Endpoint extends Abstract_Route {
 			$post_ids = array_filter( array_map( 'absint', explode( ',', $ids ) ) );
 
 			return new WP_REST_Response( [
-				'locations' => Location_Data::get_locations_by_ids( $post_ids ),
+				'locations' => $this->location_data->get_locations_by_ids( $post_ids ),
+			], 200 );
+		}
+
+		$zip = trim( (string) $request->get_param( 'zip' ) );
+
+		if ( $zip !== '' ) {
+			return new WP_REST_Response( [
+				'locations' => $this->location_data->get_locations_by_zip( $zip ),
+			], 200 );
+		}
+
+		$city  = trim( (string) $request->get_param( 'city' ) );
+		$state = trim( (string) $request->get_param( 'state' ) );
+
+		if ( $city !== '' && $state !== '' ) {
+			return new WP_REST_Response( [
+				'locations' => $this->location_data->get_locations_by_city( $city, $state ),
+			], 200 );
+		}
+
+		if ( $state !== '' ) {
+			return new WP_REST_Response( [
+				'locations' => $this->location_data->get_locations_by_state( $state ),
 			], 200 );
 		}
 
@@ -60,7 +103,7 @@ class Locations_Endpoint extends Abstract_Route {
 			$lat = (float) $lat;
 			$lng = (float) $lng;
 
-			if ( ! self::is_valid_coordinate( $lat, $lng ) ) {
+			if ( ! $this->is_valid_coordinate( $lat, $lng ) ) {
 				return new WP_Error(
 					'tribe_locations_invalid_coordinates',
 					__( 'Invalid latitude or longitude.', 'tribe' ),
@@ -71,7 +114,7 @@ class Locations_Endpoint extends Abstract_Route {
 			$radius = (float) $request->get_param( 'r' );
 
 			return new WP_REST_Response( [
-				'locations' => Location_Data::get_locations_nearby( $lat, $lng, $radius ),
+				'locations' => $this->location_data->get_locations_nearby( $lat, $lng, $radius ),
 			], 200 );
 		}
 
@@ -84,11 +127,11 @@ class Locations_Endpoint extends Abstract_Route {
 		] );
 
 		return new WP_REST_Response( [
-			'locations' => Location_Data::get_locations_by_ids( $query->posts ),
+			'locations' => $this->location_data->get_locations_by_ids( $query->posts ),
 		], 200 );
 	}
 
-	private static function is_valid_coordinate( float $lat, float $lng ): bool {
+	private function is_valid_coordinate( float $lat, float $lng ): bool {
 		return $lat >= -90.0 && $lat <= 90.0 && $lng >= -180.0 && $lng <= 180.0;
 	}
 

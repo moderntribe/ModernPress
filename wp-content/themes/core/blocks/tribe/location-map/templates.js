@@ -87,3 +87,52 @@ export const locationCard = ( data ) => `
 	</article>
 </li>
 `;
+
+/**
+ * @typedef {Object} AutocompleteItemData
+ * @property {string} optionId        Unique DOM id for aria-activedescendant.
+ * @property {string} placeId         Google Places place ID.
+ * @property {string} mainText        Primary suggestion label.
+ * @property {string} [secondaryText] Secondary suggestion label.
+ */
+
+/**
+ * Builds the markup for a single autocomplete suggestion.
+ *
+ * @param {AutocompleteItemData} data Place prediction display data.
+ * @return {string} Autocomplete item HTML markup.
+ */
+export const autocompleteItem = ( data ) => `
+<li class="b-location-map__autocomplete-item" role="presentation">
+	<button
+		type="button"
+		id="${ escapeAttribute( data.optionId ) }"
+		class="b-location-map__autocomplete-button"
+		data-js="location-map-autocomplete-item"
+		data-place-id="${ escapeAttribute( data.placeId ) }"
+		data-label="${ escapeAttribute( data.mainText ) }"
+		role="option"
+		aria-selected="false"
+	>
+		<span class="b-location-map__autocomplete-main t-body">${ escapeHTML(
+			data.mainText
+		) }</span>
+		${
+			data.secondaryText
+				? `<span class="b-location-map__autocomplete-secondary t-body">${ escapeHTML(
+						data.secondaryText
+				  ) }</span>`
+				: ''
+		}
+	</button>
+</li>
+`;
+
+/**
+ * Builds markup for the full autocomplete suggestion list.
+ *
+ * @param {AutocompleteItemData[]} items Place prediction display data.
+ * @return {string} Autocomplete list items HTML markup.
+ */
+export const autocompleteSuggestions = ( items ) =>
+	items.map( ( item ) => autocompleteItem( item ) ).join( '' );
