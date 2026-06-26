@@ -6,7 +6,6 @@
 
 import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
-import { useSelect } from '@wordpress/data';
 import {
 	Notice,
 	PanelBody,
@@ -78,14 +77,9 @@ export default function Edit( { attributes, isSelected, setAttributes } ) {
 		mapHeight,
 	} = attributes;
 
-	const tribeLocationMap = useSelect(
-		( select ) =>
-			select( 'core/block-editor' ).getSettings()?.tribeLocationMap,
-		[]
-	);
-
-	const hasGoogleMapsApiKey = tribeLocationMap?.hasGoogleMapsApiKey ?? false;
-	const settingsUrl = tribeLocationMap?.settingsUrl ?? '';
+	const hasGoogleMapsApiKey =
+		window.tribeLocationMap?.hasGoogleMapsApiKey === true;
+	const settingsUrl = window.tribeLocationMap?.settingsUrl ?? '';
 
 	return (
 		<div { ...blockProps }>
