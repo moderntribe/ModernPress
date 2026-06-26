@@ -5,6 +5,7 @@ namespace Tribe\Plugin\Object_Meta;
 use DI;
 use Tribe\Plugin\Core\Interfaces\Definer_Interface;
 use Tribe\Plugin\Object_Meta\Post_Types\Announcement_Meta;
+use Tribe\Plugin\Object_Meta\Post_Types\Location_Meta;
 
 class Meta_Definer implements Definer_Interface {
 
@@ -14,6 +15,7 @@ class Meta_Definer implements Definer_Interface {
 		return [
 			self::OBJECT_META => DI\add( [
 				DI\get( Announcement_Meta::class ),
+				DI\get( Location_Meta::class ),
 			] ),
 		];
 	}
