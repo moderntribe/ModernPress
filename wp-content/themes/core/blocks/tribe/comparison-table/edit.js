@@ -22,6 +22,8 @@ import ColumnInspectorPanel from './components/ColumnInspectorPanel';
 import RowListEditor from './components/RowListEditor';
 import TablePreviewPanel from './components/TablePreviewPanel';
 import TableSettingsPanel from './components/TableSettingsPanel';
+import { arrayMove } from '@dnd-kit/sortable';
+
 import {
 	createColumn,
 	cellsEqual,
@@ -51,7 +53,6 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 	} );
 	const {
 		insertBlock,
-		moveBlockToPosition,
 		removeBlocks,
 		replaceInnerBlocks,
 		selectBlock,
@@ -399,36 +400,19 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 		( nextRows ) => {
 			const nextBlocks = nextRows
 				.map( ( row ) =>
-					innerBlocks.find(
+					rowBlocks.find(
 						( block ) => block.clientId === row.clientId
 					)
 				)
 				.filter( Boolean );
 
-			if ( nextBlocks.length !== innerBlocks.length ) {
+			if ( nextBlocks.length !== rowBlocks.length ) {
 				return;
 			}
 
 			replaceInnerBlocks( clientId, nextBlocks, false );
 		},
-		[ clientId, innerBlocks, replaceInnerBlocks ]
-	);
-
-	const moveRow = useCallback(
-		( fromIndex, toIndex ) => {
-			if ( fromIndex === toIndex ) {
-				return;
-			}
-
-			const block = rowBlocks[ fromIndex ];
-
-			if ( ! block ) {
-				return;
-			}
-
-			moveBlockToPosition( block.clientId, toIndex, clientId );
-		},
-		[ clientId, moveBlockToPosition, rowBlocks ]
+		[ clientId, replaceInnerBlocks, rowBlocks ]
 	);
 
 	const handleRowDragStart = useCallback(
@@ -499,9 +483,16 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 				return;
 			}
 
-			moveRow( oldIndex, newIndex );
+			const nextRows = arrayMove( rows, oldIndex, newIndex );
+			const orderChanged = nextRows.some(
+				( row, index ) => row.clientId !== rows[ index ]?.clientId
+			);
+
+			if ( orderChanged ) {
+				reorderRows( nextRows );
+			}
 		},
-		[ moveRow, reorderRows, rows ]
+		[ reorderRows, rows ]
 	);
 
 	return (

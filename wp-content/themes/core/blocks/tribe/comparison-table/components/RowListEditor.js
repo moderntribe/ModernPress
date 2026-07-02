@@ -1,4 +1,4 @@
-import { useState, useRef } from '@wordpress/element';
+import { useCallback, useRef, useState } from '@wordpress/element';
 import {
 	closestCenter,
 	DndContext,
@@ -83,11 +83,50 @@ export default function RowListEditor( {
 		onRowDragCancel();
 	};
 
+	const sectionAwareCollisionDetection = useCallback(
+		( args ) => {
+			const activeIndex = rows.findIndex(
+				( row ) => row.clientId === args.active.id
+			);
+			const activeRow = activeIndex >= 0 ? rows[ activeIndex ] : null;
+			const sectionBounds =
+				activeRow?.rowType === 'category'
+					? getSectionBounds( rows, activeIndex )
+					: null;
+
+			if ( ! sectionBounds ) {
+				return closestCenter( args );
+			}
+
+			const filteredContainers = args.droppableContainers.filter(
+				( container ) => {
+					if ( container.id === args.active.id ) {
+						return true;
+					}
+
+					const index = rows.findIndex(
+						( row ) => row.clientId === container.id
+					);
+
+					return (
+						index < sectionBounds.start || index > sectionBounds.end
+					);
+				}
+			);
+
+			return closestCenter( {
+				...args,
+				droppableContainers: filteredContainers,
+			} );
+		},
+		[ rows ]
+	);
+
 	return (
 		<div className="b-comparison-table-editor__rows" ref={ rowsRef }>
 			<DndContext
 				sensors={ sensors }
-				collisionDetection={ closestCenter }
+				collisionDetection={ sectionAwareCollisionDetection }
 				onDragStart={ handleDragStart }
 				onDragEnd={ handleDragEnd }
 				onDragCancel={ handleDragCancel }
