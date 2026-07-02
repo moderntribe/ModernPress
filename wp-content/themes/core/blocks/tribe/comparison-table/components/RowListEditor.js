@@ -85,13 +85,13 @@ export default function RowListEditor( {
 
 	const sectionAwareCollisionDetection = useCallback(
 		( args ) => {
-			const activeIndex = rows.findIndex(
+			const draggedIndex = rows.findIndex(
 				( row ) => row.clientId === args.active.id
 			);
-			const activeRow = activeIndex >= 0 ? rows[ activeIndex ] : null;
+			const draggedRow = draggedIndex >= 0 ? rows[ draggedIndex ] : null;
 			const sectionBounds =
-				activeRow?.rowType === 'category'
-					? getSectionBounds( rows, activeIndex )
+				draggedRow?.rowType === 'category'
+					? getSectionBounds( rows, draggedIndex )
 					: null;
 
 			if ( ! sectionBounds ) {
