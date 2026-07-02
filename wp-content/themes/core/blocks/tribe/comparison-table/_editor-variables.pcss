@@ -16,7 +16,6 @@
 	--comparison-table-editor-active-indicator: var(--color-blue);
 	--comparison-table-editor-icon-color: var(--color-neutral-60);
 	--comparison-table-editor-icon-hover-color: var(--color-neutral-80);
-	--comparison-table-editor-badge-background: var(--color-neutral-30);
 	--comparison-table-editor-muted-text: var(--color-neutral-60);
 	--comparison-table-editor-secondary-text: var(--color-neutral-50);
 	--comparison-table-editor-value-text: var(--color-neutral-80);
@@ -49,7 +48,6 @@
 	--comparison-table-editor-active-indicator: var(--color-white);
 	--comparison-table-editor-icon-color: var(--color-white);
 	--comparison-table-editor-icon-hover-color: var(--color-neutral-20);
-	--comparison-table-editor-badge-background: var(--color-neutral-70);
 	--comparison-table-editor-muted-text: var(--color-neutral-40);
 	--comparison-table-editor-secondary-text: var(--color-neutral-30);
 	--comparison-table-editor-value-text: var(--color-white);
@@ -66,6 +64,21 @@
 		var(--color-white) 15%,
 		transparent
 	);
+	--comparison-table-editor-selected-tint: color-mix(
+		in srgb,
+		var(--color-white) 8%,
+		var(--comparison-table-editor-surface)
+	);
+	--comparison-table-editor-selected-tint-muted: color-mix(
+		in srgb,
+		var(--color-white) 8%,
+		var(--comparison-table-editor-surface-muted)
+	);
+	--comparison-table-editor-selected-category-tint: color-mix(
+		in srgb,
+		var(--color-white) 10%,
+		var(--comparison-table-editor-surface-muted)
+	);
 }
 
 :--light-theme {
@@ -78,10 +91,31 @@
 }
 
 :--brand-theme {
+	--comparison-table-editor-border-color: var(--color-dark-blue);
+	--comparison-table-editor-section-border-color: var(--color-dark-blue);
 	--comparison-table-editor-surface-muted: var(--color-dark-blue);
 	--comparison-table-editor-surface: var(--color-blue);
 	--comparison-table-editor-active-surface: var(--color-blue);
 	--comparison-table-editor-active-indicator: var(--color-white);
 	--comparison-table-editor-icon-color: var(--color-white);
 	--comparison-table-editor-icon-hover-color: var(--color-white);
+	--comparison-table-editor-muted-text: var(--color-neutral-20);
+	--comparison-table-editor-secondary-text: var(--color-neutral-10);
+	--comparison-table-editor-value-text: var(--color-white);
+	--comparison-table-editor-preview-border-color: var(--color-dark-blue);
+	--comparison-table-editor-selected-tint: color-mix(
+		in srgb,
+		var(--color-white) 12%,
+		var(--color-blue)
+	);
+	--comparison-table-editor-selected-tint-muted: color-mix(
+		in srgb,
+		var(--color-white) 12%,
+		var(--color-dark-blue)
+	);
+	--comparison-table-editor-selected-category-tint: color-mix(
+		in srgb,
+		var(--color-white) 15%,
+		var(--color-dark-blue)
+	);
 }

@@ -67,7 +67,7 @@ export default function SortableColumnChip( {
 				{ column.label || __( 'Untitled plan', 'tribe' ) }
 			</span>
 			{ column.badge && (
-				<span className="b-comparison-table-editor__column-chip-badge">
+				<span className="b-comparison-table-editor__column-chip-badge t-tag">
 					{ column.badge }
 				</span>
 			) }

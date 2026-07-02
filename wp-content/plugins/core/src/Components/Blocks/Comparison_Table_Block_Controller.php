@@ -145,7 +145,7 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 		}
 
 		return sprintf(
-			'<span class="b-comparison-table__badge t-body-small">%s</span>',
+			'<span class="b-comparison-table__badge t-tag">%s</span>',
 			esc_html( $badge )
 		);
 	}
