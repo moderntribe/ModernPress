@@ -10,7 +10,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.06]
 
-- Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. Unpin react version (no longer needed), update ESLint config file format.
+- Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
 
 ## [2026.05]
 

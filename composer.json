@@ -111,7 +111,7 @@
 		"szepeviktor/phpstan-wordpress": "^2.0"
 	},
 	"require": {
-		"php": "^8.4",
+		"php": "~8.4.0",
 		"ext-exif": "*",
 		"ext-gd": "*",
 		"ext-intl": "*",
@@ -125,7 +125,7 @@
 		"php-di/php-di": "^7.1",
 		"vinkla/extended-acf": "^15.0",
 		"vlucas/phpdotenv": "^5.5",
-		"wp-cli/wp-cli-bundle": "*",
+		"wp-cli/wp-cli-bundle": "^2.12",
 		"wpackagist-plugin/disable-emojis": "^1.9",
 		"wpackagist-plugin/duplicate-post": "^4.5",
 		"wpackagist-plugin/safe-svg": "^2.4",
