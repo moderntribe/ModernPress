@@ -10,11 +10,11 @@ use Tribe\Plugin\Settings\Tribe_Settings;
 
 class Location_Map_Block_Controller extends Abstract_Block_Controller {
 
-	private const string SOURCE_MANUAL   = 'manual';
-	private const string SOURCE_ALL      = 'all';
-	private const string SOURCE_ENDPOINT = 'endpoint';
-	private const string HEIGHT_FIXED    = 'fixed';
-	private const string HEIGHT_VIEWPORT = 'viewport';
+	private const string SOURCE_MANUAL      = 'manual';
+	private const string SOURCE_ALL         = 'all';
+	private const string SOURCE_ENDPOINT    = 'endpoint';
+	private const string HEIGHT_FIXED       = 'fixed';
+	private const string HEIGHT_VIEWPORT    = 'viewport';
 	private const string MAP_POSITION_LEFT  = 'left';
 	private const string MAP_POSITION_RIGHT = 'right';
 
@@ -53,22 +53,22 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 		$this->location_data = $location_data;
 		$this->maps_config   = $maps_config;
 
-		$this->location_source    = $this->attributes['locationSource'] ?? self::SOURCE_MANUAL;
-		$this->chosen_locations   = $this->attributes['chosenLocations'] ?? [];
-		$this->endpoint_url       = $this->attributes['endpointUrl'] ?? '';
-		$this->show_sidebar          = (bool) ( $this->attributes['showSidebar'] ?? true );
-		$this->show_location_cards   = (bool) ( $this->attributes['showLocationCards'] ?? false );
-		$this->map_position          = $this->get_map_position();
-		$this->show_search           = (bool) ( $this->attributes['showSearch'] ?? true );
-		$this->show_location_list = (bool) ( $this->attributes['showLocationList'] ?? true );
-		$this->search_radius      = absint( $this->attributes['searchRadius'] ?? 30 );
-		$this->default_lat        = (float) ( $this->attributes['defaultLat'] ?? 39.10015 );
-		$this->default_lng        = (float) ( $this->attributes['defaultLng'] ?? -94.58327 );
-		$this->default_zoom       = absint( $this->attributes['defaultZoom'] ?? 11 );
-		$this->fit_bounds         = (bool) ( $this->attributes['fitBounds'] ?? true );
-		$this->cluster_markers    = (bool) ( $this->attributes['clusterMarkers'] ?? true );
-		$this->map_height_mode    = $this->get_map_height_mode();
-		$this->map_height         = absint( $this->attributes['mapHeight'] ?? 600 );
+		$this->location_source     = $this->attributes['locationSource'] ?? self::SOURCE_MANUAL;
+		$this->chosen_locations    = $this->attributes['chosenLocations'] ?? [];
+		$this->endpoint_url        = $this->attributes['endpointUrl'] ?? '';
+		$this->show_sidebar        = (bool) ( $this->attributes['showSidebar'] ?? true );
+		$this->show_location_cards = (bool) ( $this->attributes['showLocationCards'] ?? false );
+		$this->map_position        = $this->get_map_position();
+		$this->show_search         = (bool) ( $this->attributes['showSearch'] ?? true );
+		$this->show_location_list  = (bool) ( $this->attributes['showLocationList'] ?? true );
+		$this->search_radius       = absint( $this->attributes['searchRadius'] ?? 30 );
+		$this->default_lat         = (float) ( $this->attributes['defaultLat'] ?? 39.10015 );
+		$this->default_lng         = (float) ( $this->attributes['defaultLng'] ?? -94.58327 );
+		$this->default_zoom        = absint( $this->attributes['defaultZoom'] ?? 11 );
+		$this->fit_bounds          = (bool) ( $this->attributes['fitBounds'] ?? true );
+		$this->cluster_markers     = (bool) ( $this->attributes['clusterMarkers'] ?? true );
+		$this->map_height_mode     = $this->get_map_height_mode();
+		$this->map_height          = absint( $this->attributes['mapHeight'] ?? 600 );
 
 		if ( self::HEIGHT_VIEWPORT === $this->map_height_mode && ! $this->show_location_cards ) {
 			$this->block_classes .= ' b-location-map--viewport-height';
