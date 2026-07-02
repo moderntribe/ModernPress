@@ -111,6 +111,10 @@ $show_autocomplete    = $c->should_show_autocomplete();
 		<div class="b-location-map__map-column">
 			<div class="b-location-map__map" data-js="location-map-canvas" role="region" aria-label="<?php esc_attr_e( 'Location map', 'tribe' ); ?>"></div>
 		</div>
+
+		<?php if ( $c->should_show_location_cards() ) : ?>
+			<ul class="b-location-map__list b-location-map__list--cards" data-js="location-map-list"></ul>
+		<?php endif; ?>
 	</div>
 
 	<div class="b-location-map__loading-overlay" data-js="location-map-loading" aria-hidden="true" hidden>

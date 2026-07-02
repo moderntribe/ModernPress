@@ -52,6 +52,8 @@ const selectors = {
  * @property {boolean} [autocompleteEnabled]  Whether Google Places autocomplete is enabled.
  * @property {string}  [searchCountry]        ISO country code for Places restrictions.
  * @property {boolean} [showSearch]           Whether the search field is visible.
+ * @property {boolean} [showLocationList]     Whether the sidebar location list is visible.
+ * @property {boolean} [showLocationCards]    Whether location cards appear beside the map.
  */
 
 /**
@@ -344,8 +346,15 @@ const renderLocationList = ( block, locations ) => {
 		return;
 	}
 
+	const { settings } = getBlockState( block );
+
 	list.innerHTML = locations
-		.map( ( location ) => locationCard( location ) )
+		.map( ( location ) =>
+			locationCard( location, {
+				showActions: ! settings.showLocationCards,
+				showDirections: settings.showLocationCards,
+			} )
+		)
 		.join( '' );
 };
 
@@ -356,7 +365,17 @@ const renderLocationList = ( block, locations ) => {
  * @param {number}      index Active location index.
  */
 const handleMarkerClick = ( block, index ) => {
-	const { map } = getBlockState( block );
+	const { map, locations, settings } = getBlockState( block );
+	const location = locations[ index ];
+	const hasCards = settings.showLocationList || settings.showLocationCards;
+
+	if ( ! hasCards ) {
+		if ( location?.url ) {
+			window.location.assign( location.url );
+		}
+
+		return;
+	}
 
 	setActiveMarker( map, index );
 
@@ -774,6 +793,8 @@ const initBlock = async ( block ) => {
 
 	requestAnimationFrame( () => invalidateMapSize( blockState.map ) );
 };
+
+export const initLocationMapBlock = initBlock;
 
 /**
  * Initializes every location map block present on the page.

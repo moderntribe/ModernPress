@@ -15,6 +15,8 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 	private const string SOURCE_ENDPOINT = 'endpoint';
 	private const string HEIGHT_FIXED    = 'fixed';
 	private const string HEIGHT_VIEWPORT = 'viewport';
+	private const string MAP_POSITION_LEFT  = 'left';
+	private const string MAP_POSITION_RIGHT = 'right';
 
 	/**
 	 * @var array<int, array{id: int, value?: string, pickerLabel?: string}>
@@ -23,6 +25,8 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 	private string $location_source;
 	private string $endpoint_url;
 	private bool $show_sidebar;
+	private bool $show_location_cards;
+	private string $map_position;
 	private bool $show_search;
 	private bool $show_location_list;
 	private int $search_radius;
@@ -52,8 +56,10 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 		$this->location_source    = $this->attributes['locationSource'] ?? self::SOURCE_MANUAL;
 		$this->chosen_locations   = $this->attributes['chosenLocations'] ?? [];
 		$this->endpoint_url       = $this->attributes['endpointUrl'] ?? '';
-		$this->show_sidebar       = (bool) ( $this->attributes['showSidebar'] ?? true );
-		$this->show_search        = (bool) ( $this->attributes['showSearch'] ?? true );
+		$this->show_sidebar          = (bool) ( $this->attributes['showSidebar'] ?? true );
+		$this->show_location_cards   = (bool) ( $this->attributes['showLocationCards'] ?? false );
+		$this->map_position          = $this->get_map_position();
+		$this->show_search           = (bool) ( $this->attributes['showSearch'] ?? true );
 		$this->show_location_list = (bool) ( $this->attributes['showLocationList'] ?? true );
 		$this->search_radius      = absint( $this->attributes['searchRadius'] ?? 30 );
 		$this->default_lat        = (float) ( $this->attributes['defaultLat'] ?? 39.10015 );
@@ -64,20 +70,31 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 		$this->map_height_mode    = $this->get_map_height_mode();
 		$this->map_height         = absint( $this->attributes['mapHeight'] ?? 600 );
 
-		if ( self::HEIGHT_VIEWPORT === $this->map_height_mode ) {
+		if ( self::HEIGHT_VIEWPORT === $this->map_height_mode && ! $this->show_location_cards ) {
 			$this->block_classes .= ' b-location-map--viewport-height';
 		}
 
 		if ( ! $this->show_sidebar ) {
 			$this->show_search        = false;
 			$this->show_location_list = false;
+		} else {
+			$this->show_location_cards = false;
 		}
 
 		if ( $this->show_search && ! $this->show_location_list ) {
 			$this->show_location_list = true;
 		}
 
-		$this->block_classes .= $this->show_sidebar ? ' b-location-map--has-sidebar' : ' b-location-map--map-only';
+		if ( $this->show_sidebar ) {
+			$this->block_classes .= ' b-location-map--has-sidebar';
+		} elseif ( $this->show_location_cards ) {
+			$this->block_classes .= ' b-location-map--has-cards';
+			$this->block_classes .= self::MAP_POSITION_RIGHT === $this->map_position
+				? ' b-location-map--map-right'
+				: ' b-location-map--map-left';
+		} else {
+			$this->block_classes .= ' b-location-map--map-only';
+		}
 
 		if ( ! $this->show_search ) {
 			return;
@@ -93,10 +110,6 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 
 		if ( self::SOURCE_MANUAL === $this->location_source ) {
 			return empty( $this->chosen_locations );
-		}
-
-		if ( self::SOURCE_ENDPOINT === $this->location_source ) {
-			return $this->endpoint_url === '';
 		}
 
 		return false;
@@ -118,8 +131,12 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 		return $this->show_location_list;
 	}
 
+	public function should_show_location_cards(): bool {
+		return $this->show_location_cards;
+	}
+
 	public function get_map_height_style(): string {
-		if ( self::HEIGHT_VIEWPORT === $this->map_height_mode ) {
+		if ( $this->show_location_cards || self::HEIGHT_VIEWPORT === $this->map_height_mode ) {
 			return '';
 		}
 
@@ -144,6 +161,7 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 			'clusterMarkers'       => $this->cluster_markers,
 			'showSearch'           => $this->show_search,
 			'showLocationList'     => $this->show_location_list,
+			'showLocationCards'    => $this->show_location_cards,
 			'mapId'                => $this->settings->get_google_maps_map_id(),
 			'autocompleteEnabled'  => $this->settings->is_google_maps_autocomplete_enabled(),
 			'autocompleteMinChars' => $this->settings->get_google_maps_autocomplete_min_chars(),
@@ -200,6 +218,16 @@ class Location_Map_Block_Controller extends Abstract_Block_Controller {
 		}
 
 		return $mode;
+	}
+
+	private function get_map_position(): string {
+		$position = $this->attributes['mapPosition'] ?? self::MAP_POSITION_LEFT;
+
+		if ( ! in_array( $position, [ self::MAP_POSITION_LEFT, self::MAP_POSITION_RIGHT ], true ) ) {
+			return self::MAP_POSITION_LEFT;
+		}
+
+		return $position;
 	}
 
 	private function get_locations_endpoint_url(): string {

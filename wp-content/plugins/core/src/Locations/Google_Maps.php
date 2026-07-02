@@ -13,16 +13,24 @@ class Google_Maps {
 
 	public function register(): void {
 		add_action( 'wp_enqueue_scripts', function (): void {
-			$this->maybe_enqueue_frontend_loader();
+			$this->maybe_enqueue_loader( false );
+		}, 5, 0 );
+
+		add_action( 'enqueue_block_editor_assets', function (): void {
+			$this->maybe_enqueue_loader( true );
 		}, 5, 0 );
 	}
 
-	private function maybe_enqueue_frontend_loader(): void {
-		if ( is_admin() || ! $this->settings->has_google_maps_api_key() ) {
+	private function maybe_enqueue_loader( bool $for_editor ): void {
+		if ( ! $this->settings->has_google_maps_api_key() ) {
 			return;
 		}
 
-		if ( ! has_block( 'tribe/location-map' ) ) {
+		if ( $for_editor ) {
+			if ( ! is_admin() ) {
+				return;
+			}
+		} elseif ( is_admin() || ! has_block( 'tribe/location-map' ) ) {
 			return;
 		}
 

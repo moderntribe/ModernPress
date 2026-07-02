@@ -5,18 +5,20 @@
  */
 
 import { __ } from '@wordpress/i18n';
+import { useMemo } from '@wordpress/element';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import {
 	Notice,
 	PanelBody,
+	Placeholder,
 	RangeControl,
 	SelectControl,
 	TextControl,
 	ToggleControl,
 } from '@wordpress/components';
-import { ServerSideRender } from '@wordpress/server-side-render';
 import PostSearchField from 'components/PostSearchField';
 
+import EditorPreview from './editor-preview';
 import './editor.pcss';
 
 const LOCATION_POST_TYPE = 'location';
@@ -30,6 +32,18 @@ const MAP_HEIGHT_MODE_OPTIONS = [
 	{
 		label: __( 'Viewport', 'tribe' ),
 		value: 'viewport',
+	},
+];
+
+/** @type {import('@wordpress/components').SelectControlOption[]} */
+const MAP_POSITION_OPTIONS = [
+	{
+		label: __( 'Left', 'tribe' ),
+		value: 'left',
+	},
+	{
+		label: __( 'Right', 'tribe' ),
+		value: 'right',
 	},
 ];
 
@@ -50,6 +64,75 @@ const LOCATION_SOURCE_OPTIONS = [
 ];
 
 /**
+ * @typedef {Object} EditorPreviewOptions
+ * @property {boolean} hasGoogleMapsApiKey    Whether a Maps API key exists.
+ * @property {string}  settingsUrl            Tribe settings admin URL.
+ * @property {boolean} isMissingConfiguration Whether required source settings are missing.
+ * @property {string}  locationSource         Selected location source.
+ * @property {Object}  attributes             Block attributes for SSR preview.
+ */
+
+/**
+ * Renders the in-editor block preview based on configuration state.
+ *
+ * @param {EditorPreviewOptions} options Preview options.
+ * @return {import('react').JSX.Element} Editor preview markup.
+ */
+function renderEditorPreview( {
+	hasGoogleMapsApiKey,
+	settingsUrl,
+	isMissingConfiguration,
+	locationSource,
+	attributes,
+} ) {
+	if ( ! hasGoogleMapsApiKey ) {
+		return (
+			<Notice status="warning" isDismissible={ false }>
+				{ __(
+					'Please set your Google Maps API key in Tribe Settings.',
+					'tribe'
+				) }
+				{ settingsUrl ? (
+					<>
+						{ ' ' }
+						<a href={ settingsUrl }>
+							{ __( 'Open Tribe Settings', 'tribe' ) }
+						</a>
+					</>
+				) : null }
+			</Notice>
+		);
+	}
+
+	if ( isMissingConfiguration ) {
+		return (
+			<Placeholder
+				icon="location"
+				label={ __( 'Location Map', 'tribe' ) }
+				instructions={ __(
+					'Configure a location source in the block settings to preview the map.',
+					'tribe'
+				) }
+			>
+				<p className="b-location-map__placeholder-help t-body">
+					{ locationSource === 'manual'
+						? __(
+								'Search for and select one or more locations.',
+								'tribe'
+						  )
+						: __(
+								'Enter a valid locations endpoint URL.',
+								'tribe'
+						  ) }
+				</p>
+			</Placeholder>
+		);
+	}
+
+	return <EditorPreview attributes={ attributes } />;
+}
+
+/**
  * Location Map block editor UI.
  *
  * @param {Object}   props               Component props.
@@ -65,6 +148,8 @@ export default function Edit( { attributes, isSelected, setAttributes } ) {
 		chosenLocations,
 		endpointUrl,
 		showSidebar,
+		showLocationCards,
+		mapPosition,
 		showSearch,
 		showLocationList,
 		searchRadius,
@@ -80,30 +165,40 @@ export default function Edit( { attributes, isSelected, setAttributes } ) {
 	const hasGoogleMapsApiKey =
 		window.tribeLocationMap?.hasGoogleMapsApiKey === true;
 	const settingsUrl = window.tribeLocationMap?.settingsUrl ?? '';
+	const defaultLocationsEndpointUrl =
+		window.tribeLocationMap?.defaultLocationsEndpointUrl ?? '';
+	const isMissingConfiguration =
+		locationSource === 'manual' && ! chosenLocations?.length;
+	const previewAttributes = useMemo( () => {
+		if (
+			locationSource !== 'endpoint' ||
+			endpointUrl?.trim() ||
+			! defaultLocationsEndpointUrl
+		) {
+			return attributes;
+		}
+
+		return {
+			...attributes,
+			endpointUrl: defaultLocationsEndpointUrl,
+		};
+	}, [
+		attributes,
+		defaultLocationsEndpointUrl,
+		endpointUrl,
+		locationSource,
+	] );
+	const endpointFieldValue = endpointUrl || defaultLocationsEndpointUrl;
 
 	return (
 		<div { ...blockProps }>
-			{ ! hasGoogleMapsApiKey ? (
-				<Notice status="warning" isDismissible={ false }>
-					{ __(
-						'Please set your Google Maps API key in Tribe Settings.',
-						'tribe'
-					) }
-					{ settingsUrl ? (
-						<>
-							{ ' ' }
-							<a href={ settingsUrl }>
-								{ __( 'Open Tribe Settings', 'tribe' ) }
-							</a>
-						</>
-					) : null }
-				</Notice>
-			) : (
-				<ServerSideRender
-					block="tribe/location-map"
-					attributes={ attributes }
-				/>
-			) }
+			{ renderEditorPreview( {
+				hasGoogleMapsApiKey,
+				settingsUrl,
+				isMissingConfiguration,
+				locationSource,
+				attributes: previewAttributes,
+			} ) }
 			{ isSelected && (
 				<InspectorControls>
 					<PanelBody title={ __( 'Location Source', 'tribe' ) }>
@@ -113,9 +208,20 @@ export default function Edit( { attributes, isSelected, setAttributes } ) {
 							label={ __( 'Source', 'tribe' ) }
 							value={ locationSource }
 							options={ LOCATION_SOURCE_OPTIONS }
-							onChange={ ( value ) =>
-								setAttributes( { locationSource: value } )
-							}
+							onChange={ ( value ) => {
+								const next = { locationSource: value };
+
+								if (
+									value === 'endpoint' &&
+									! endpointUrl?.trim() &&
+									defaultLocationsEndpointUrl
+								) {
+									next.endpointUrl =
+										defaultLocationsEndpointUrl;
+								}
+
+								setAttributes( next );
+							} }
 						/>
 						{ locationSource === 'manual' && (
 							<PostSearchField
@@ -142,10 +248,10 @@ export default function Edit( { attributes, isSelected, setAttributes } ) {
 									'tribe'
 								) }
 								help={ __(
-									'Must return JSON with a locations array.',
+									'This should be a relative URL. Defaults to the all-locations REST endpoint. Must return JSON with a locations array.',
 									'tribe'
 								) }
-								value={ endpointUrl }
+								value={ endpointFieldValue }
 								onChange={ ( value ) =>
 									setAttributes( { endpointUrl: value } )
 								}
@@ -163,7 +269,9 @@ export default function Edit( { attributes, isSelected, setAttributes } ) {
 							onChange={ ( value ) => {
 								const next = { showSidebar: value };
 
-								if ( ! value ) {
+								if ( value ) {
+									next.showLocationCards = false;
+								} else {
 									next.showSearch = false;
 									next.showLocationList = false;
 								}
@@ -171,6 +279,37 @@ export default function Edit( { attributes, isSelected, setAttributes } ) {
 								setAttributes( next );
 							} }
 						/>
+						{ ! showSidebar && (
+							<>
+								<ToggleControl
+									__nextHasNoMarginBottom
+									label={ __(
+										'Show location cards',
+										'tribe'
+									) }
+									checked={ showLocationCards }
+									onChange={ ( value ) =>
+										setAttributes( {
+											showLocationCards: value,
+										} )
+									}
+								/>
+								{ showLocationCards && (
+									<SelectControl
+										__next40pxDefaultSize
+										__nextHasNoMarginBottom
+										label={ __( 'Map position', 'tribe' ) }
+										value={ mapPosition ?? 'left' }
+										options={ MAP_POSITION_OPTIONS }
+										onChange={ ( value ) =>
+											setAttributes( {
+												mapPosition: value,
+											} )
+										}
+									/>
+								) }
+							</>
+						) }
 						{ showSidebar && (
 							<>
 								<ToggleControl
@@ -211,28 +350,39 @@ export default function Edit( { attributes, isSelected, setAttributes } ) {
 								/>
 							</>
 						) }
-						<SelectControl
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-							label={ __( 'Map height', 'tribe' ) }
-							value={ mapHeightMode ?? 'fixed' }
-							options={ MAP_HEIGHT_MODE_OPTIONS }
-							onChange={ ( value ) =>
-								setAttributes( { mapHeightMode: value } )
-							}
-						/>
-						{ ( mapHeightMode ?? 'fixed' ) === 'fixed' && (
-							<RangeControl
-								__next40pxDefaultSize
-								__nextHasNoMarginBottom
-								label={ __( 'Map height (px)', 'tribe' ) }
-								min={ 300 }
-								max={ 900 }
-								value={ mapHeight }
-								onChange={ ( value ) =>
-									setAttributes( { mapHeight: value } )
-								}
-							/>
+						{ ( showSidebar || ! showLocationCards ) && (
+							<>
+								<SelectControl
+									__next40pxDefaultSize
+									__nextHasNoMarginBottom
+									label={ __( 'Map height', 'tribe' ) }
+									value={ mapHeightMode ?? 'fixed' }
+									options={ MAP_HEIGHT_MODE_OPTIONS }
+									onChange={ ( value ) =>
+										setAttributes( {
+											mapHeightMode: value,
+										} )
+									}
+								/>
+								{ ( mapHeightMode ?? 'fixed' ) === 'fixed' && (
+									<RangeControl
+										__next40pxDefaultSize
+										__nextHasNoMarginBottom
+										label={ __(
+											'Map height (px)',
+											'tribe'
+										) }
+										min={ 300 }
+										max={ 900 }
+										value={ mapHeight }
+										onChange={ ( value ) =>
+											setAttributes( {
+												mapHeight: value,
+											} )
+										}
+									/>
+								) }
+							</>
 						) }
 					</PanelBody>
 					<PanelBody

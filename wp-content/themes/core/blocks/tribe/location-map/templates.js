@@ -16,16 +16,30 @@ import { escapeAttribute, escapeHTML } from '@wordpress/escape-html';
  */
 
 /**
+ * @typedef {Object} LocationCardOptions
+ * @property {boolean} [showActions=true]     Whether to render sidebar card action buttons.
+ * @property {boolean} [showDirections=false] Whether to render a grid card directions link.
+ */
+
+/**
  * Builds the markup for a single location card in the sidebar list.
  *
- * @param {LocationCardData} data Normalized location data.
+ * @param {LocationCardData}    data    Normalized location data.
+ * @param {LocationCardOptions} options Card rendering options.
  * @return {string} Location card HTML markup.
  */
-export const locationCard = ( data ) => `
+export const locationCard = ( data, options = {} ) => {
+	const { showActions = true, showDirections = false } = options;
+	const articleClass = showDirections
+		? 'b-location-map__location b-location-map__location--card'
+		: 'b-location-map__location';
+
+	return `
 <li class="b-location-map__list-item">
-	<article class="b-location-map__location" data-location-id="${ escapeAttribute(
+	<article class="${ articleClass }" data-location-id="${ escapeAttribute(
 		String( data.id )
 	) }">
+		<div class="b-location-map__location-content">
 		<h3 class="b-location-map__location-title t-display-xx-small">
 			${
 				data.url
@@ -63,7 +77,9 @@ export const locationCard = ( data ) => `
 				  ) }</p>`
 				: ''
 		}
-		<div class="b-location-map__location-actions">
+		${
+			showActions
+				? `<div class="b-location-map__location-actions">
 			<button
 				type="button"
 				class="b-location-map__location-action"
@@ -83,10 +99,26 @@ export const locationCard = ( data ) => `
 					  ) }</a>`
 					: ''
 			}
+		</div>`
+				: ''
+		}
 		</div>
+		${
+			showDirections && data.directionsUrl
+				? `<div class="b-location-map__location-footer">
+			<a class="b-location-map__location-directions a-btn-link" href="${ escapeAttribute(
+				data.directionsUrl
+			) }" target="_blank" rel="noopener noreferrer">${ __(
+				'Get directions',
+				'tribe'
+			) }</a>
+		</div>`
+				: ''
+		}
 	</article>
 </li>
 `;
+};
 
 /**
  * @typedef {Object} AutocompleteItemData

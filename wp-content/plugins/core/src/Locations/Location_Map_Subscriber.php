@@ -16,14 +16,22 @@ class Location_Map_Subscriber extends Abstract_Subscriber {
 			wp_add_inline_script(
 				'wp-blocks',
 				'window.tribeLocationMap = ' . wp_json_encode( [
-					'hasGoogleMapsApiKey' => $tribe_settings->has_google_maps_api_key(),
-					'settingsUrl'         => admin_url(
+					'hasGoogleMapsApiKey'         => $tribe_settings->has_google_maps_api_key(),
+					'settingsUrl'                 => admin_url(
 						'options-general.php?page=' . Tribe_Settings::PAGE_SLUG
 					),
+					'defaultLocationsEndpointUrl' => $this->get_locations_endpoint_url(),
 				] ) . ';',
 				'before'
 			);
 		} );
+	}
+
+	private function get_locations_endpoint_url(): string {
+		$url      = rest_url( 'tribe/v1/locations' );
+		$relative = wp_make_link_relative( $url );
+
+		return is_string( $relative ) && $relative !== '' ? $relative : $url;
 	}
 
 }
