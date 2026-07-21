@@ -14,15 +14,26 @@ import {
 	ToggleControl,
 	__experimentalInputControl as InputControl, // eslint-disable-line
 } from '@wordpress/components';
+import { getBlockType, registerBlockType } from '@wordpress/blocks';
 import { createHigherOrderComponent } from '@wordpress/compose';
-import { Fragment } from '@wordpress/element';
+import { cloneElement, Fragment, useEffect } from '@wordpress/element';
 import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 import { cleanForSlug } from '@wordpress/url';
 
-const state = {
-	settings: {},
-};
+/** @type {Object[]} Registered settings objects (one per createWPControls call). */
+const configs = [];
+
+let filtersRegistered = false;
+
+/**
+ * Settings for a block type, if any config targets it.
+ *
+ * @param {string} blockName Block name (e.g. core/paragraph).
+ * @return {Object|undefined} Matching settings object.
+ */
+const getSettingsForBlock = ( blockName ) =>
+	configs.find( ( config ) => config.blocks.includes( blockName ) );
 
 /** Default panel title when control has no panel (used for default and styles groups). */
 const DEFAULT_PANEL_TITLE = __( 'Custom Block Settings', 'tribe' );
@@ -159,7 +170,51 @@ const buildClassName = ( baseClassName, controls, attributes ) => {
 };
 
 /**
- * Applies conditional props (classes, styles) to core blocks on save.
+ * Normalizes a single class source (string or array) into a space-delimited string.
+ *
+ * @param {string|string[]|undefined} value - Class string or array from block attributes.
+ * @return {string} Normalized class string.
+ */
+const normalizeClassSource = ( value ) => {
+	if ( ! value ) {
+		return '';
+	}
+
+	if ( Array.isArray( value ) ) {
+		return value.filter( Boolean ).join( ' ' );
+	}
+
+	return String( value ).trim();
+};
+
+/**
+ * Merges class sources from save props and block attributes into one base string.
+ *
+ * @param {Object}          sources                      Class sources.
+ * @param {string}          [sources.propsClassName]     className on save props / element.
+ * @param {string}          [sources.attributeClassName] Block className attribute.
+ * @param {string|string[]} [sources.attributeClasses]   Block classes attribute.
+ * @return {string} Combined base class string (may be empty).
+ */
+const getBaseClassName = ( {
+	propsClassName,
+	attributeClassName,
+	attributeClasses,
+} = {} ) => {
+	return [
+		normalizeClassSource( propsClassName ),
+		normalizeClassSource( attributeClassName ),
+		normalizeClassSource( attributeClasses ),
+	]
+		.filter( Boolean )
+		.join( ' ' )
+		.trim();
+};
+
+/**
+ * Applies inline styles from controls during save (via getBlockProps / extraProps).
+ *
+ * Classes are applied in applySaveElementClasses so apiVersion 3 blocks are covered.
  *
  * @param {Object} props      Block wrapper props.
  * @param {Object} block      Block definition (with name).
@@ -167,22 +222,13 @@ const buildClassName = ( baseClassName, controls, attributes ) => {
  * @return {Object} Original or updated props.
  */
 const applyBlockProps = ( props, block, attributes ) => {
-	if ( ! state.settings.blocks.includes( block.name ) ) {
+	const settings = getSettingsForBlock( block.name );
+	if ( ! settings ) {
 		return props;
 	}
 
-	const controls = state.settings.controls;
+	const controls = settings.controls;
 
-	// Replace managed classes so add/remove stays consistent.
-	if ( props.className !== undefined ) {
-		props.className = buildClassName(
-			props.className,
-			controls,
-			attributes
-		);
-	}
-
-	// Add styles only when the control value is active.
 	controls.forEach( ( control ) => {
 		if ( ! control.applyStyleProperty ) {
 			return;
@@ -204,24 +250,89 @@ const applyBlockProps = ( props, block, attributes ) => {
 };
 
 /**
+ * Applies managed classes to the saved block element (all API versions).
+ *
+ * core/paragraph is apiVersion 3; WordPress only runs extraProps on the save
+ * element itself when apiVersion <= 1. This filter runs for every saved block.
+ *
+ * @param {Object} element    Saved element from the block's save function.
+ * @param {Object} blockType  Block type definition.
+ * @param {Object} attributes Block attributes.
+ * @return {Object} Original or updated element.
+ */
+const applySaveElementClasses = ( element, blockType, attributes ) => {
+	const settings = getSettingsForBlock( blockType.name );
+	if ( ! settings || ! element?.props ) {
+		return element;
+	}
+
+	const controls = settings.controls;
+	const baseClassName = getBaseClassName( {
+		propsClassName: element.props.className,
+		attributeClassName: attributes.className,
+		attributeClasses: attributes.classes,
+	} );
+
+	const className = buildClassName(
+		baseClassName || undefined,
+		controls,
+		attributes
+	);
+
+	if ( className === element.props.className ) {
+		return element;
+	}
+
+	return cloneElement( element, {
+		...element.props,
+		className,
+	} );
+};
+
+/**
+ * Re-registers core block types with custom attributes after block library loads.
+ *
+ * The registerBlockType filter does not run for blocks that were already
+ * registered before this script executes.
+ *
+ * @param {Object} settings - Config for blocks, controls, and attributes.
+ */
+const mergeBlockTypeAttributes = ( settings ) => {
+	settings.blocks.forEach( ( blockName ) => {
+		const blockSettings = getBlockType( blockName );
+		if ( ! blockSettings ) {
+			return;
+		}
+
+		registerBlockType( blockName, {
+			...blockSettings,
+			attributes: {
+				...blockSettings.attributes,
+				...settings.attributes,
+			},
+		} );
+	} );
+};
+
+/**
  * HOC (Higher Order Component) that assigns props/classes to the block in the editor (BlockListBlock).
  */
 const applyEditorBlockProps = createHigherOrderComponent(
 	( BlockListBlock ) => {
 		return ( props ) => {
 			const { name, attributes } = props;
-			const controls = state.settings.controls;
-
-			if ( ! state.settings.blocks.includes( name ) ) {
+			const settings = getSettingsForBlock( name );
+			if ( ! settings ) {
 				return <BlockListBlock { ...props } />;
 			}
 
-			const baseClasses = attributes.classes
-				? attributes.classes.split( ' ' ).filter( Boolean )
-				: [];
-			const baseClassName = baseClasses.join( ' ' );
+			const controls = settings.controls;
+			const baseClassName = getBaseClassName( {
+				attributeClassName: attributes.className,
+				attributeClasses: attributes.classes,
+			} );
 			const className = buildClassName(
-				baseClassName,
+				baseClassName || undefined,
 				controls,
 				attributes
 			);
@@ -424,18 +535,32 @@ const addBlockControls = createHigherOrderComponent( ( BlockEdit ) => {
 	return ( props ) => {
 		const { attributes, setAttributes, name, isSelected } = props;
 
-		if ( ! state.settings.blocks.includes( name ) ) {
+		const settings = getSettingsForBlock( name );
+
+		useEffect( () => {
+			if ( ! settings ) {
+				return;
+			}
+
+			const defaults = {};
+
+			settings.controls.forEach( ( control ) => {
+				if ( attributes[ control.attribute ] === undefined ) {
+					defaults[ control.attribute ] = control.defaultValue;
+				}
+			} );
+
+			if ( Object.keys( defaults ).length > 0 ) {
+				setAttributes( defaults );
+			}
+		}, [ attributes, setAttributes, settings ] );
+
+		if ( ! settings ) {
 			return <BlockEdit { ...props } />;
 		}
 
-		state.settings.controls.forEach( ( control ) => {
-			if ( attributes[ control.attribute ] === undefined ) {
-				attributes[ control.attribute ] = control.defaultValue;
-			}
-		} );
-
 		const buckets = bucketControlsByGroupAndPanel(
-			state.settings.controls,
+			settings.controls,
 			attributes
 		);
 
@@ -500,14 +625,15 @@ const addBlockControls = createHigherOrderComponent( ( BlockEdit ) => {
  * @return {Object} Existing or updated settings.
  */
 const addBlockAttributes = ( settings, name ) => {
-	if ( ! state.settings.blocks.includes( name ) ) {
+	const config = getSettingsForBlock( name );
+	if ( ! config ) {
 		return settings;
 	}
 
 	if ( settings?.attributes !== undefined ) {
 		settings.attributes = {
 			...settings.attributes,
-			...state.settings.attributes,
+			...config.attributes,
 		};
 	}
 
@@ -524,7 +650,14 @@ const init = ( settings = null ) => {
 		return;
 	}
 
-	state.settings = settings;
+	configs.push( settings );
+	mergeBlockTypeAttributes( settings );
+
+	if ( filtersRegistered ) {
+		return;
+	}
+
+	filtersRegistered = true;
 
 	addFilter(
 		'blocks.registerBlockType',
@@ -548,6 +681,12 @@ const init = ( settings = null ) => {
 		'blocks.getSaveContent.extraProps',
 		'tribe/apply-block-props',
 		applyBlockProps
+	);
+
+	addFilter(
+		'blocks.getSaveElement',
+		'tribe/apply-save-element-classes',
+		applySaveElementClasses
 	);
 };
 
