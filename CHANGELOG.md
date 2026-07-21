@@ -9,6 +9,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.05]
 
+- Fixed: Carousel `.swiper-wrapper` and `.swiper-slide` set to `height: auto` to prevent image cropping when slides have mixed aspect ratios. Added `--swiper-navigation-border-size` and `--swiper-navigation-hover-border-size` CSS variables for border-width theming.
 - Updated: Prettier config to support `.pcss` files, ensuring PostCSS files use CSS formatting rules.
 - Fixed: Pagination breaking on mobile
 - Updated: Announcement Renderer block adjusted to not be available in the inserter and attributes updated to actual values
