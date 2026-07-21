@@ -1,0 +1,146 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "tribe/comparison-table",
+	"version": "1.0.0",
+	"title": "Comparison Table",
+	"category": "theme",
+	"icon": "editor-table",
+	"description": "A feature comparison matrix for product tiers and pricing plans.",
+	"example": {
+		"attributes": {
+			"showFooterCtas": true,
+			"columns": [
+				{
+					"id": "col-starter",
+					"label": "Starter",
+					"subtitle": "$29/mo",
+					"badge": "",
+					"ctaLabel": "Get Started",
+					"ctaUrl": "#",
+					"ctaStyle": "outlined"
+				},
+				{
+					"id": "col-pro",
+					"label": "Pro",
+					"subtitle": "$79/mo",
+					"badge": "Popular",
+					"ctaLabel": "Start free trial",
+					"ctaUrl": "#",
+					"ctaStyle": "outlined"
+				},
+				{
+					"id": "col-enterprise",
+					"label": "Enterprise",
+					"subtitle": "Custom",
+					"badge": "",
+					"ctaLabel": "Contact sales",
+					"ctaUrl": "#",
+					"ctaStyle": "outlined"
+				}
+			]
+		},
+		"innerBlocks": [
+			{
+				"name": "tribe/comparison-row",
+				"attributes": {
+					"rowType": "category",
+					"label": "Core Features"
+				}
+			},
+			{
+				"name": "tribe/comparison-row",
+				"attributes": {
+					"rowType": "feature",
+					"label": "Users",
+					"cells": [
+						{
+							"type": "text",
+							"value": "5"
+						},
+						{
+							"type": "text",
+							"value": "25"
+						},
+						{
+							"type": "text",
+							"value": "Unlimited"
+						}
+					]
+				}
+			},
+			{
+				"name": "tribe/comparison-row",
+				"attributes": {
+					"rowType": "feature",
+					"label": "Single sign-on (SSO)",
+					"cells": [
+						{
+							"type": "dash"
+						},
+						{
+							"type": "check"
+						},
+						{
+							"type": "check"
+						}
+					]
+				}
+			}
+		]
+	},
+	"attributes": {
+		"columns": {
+			"type": "array",
+			"default": []
+		},
+		"showFooterCtas": {
+			"type": "boolean",
+			"default": true
+		},
+		"ctaPlacement": {
+			"type": "string",
+			"default": "footer",
+			"enum": [
+				"footer",
+				"header"
+			]
+		},
+		"mobileCardView": {
+			"type": "boolean",
+			"default": false
+		},
+		"mobileCardCarousel": {
+			"type": "boolean",
+			"default": false
+		},
+		"previewRows": {
+			"type": "array",
+			"default": []
+		}
+	},
+	"providesContext": {
+		"tribe/comparison-table/columns": "columns"
+	},
+	"supports": {
+		"html": false,
+		"alignCustom": [
+			"wide",
+			"grid",
+			"full"
+		],
+		"spacing": {
+			"margin": true,
+			"padding": false
+		}
+	},
+	"textdomain": "tribe",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": [
+		"file:./style-index.css",
+		"file:./view.css"
+	],
+	"viewScript": "file:./view.js",
+	"render": "file:./render.php"
+}
