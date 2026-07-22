@@ -23,6 +23,7 @@ const DEFAULT_EXCLUDED_TYPES = [
  * @param {string}   props.label          - Field label.
  * @param {string}   props.placeholder    - Input placeholder text.
  * @param {Array}    props.excludedTypes  - Post type slugs to exclude from search.
+ * @param {Array}    props.includedTypes  - Optional allowlist of post type slugs.
  * @param {Array}    props.excludeIds     - Post IDs to exclude from results.
  * @param {number}   props.perPage        - Number of results per post type per query.
  * @param {number}   props.maxSuggestions - Maximum suggestions shown in dropdown.
@@ -33,6 +34,7 @@ export default function PostSearchField( {
 	label = __( 'Search Posts', 'tribe' ),
 	placeholder = __( 'Start typing to search…', 'tribe' ),
 	excludedTypes = DEFAULT_EXCLUDED_TYPES,
+	includedTypes = [],
 	excludeIds = [],
 	perPage = 20,
 	maxSuggestions = 20,
@@ -51,6 +53,11 @@ export default function PostSearchField( {
 		[ excludeIds ]
 	);
 
+	const includedSet = useMemo(
+		() => ( includedTypes.length > 0 ? new Set( includedTypes ) : null ),
+		[ includedTypes ]
+	);
+
 	// Get all post types that are viewable and not excluded
 	const selectableTypes = useSelect(
 		( select ) => {
@@ -62,10 +69,11 @@ export default function PostSearchField( {
 				( type ) =>
 					type.viewable === true &&
 					type.rest_base &&
-					! excludedSet.has( type.slug )
+					! excludedSet.has( type.slug ) &&
+					( ! includedSet || includedSet.has( type.slug ) )
 			);
 		},
-		[ excludedSet ]
+		[ excludedSet, includedSet ]
 	);
 
 	// Query posts on-demand as the user types

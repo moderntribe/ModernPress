@@ -1,0 +1,582 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Location Map - Styles - FE / Editor
+ *
+ * ------------------------------------------------------------------------- */
+
+@import '_variables.pcss';
+
+.b-location-map {
+	container: locationmap / inline-size;
+}
+
+/* -------------------------------------------------------------------------
+ * Location Map - Viewport Height
+ * ------------------------------------------------------------------------- */
+
+.b-location-map--viewport-height {
+	height: var(--location-map-viewport-height);
+	min-height: var(--location-map-viewport-height);
+}
+
+.b-location-map--viewport-height .b-location-map__grid {
+	height: 100%;
+	min-height: 0;
+}
+
+.b-location-map--viewport-height.b-location-map--has-sidebar .b-location-map__sidebar {
+	height: 100%;
+	min-height: 0;
+}
+
+.b-location-map--viewport-height.b-location-map--has-cards .b-location-map__grid {
+	height: 100%;
+	min-height: 0;
+}
+
+.b-location-map--viewport-height .b-location-map__locations {
+	flex: 1;
+	min-height: 0;
+}
+
+.b-location-map--viewport-height .b-location-map__locations-wrap {
+	flex: 1;
+	max-height: none;
+	min-height: 0;
+}
+
+.b-location-map--viewport-height .b-location-map__map-column,
+.b-location-map--viewport-height .b-location-map__map {
+	height: 100%;
+	min-height: 0;
+}
+
+/* -------------------------------------------------------------------------
+ * Location Map - Grid
+ * ------------------------------------------------------------------------- */
+
+.b-location-map__grid {
+	display: grid;
+}
+
+.b-location-map--has-sidebar .b-location-map__grid {
+
+	@container locationmap (min-width: 781px) {
+		grid-template-columns: minmax(300px, 625px) minmax(0, 1fr);
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Location Map - Cards Grid
+ * ------------------------------------------------------------------------- */
+
+.b-location-map--has-cards .b-location-map__grid {
+	gap: var(--spacer-40);
+	grid-template-columns: 1fr;
+
+	@container locationmap (min-width: 781px) {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		align-items: stretch;
+	}
+}
+
+.b-location-map--has-cards .b-location-map__map-column {
+	min-height: var(--location-map-cards-map-min-height);
+	height: var(--location-map-cards-map-min-height);
+
+	@container locationmap (min-width: 781px) {
+		grid-row: 1 / span 2;
+		height: auto;
+		min-height: var(--location-map-cards-map-min-height);
+		align-self: stretch;
+	}
+}
+
+.b-location-map--has-cards.b-location-map--map-left .b-location-map__map-column {
+
+	@container locationmap (min-width: 781px) {
+		grid-column: 1 / span 2;
+	}
+}
+
+.b-location-map--has-cards.b-location-map--map-right .b-location-map__map-column {
+
+	@container locationmap (min-width: 781px) {
+		grid-column: 3 / span 2;
+	}
+}
+
+.b-location-map--has-cards .b-location-map__map {
+	min-height: var(--location-map-cards-map-min-height);
+	height: var(--location-map-cards-map-min-height);
+
+	@container locationmap (min-width: 781px) {
+		height: 100%;
+		min-height: var(--location-map-cards-map-min-height);
+	}
+}
+
+.b-location-map--has-cards .b-location-map__list--cards {
+	padding: 0;
+
+	@container locationmap (min-width: 781px) {
+		display: contents;
+		margin: 0;
+	}
+}
+
+.b-location-map--has-cards .b-location-map__list--cards .b-location-map__list-item {
+	list-style: none;
+
+	@container locationmap (min-width: 781px) {
+		display: flex;
+		align-self: stretch;
+		min-height: 100%;
+	}
+
+	@container locationmap (min-width: 781px) and (max-width: 1159px) {
+		grid-column: span 2;
+	}
+
+	@container locationmap (min-width: 1160px) {
+		grid-column: span 1;
+	}
+}
+
+.b-location-map--has-cards .b-location-map__location--card {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+
+	@container locationmap (min-width: 781px) {
+		flex: 1;
+		min-height: 100%;
+	}
+}
+
+.b-location-map--has-cards .b-location-map__location-footer {
+	margin-top: auto;
+	padding-top: var(--spacer-20);
+}
+
+.b-location-map__location-directions {
+	appearance: none;
+	background: none;
+	border: 0;
+	color: inherit;
+	cursor: pointer;
+	display: inline-block;
+	padding: 0;
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+
+	&:hover,
+	&:focus-visible {
+		text-decoration: none;
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Location Map - Sidebar
+ * ------------------------------------------------------------------------- */
+
+.b-location-map__sidebar {
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	background-color: var(--location-map-sidebar-background-color);
+}
+
+/* -------------------------------------------------------------------------
+ * Location Map - Search
+ * ------------------------------------------------------------------------- */
+
+.b-location-map__search {
+	position: sticky;
+	background-color: var(--location-map-sidebar-background-color);
+	top: 0;
+	z-index: 1;
+	padding: var(--spacer-30);
+	border-bottom: 1px solid var(--location-map-search-border-color);
+}
+
+.b-location-map__search-form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacer-20);
+	position: relative;
+}
+
+.b-location-map__search-input {
+	width: 100%;
+	padding: var(--spacer-20) calc(var(--spacer-20) + var(--location-map-search-action-button-size) + var(--spacer-20));
+	border: 1px solid var(--location-map-search-border-color);
+	border-radius: 4px;
+
+	.b-location-map__search-form:has(.b-location-map__autocomplete:not([hidden])) & {
+		border-bottom-right-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+}
+
+.b-location-map__search-location {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--location-map-search-action-button-size);
+	height: var(--location-map-search-action-button-size);
+	position: absolute;
+	top: 50%;
+	right: var(--spacer-20);
+	transform: translateY(-50%);
+	padding: 6px;
+	margin: 0;
+	border: 0;
+	border-radius: 100%;
+	background-color: var(--location-map-search-button-background-color);
+	cursor: pointer;
+
+	.icon {
+		display: block;
+		width: 100%;
+		height: 100%;
+		mask: var(--icon-my-location) center / contain no-repeat;
+		background-color: var(--location-map-search-icon-color);
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+}
+
+.b-location-map__search-submit {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--location-map-search-action-button-size);
+	height: var(--location-map-search-action-button-size);
+	position: absolute;
+	top: 50%;
+	left: var(--spacer-20);
+	transform: translateY(-50%);
+	padding: 6px;
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+	background-color: transparent;
+	cursor: pointer;
+
+	.icon {
+		display: block;
+		width: 100%;
+		height: 100%;
+		mask: var(--icon-search) center / contain no-repeat;
+		background-color: var(--location-map-search-icon-color);
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Location Map - Search Autocomplete
+ * ------------------------------------------------------------------------- */
+
+.b-location-map__autocomplete {
+	max-height: 280px;
+	position: absolute;
+	top: calc(100% - 1px);
+	left: 0;
+	right: 0;
+	z-index: 2;
+	margin: 0;
+	padding: var(--spacer-10) 0;
+	list-style: none;
+	border: 1px solid var(--location-map-search-autocomplete-border-color);
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	background-color: var(--location-map-search-autocomplete-background-color);
+	box-shadow: var(--box-shadow-40);
+	overflow-y: auto;
+}
+
+.b-location-map__autocomplete-item {
+	list-style: none;
+	padding: 0;
+}
+
+.b-location-map__autocomplete-button {
+	appearance: none;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 100%;
+	padding: var(--spacer-10) calc(var(--spacer-20) * 2 + 24px) var(--spacer-10) calc(var(--spacer-20) * 2 + 24px);
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	text-align: left;
+	cursor: pointer;
+	position: relative;
+
+	&::before {
+		content: '';
+		display: block;
+		width: 24px;
+		height: 32px;
+		background-color: var(--location-map-search-autocomplete-icon-color);
+		mask: var(--icon-map-pin) center / contain no-repeat;
+		position: absolute;
+		top: var(--spacer-10);
+		left: var(--spacer-20);
+	}
+
+	&::after {
+		content: '';
+		display: block;
+		width: 24px;
+		height: 24px;
+		background-color: var(--location-map-search-autocomplete-icon-color);
+		mask: var(--icon-keyboard-return) center / contain no-repeat;
+		position: absolute;
+		top: 50%;
+		right: var(--spacer-20);
+		transform: translateY(-50%);
+		opacity: 0;
+		transition: opacity 0.15s ease;
+		pointer-events: none;
+	}
+
+	&:hover,
+	&:focus-visible,
+	&.is-active {
+		background-color: var(--location-map-search-autocomplete-item-active-background-color);
+		outline: none;
+
+		&::after {
+			opacity: 1;
+		}
+	}
+}
+
+.b-location-map__autocomplete-main {
+	color: var(--location-map-search-autocomplete-item-color);
+}
+
+.b-location-map__autocomplete-secondary {
+	color: var(--location-map-search-autocomplete-item-secondary-color);
+	font-size: var(--font-size-10);
+}
+
+/* -------------------------------------------------------------------------
+ * Location Map - Location List
+ * ------------------------------------------------------------------------- */
+
+.b-location-map__locations {
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+
+.b-location-map__locations-wrap {
+	max-height: var(--location-map-height);
+	overflow: auto;
+
+	.b-location-map__locations:not(.is-mobile-open) & {
+
+		@container locationmap (max-width: 780px) {
+			display: none;
+		}
+	}
+}
+
+.b-location-map__locations-mobile-wrap {
+	display: block;
+
+	@container locationmap (min-width: 781px) {
+		display: none;
+	}
+}
+
+.b-location-map__locations-mobile-toggle {
+	width: 100%;
+	margin-bottom: var(--spacer-10);
+}
+
+.b-location-map__results,
+.b-location-map__no-results,
+.b-location-map__error {
+	margin-top: 0 !important;
+	padding: var(--spacer-30) var(--spacer-30) 0;
+}
+
+.b-location-map__list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacer-20);
+	margin: 0;
+	padding: var(--spacer-30);
+	list-style: none;
+}
+
+/* -------------------------------------------------------------------------
+ * Location Map - Location Card
+ * ------------------------------------------------------------------------- */
+
+.b-location-map__location {
+	padding: var(--spacer-20);
+	border: 1px solid var(--location-map-location-border-color);
+	border-radius: 4px;
+	background-color: var(--location-map-location-background-color);
+}
+
+.b-location-map__location.is-active {
+	border-color: var(--location-map-location-active-border-color);
+	box-shadow: 0 0 0 1px var(--location-map-location-active-shadow-color);
+}
+
+.b-location-map__location-title {
+	margin: 0 0 var(--spacer-10) !important;
+}
+
+.b-location-map__location-hours,
+.b-location-map__location-phone,
+.b-location-map__location-email,
+.b-location-map__location-address {
+	margin: 0 0 var(--spacer-10) !important;
+}
+
+.b-location-map__location-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--spacer-10);
+	margin-top: var(--spacer-20);
+}
+
+.b-location-map__location-action {
+	appearance: none;
+	border: 1px solid var(--location-map-location-action-border-color);
+	background: var(--location-map-location-action-background-color);
+	border-radius: 4px;
+	color: inherit;
+	cursor: pointer;
+	padding: var(--spacer-10) var(--spacer-20);
+	text-decoration: none;
+}
+
+/* -------------------------------------------------------------------------
+ * Location Map - Map Canvas
+ * ------------------------------------------------------------------------- */
+
+.b-location-map__map-column,
+.b-location-map__map {
+	min-height: var(--location-map-height);
+	height: var(--location-map-height);
+}
+
+.b-location-map__map {
+	width: 100%;
+	z-index: 0;
+}
+
+.b-location-map__map > div {
+	width: 100%;
+	height: 100%;
+}
+
+/* -------------------------------------------------------------------------
+ * Location Map - Markers
+ * ------------------------------------------------------------------------- */
+
+.b-location-map__marker {
+	background: transparent;
+	border: 0;
+}
+
+.b-location-map__marker-pin {
+	display: block;
+	width: 24px;
+	height: 32px;
+	background-color: var(--location-map-marker-color);
+	mask: var(--icon-map-pin) center / contain no-repeat;
+}
+
+.b-location-map__marker.is-active .b-location-map__marker-pin {
+	background-color: var(--location-map-marker-active-color);
+}
+
+.b-location-map__cluster {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	border: 2px solid var(--location-map-marker-color);
+	background-color: var(--color-white);
+	color: var(--color-black);
+	font-size: 14px;
+	font-weight: 700;
+}
+
+/* -------------------------------------------------------------------------
+ * Location Map - Loading Overlay
+ * ------------------------------------------------------------------------- */
+
+.b-location-map__loading-overlay {
+	align-items: center;
+	background: var(--location-map-loading-overlay-background-color);
+	display: none;
+	height: 100dvh;
+	inset: 0;
+	justify-content: center;
+	left: 0;
+	pointer-events: none;
+	position: fixed;
+	top: 0;
+	width: 100dvw;
+	z-index: 100000;
+}
+
+.b-location-map__loading-overlay.is-loading {
+	display: flex;
+}
+
+.b-location-map__loading-spinner {
+	width: 40px;
+	height: 40px;
+	border: 3px solid var(--location-map-loading-spinner-border-color);
+	border-top-color: var(--location-map-loading-spinner-active-border-color);
+	border-radius: 50%;
+	animation: b-location-map-spin 0.9s linear infinite;
+}
+
+@keyframes b-location-map-spin {
+
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Location Map - Utilities
+ * ------------------------------------------------------------------------- */
+
+.b-location-map .hidden,
+.b-location-map [hidden] {
+	display: none !important;
+}
