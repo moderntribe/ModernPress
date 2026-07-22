@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.07]
+- Fixed: `create-wp-controls.js` was duplicating classes in `getBaseClassName` when `propsClassName` already included `attributeClassName`/`attributeClasses`. Tokens are now deduped across all three sources. [MOOSE-408](https://moderntribe.atlassian.net/browse/MOOSE-408)
+
 ## [2026.06]
 - Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
 
