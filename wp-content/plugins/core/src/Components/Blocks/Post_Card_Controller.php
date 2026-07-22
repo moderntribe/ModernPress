@@ -4,6 +4,7 @@ namespace Tribe\Plugin\Components\Blocks;
 
 use Tribe\Plugin\Components\Abstracts\Abstract_Block_Controller;
 use Tribe\Plugin\Components\Traits\Post_Data;
+use Tribe\Plugin\Taxonomies\Category\Category;
 
 class Post_Card_Controller extends Abstract_Block_Controller {
 
@@ -15,6 +16,7 @@ class Post_Card_Controller extends Abstract_Block_Controller {
 	public function __construct( array $args = [] ) {
 		parent::__construct( $args );
 		$this->set_post( $args['post_id'] ?? 0 );
+		$this->set_display_term_taxonomy( $args['taxonomy_slug'] ?? Category::NAME );
 
 		$this->layout         = $this->attributes['layout'] ?? 'vertical';
 		$this->heading_level  = $this->attributes['heading_level'] ?? 'h3';

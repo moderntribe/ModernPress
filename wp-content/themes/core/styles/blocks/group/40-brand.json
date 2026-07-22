@@ -3,9 +3,7 @@
 	"version": 3,
 	"slug": "brand",
 	"title": "Brand",
-	"blockTypes": [
-		"core/group"
-	],
+	"blockTypes": [ "core/group" ],
 	"styles": {
 		"css": "--color-text-secondary: var(--color-neutral-10)",
 		"color": {

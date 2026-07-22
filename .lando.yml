@@ -27,6 +27,9 @@ services:
         XDEBUG_MODE: 'debug,develop'
   node:
     type: node:24
+    overrides:
+      volumes:
+        - /app/node_modules
 
 # Enabling MailHog will cause an error on start: `/bin/sh: 1: curl: not found`.
 # Related GH Issue: https://github.com/lando/mailhog/issues/35
