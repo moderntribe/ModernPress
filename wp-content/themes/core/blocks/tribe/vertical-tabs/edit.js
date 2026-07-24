@@ -6,7 +6,7 @@ import {
 } from '@wordpress/block-editor';
 import { Button, Flex, FlexItem, Tooltip } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { useCallback, useEffect, useMemo, useRef } from '@wordpress/element';
+import { useCallback, useEffect, useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { dragHandle, trash } from '@wordpress/icons';
 
@@ -194,17 +194,25 @@ export default function Edit( { attributes, clientId, setAttributes } ) {
 	);
 
 	/**
-	 * First tab is active when the block loads in the editor (once per mount).
+	 * Default to the first tab when none is selected (or the selected id is stale).
+	 * Wait for the child to assign blockId — useInstanceId runs after the first paint.
 	 */
-	const hasSetInitialTab = useRef( false );
 	useEffect( () => {
-		if ( innerBlocks.length > 0 && ! hasSetInitialTab.current ) {
-			setAttributes( {
-				currentActiveTabInstanceId: innerBlocks[ 0 ].attributes.blockId,
-			} );
-			hasSetInitialTab.current = true;
+		const firstBlockId = innerBlocks[ 0 ]?.attributes?.blockId;
+		if ( ! firstBlockId ) {
+			return;
 		}
-	}, [ innerBlocks, setAttributes ] );
+
+		const activeExists = innerBlocks.some(
+			( block ) =>
+				block.attributes.blockId &&
+				block.attributes.blockId === currentActiveTabInstanceId
+		);
+
+		if ( ! activeExists ) {
+			setAttributes( { currentActiveTabInstanceId: firstBlockId } );
+		}
+	}, [ innerBlocks, currentActiveTabInstanceId, setAttributes ] );
 
 	const updateTabTitle = ( title, tabClientId ) => {
 		dispatch.updateBlockAttributes( tabClientId, { title } );

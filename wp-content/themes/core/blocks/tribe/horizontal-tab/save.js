@@ -5,10 +5,10 @@ export default function save( props ) {
 		attributes: { blockId },
 	} = props;
 
+	// omit tabindex — kses strips it from post content and breaks block validation
 	const blockProps = useBlockProps.save( {
 		id: blockId,
 		role: 'tabpanel',
-		tabindex: '0',
 		hidden: true,
 		'aria-labelledby': 'button-' + blockId,
 	} );

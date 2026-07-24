@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.07]
+- Fixed: Horizontal/Vertical Tabs — omit `tabindex` from saved markup (kses strips it and breaks validation); apply it on the front end via JS. Default the active tab only after child `blockId` is assigned, and reset when the selection is stale.
+
 ## [2026.06]
 - Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
 
