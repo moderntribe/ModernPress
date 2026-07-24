@@ -78,6 +78,11 @@ const maybeMoveTabContent = ( block ) => {
  */
 const initializeTabBlocks = () => {
 	el.tabBlocks.forEach( ( tabBlock ) => {
+		// tabindex is applied in JS — kses strips it from saved block markup
+		tabBlock
+			.querySelectorAll( '[role="tabpanel"]' )
+			.forEach( ( panel ) => panel.setAttribute( 'tabindex', '0' ) );
+
 		// ensure the first tab panel in each block is visible on load
 		const firstTabPanel = tabBlock.querySelector(
 			'[role="tabpanel"]:first-child'
