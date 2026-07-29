@@ -2,12 +2,14 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "tribe/horizontal-tab",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"title": "Horizontal Tab",
 	"category": "theme",
 	"description": "A child block of the Horizontal Tabs block",
 	"icon": "text-page",
-	"parent": [ "tribe/horizontal-tabs" ],
+	"parent": [
+		"tribe/horizontal-tabs"
+	],
 	"supports": {
 		"html": false,
 		"spacing": {
@@ -25,8 +27,11 @@
 			"default": ""
 		}
 	},
-	"usesContext": [ "tribe/horizontal-tabs/currentActiveTabInstanceId" ],
+	"usesContext": [
+		"tribe/horizontal-tabs/currentActiveTabInstanceId"
+	],
 	"textdomain": "tribe",
 	"editorScript": "file:./index.js",
-	"editorStyle": "file:./index.css"
+	"editorStyle": "file:./index.css",
+	"render": "file:./render.php"
 }

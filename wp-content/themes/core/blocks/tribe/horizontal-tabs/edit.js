@@ -6,7 +6,7 @@ import {
 } from '@wordpress/block-editor';
 import { Button, Flex, FlexItem, Tooltip } from '@wordpress/components';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { useCallback, useEffect, useMemo } from '@wordpress/element';
+import { useCallback, useEffect, useMemo, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { dragHandle, trash } from '@wordpress/icons';
 
@@ -172,25 +172,26 @@ export default function Edit( { clientId, attributes, setAttributes } ) {
 	);
 
 	/**
-	 * Default to the first tab when none is selected (or the selected id is stale).
-	 * Wait for the child to assign blockId — useInstanceId runs after the first paint.
+	 * Default to the first tab when the block loads in the editor (once per mount).
+	 * Wait until the first tab has persisted its blockId before locking this in,
+	 * otherwise we can capture an empty id and never retry.
 	 */
+	const hasSetInitialTab = useRef( false );
 	useEffect( () => {
-		const firstBlockId = innerBlocks[ 0 ]?.attributes?.blockId;
-		if ( ! firstBlockId ) {
+		if (
+			hasSetInitialTab.current ||
+			innerBlocks.length === 0 ||
+			innerBlocks[ 0 ].attributes.blockId === ''
+		) {
 			return;
 		}
 
-		const activeExists = innerBlocks.some(
-			( block ) =>
-				block.attributes.blockId &&
-				block.attributes.blockId === currentActiveTabInstanceId
-		);
+		setAttributes( {
+			currentActiveTabInstanceId: innerBlocks[ 0 ].attributes.blockId,
+		} );
 
-		if ( ! activeExists ) {
-			setAttributes( { currentActiveTabInstanceId: firstBlockId } );
-		}
-	}, [ innerBlocks, currentActiveTabInstanceId, setAttributes ] );
+		hasSetInitialTab.current = true;
+	}, [ innerBlocks, setAttributes ] );
 
 	/**
 	 * @function updateTabLabel
