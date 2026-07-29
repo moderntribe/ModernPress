@@ -20,6 +20,15 @@ abstract class Base_Tabs_Block_Controller extends Abstract_Block_Controller {
 
 	protected \WP_Block $block;
 
+	/**
+	 * Map a single inner block's attributes to a tab row for the template.
+	 *
+	 * @param array<string, mixed> $attributes
+	 *
+	 * @return array<string, mixed>
+	 */
+	abstract protected function map_tab_attributes( array $attributes ): array;
+
 	public function __construct( array $args = [] ) {
 		parent::__construct( $args );
 
@@ -47,7 +56,7 @@ abstract class Base_Tabs_Block_Controller extends Abstract_Block_Controller {
 	 * @return array<int, array<string, mixed>>
 	 */
 	protected function build_tabs_from_inner_blocks(): array {
-		$parsed_block = $this->block->parsed_block ?? [];
+		$parsed_block = $this->block->parsed_block;
 		$inner_blocks = $parsed_block['innerBlocks'] ?? [];
 		$tabs         = [];
 
@@ -61,14 +70,5 @@ abstract class Base_Tabs_Block_Controller extends Abstract_Block_Controller {
 
 		return $tabs;
 	}
-
-	/**
-	 * Map a single inner block's attributes to a tab row for the template.
-	 *
-	 * @param array<string, mixed> $attributes
-	 *
-	 * @return array<string, mixed>
-	 */
-	abstract protected function map_tab_attributes( array $attributes ): array;
 
 }
