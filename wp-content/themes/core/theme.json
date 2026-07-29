@@ -18,6 +18,8 @@
 			"core/accordion-panel",
 			"core/breadcrumbs",
 			"tribe/carousel-slide",
+			"tribe/comparison-row",
+			"tribe/comparison-table",
 			"tribe/horizontal-tab",
 			"tribe/logo-marquee",
 			"tribe/vertical-tab"
