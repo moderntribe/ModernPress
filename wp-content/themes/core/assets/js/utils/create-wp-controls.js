@@ -201,14 +201,21 @@ const getBaseClassName = ( {
 	attributeClassName,
 	attributeClasses,
 } = {} ) => {
-	return [
+	// The three sources may overlap (e.g. WP core's customClassName support
+	// merges attributeClassName into propsClassName earlier in the
+	// pipeline), so dedupe tokens across all three instead of concatenating
+	// them.
+	const tokens = [
 		normalizeClassSource( propsClassName ),
 		normalizeClassSource( attributeClassName ),
 		normalizeClassSource( attributeClasses ),
 	]
 		.filter( Boolean )
 		.join( ' ' )
-		.trim();
+		.split( /\s+/ )
+		.filter( Boolean );
+
+	return [ ...new Set( tokens ) ].join( ' ' ).trim();
 };
 
 /**
