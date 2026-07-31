@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.07]
+- Fixed: Horizontal/Vertical Tabs — render child tab panels via `render.php` so fragile ARIA/`tabindex` markup is not saved into post content (avoids kses stripping and block validation errors). Wait for child `blockId` before setting the default active tab in the editor.
+- Changed: Extracted shared tab parent block controller into `Components/Blocks/Tabs` (`Base_Tabs_Block_Controller` + horizontal/vertical subclasses).
+
 ## [2026.06]
 - Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
 

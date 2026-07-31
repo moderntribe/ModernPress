@@ -83,7 +83,9 @@ const initializeTabBlocks = () => {
 			'[role="tabpanel"]:first-child'
 		);
 
-		firstTabPanel.removeAttribute( 'hidden' );
+		if ( firstTabPanel ) {
+			firstTabPanel.removeAttribute( 'hidden' );
+		}
 
 		// conditionally (based on width) copy tab content into tabs for mobile view
 		if (
