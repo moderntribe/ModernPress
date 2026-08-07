@@ -12,6 +12,7 @@ namespace Tribe\AI;
 use Tribe\AI\Admin\Settings_Page;
 use Tribe\AI\Editor\Assets_Enqueuer;
 use Tribe\AI\REST\AI_Controller;
+use Tribe\AI\REST\Documentation_Controller;
 use Tribe\AI\AI\Site_Analyzer;
 
 /**
@@ -45,6 +46,13 @@ class Plugin {
 	 * @var AI_Controller
 	 */
 	private AI_Controller $rest_controller;
+
+	/**
+	 * Documentation REST controller instance.
+	 *
+	 * @var Documentation_Controller
+	 */
+	private Documentation_Controller $documentation_controller;
 
 	/**
 	 * Site analyzer instance.
@@ -90,6 +98,7 @@ class Plugin {
 		$this->settings_page          = new Settings_Page();
 		$this->assets_enqueuer        = new Assets_Enqueuer();
 		$this->rest_controller        = new AI_Controller();
+		$this->documentation_controller = new Documentation_Controller();
 		$this->site_analyzer          = new Site_Analyzer();
 		$this->block_registry_analyzer = new \Tribe\AI\AI\Block_Registry_Analyzer();
 	}
@@ -104,6 +113,7 @@ class Plugin {
 		add_action( 'admin_init', [ $this->settings_page, 'register_settings' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this->assets_enqueuer, 'enqueue' ] );
 		add_action( 'rest_api_init', [ $this->rest_controller, 'register_routes' ] );
+		add_action( 'rest_api_init', [ $this->documentation_controller, 'register_routes' ] );
 
 		// Cache management hooks.
 		$this->init_cache_hooks();
