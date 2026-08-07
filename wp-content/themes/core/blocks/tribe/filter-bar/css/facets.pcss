@@ -1,0 +1,176 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Filter Bar - Facet Styles
+ *
+ * ------------------------------------------------------------------------- */
+
+.tribe-facet__list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacer-20);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.tribe-facet__reset-button,
+.tribe-facet__clear {
+	padding: 0;
+	border: 0;
+	background: none;
+	cursor: pointer;
+}
+
+.tribe-facet__clear {
+	margin-top: var(--spacer-20);
+}
+
+/* -------------------------------------------------------------------------
+ * Filter Bar - Checkbox / Radio Facets
+ * ------------------------------------------------------------------------- */
+
+.tribe-facet--checkboxes,
+.tribe-facet--radio {
+
+	.tribe-facet__label {
+		position: relative;
+		cursor: pointer;
+		padding-left: calc(24px + var(--spacer-10));
+
+		&::before {
+			content: '';
+			display: block;
+			width: 24px;
+			height: 24px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			border: 1px solid var(--color-neutral-30);
+			border-radius: 0;
+		}
+
+		input[type="checkbox"],
+		input[type="radio"] {
+			position: absolute;
+			clip: rect(1px, 1px, 1px, 1px);
+		}
+
+		@media (--has-hover) {
+
+			&:hover {
+
+				@mixin facet-checkbox-hover-focus;
+			}
+		}
+
+		&:focus-within {
+
+			@mixin facet-checkbox-hover-focus;
+		}
+
+		&:has(input[type="checkbox"]:checked),
+		&:has(input[type="radio"]:checked) {
+
+			&::before {
+				border-color: var(--color-black);
+				background: var(--icon-list-check) center no-repeat;
+				background-size: 16px 14px;
+			}
+
+			.tribe-facet__label-text {
+				font-weight: var(--font-weight-bold);
+			}
+		}
+	}
+}
+
+.tribe-facet--radio {
+
+	.tribe-facet__label {
+
+		&::before {
+			border-radius: 50%;
+		}
+
+		&:has(input[type="radio"]:checked) {
+
+			&::before {
+				background: none;
+				background-color: var(--color-black);
+				box-shadow: inset 0 0 0 6px var(--color-white);
+			}
+		}
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Filter Bar - Dropdown Facet
+ * ------------------------------------------------------------------------- */
+
+.tribe-facet--dropdown {
+	--icon-size: 15px;
+
+	.tribe-facet__select {
+		width: 100%;
+		height: 50px;
+		padding: 0 calc(var(--spacer-20) * 2 + var(--icon-size)) 0 var(--spacer-20);
+		border: 1px solid var(--color-border);
+		border-radius: var(--border-radius-s);
+		appearance: none;
+		background: var(--color-white) var(--icon-select-chevron) right var(--spacer-20) center no-repeat;
+		background-size: var(--icon-size);
+
+		&:focus-visible {
+
+			@mixin focus-visible;
+		}
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Filter Bar - Search Facet
+ * ------------------------------------------------------------------------- */
+
+.tribe-facet--search {
+	--icon-size: 24px;
+	position: relative;
+
+	.tribe-facet__search-input {
+		width: 100%;
+		height: 50px;
+		padding: 0 calc(var(--spacer-20) * 2 + var(--icon-size)) 0 var(--spacer-20);
+		border: 1px solid transparent;
+		border-radius: var(--border-radius-s);
+		background-color: var(--color-neutral-10);
+
+		&:focus-visible {
+
+			@mixin focus-visible;
+		}
+	}
+
+	&::after {
+		content: "";
+		position: absolute;
+		top: 50%;
+		right: var(--spacer-20);
+		width: var(--icon-size);
+		height: var(--icon-size);
+		mask: var(--icon-search) center no-repeat;
+		mask-size: contain;
+		background-color: var(--color-neutral-50);
+		transform: translateY(-50%);
+	}
+
+	&:has(.tribe-facet__search-input:focus) {
+
+		.tribe-facet__search-input {
+			background-color: var(--color-white);
+			border-color: var(--color-border);
+		}
+
+		&::after {
+			background-color: var(--color-border);
+		}
+	}
+}

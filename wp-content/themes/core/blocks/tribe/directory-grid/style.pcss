@@ -1,0 +1,46 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Directory Grid - Styles - FE / Editor
+ *
+ * ------------------------------------------------------------------------- */
+
+.b-directory-grid {
+	container: directory-grid / inline-size;
+	transition: opacity var(--transition);
+
+	&[aria-busy="true"] {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+}
+
+.b-directory-grid__grid {
+	--post-template-grid-template-columns: 1fr;
+	display: grid;
+	gap: var(--spacer-50) var(--grid-gutter);
+	grid-template-columns: var(--post-template-grid-template-columns);
+
+	@container directory-grid (min-width: 768px) {
+		--post-template-grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	@container directory-grid (min-width: 992px) {
+		--post-template-grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	@container directory-grid (min-width: 1275px) {
+		--post-template-grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+}
+
+.b-directory-grid__pagination {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--spacer-20);
+	margin-top: var(--spacer-50);
+}
+
+.b-directory-grid__empty {
+	margin: 0;
+}
