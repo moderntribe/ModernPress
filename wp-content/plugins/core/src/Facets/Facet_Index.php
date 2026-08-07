@@ -29,7 +29,8 @@ class Facet_Index {
 
 	public function __construct(
 		private Facet_Registry $registry,
-	) {}
+	) {
+	}
 
 	public function table_name(): string {
 		global $wpdb;

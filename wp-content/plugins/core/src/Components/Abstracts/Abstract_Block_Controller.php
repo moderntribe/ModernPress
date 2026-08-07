@@ -10,6 +10,7 @@ abstract class Abstract_Block_Controller extends Abstract_Controller {
 	 * @var array <mixed>
 	 */
 	protected array $attributes;
+
 	/**
 	 * @var array <mixed>
 	 */

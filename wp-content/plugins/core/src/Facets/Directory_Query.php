@@ -7,7 +7,8 @@ class Directory_Query {
 	public function __construct(
 		private Facet_Registry $registry,
 		private Facet_Index $index,
-	) {}
+	) {
+	}
 
 	/**
 	 * Build WP_Query args for a directory grid.
@@ -135,8 +136,6 @@ class Directory_Query {
 	 * Get the search query from the request.
 	 *
 	 * @param array<string, mixed> $request
-	 *
-	 * @return string
 	 */
 	public function get_search_query( array $request = [] ): string {
 		return isset( $request[ Facet_Registry::SEARCH_PARAM ] )

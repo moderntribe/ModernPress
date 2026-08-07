@@ -19,11 +19,7 @@ assert( Facet_Types::FANCY_DROPDOWN === $layout_types['top_type'] );
 assert( Facet_Types::RADIO === $layout_types['sidebar_type'] );
 assert( Facet_Types::DROPDOWN === $layout_types['mobile_type'] );
 
-$legacy_layout_types = Facet_Types::normalize_layout_types(
-	Facet_Types::FANCY_DROPDOWN,
-	'',
-	Facet_Types::CHECKBOXES
-);
+$legacy_layout_types = Facet_Types::normalize_layout_types( Facet_Types::FANCY_DROPDOWN, '', Facet_Types::CHECKBOXES );
 assert( Facet_Types::FANCY_DROPDOWN === $legacy_layout_types['sidebar_type'], 'missing sidebar type falls back to the legacy/top type' );
 
 $facets = [
@@ -64,17 +60,21 @@ $index_match = static function ( array $rows, array $selections ): array {
 	foreach ( $rows as $row ) {
 		$terms = $active[ $row['facet_slug'] ] ?? [];
 
-		if ( in_array( $row['term_slug'], $terms, true ) ) {
-			$hits[ $row['post_id'] ][ $row['facet_slug'] ] = true;
+		if ( ! in_array( $row['term_slug'], $terms, true ) ) {
+			continue;
 		}
+
+		$hits[ $row['post_id'] ][ $row['facet_slug'] ] = true;
 	}
 
 	$matched = [];
 
 	foreach ( $hits as $post_id => $facet_hits ) {
-		if ( count( $facet_hits ) === count( $active ) ) {
-			$matched[] = $post_id;
+		if ( count( $facet_hits ) !== count( $active ) ) {
+			continue;
 		}
+
+		$matched[] = $post_id;
 	}
 
 	return $matched;

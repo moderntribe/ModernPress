@@ -106,7 +106,7 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 	 */
 	private function set_query( ?array $request ): void {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$request       = $request ?? wp_unslash( $_GET );
+		$request     ??= wp_unslash( $_GET );
 		$this->request = is_array( $request ) ? $request : [];
 		$paged         = absint( $this->request[ Facet_Registry::PAGE_PARAM ] ?? get_query_var( 'paged' ) ?: 1 );
 

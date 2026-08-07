@@ -32,10 +32,6 @@ if ( $is_sidebar ) {
 ?>
 <div <?php echo get_block_wrapper_attributes( $wrapper_attrs ); ?>>
 	<?php
-	get_template_part(
-		'components/filter-bar/' . ( $is_sidebar ? 'sidebar' : 'top' ),
-		null,
-		$template_args
-	);
+	get_template_part( 'components/filter-bar/' . ( $is_sidebar ? 'sidebar' : 'top' ), null, $template_args );
 	?>
 </div>

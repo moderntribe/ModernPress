@@ -21,7 +21,8 @@ class Results_Endpoint {
 
 	public function __construct(
 		private Facet_Registry $registry,
-	) {}
+	) {
+	}
 
 	public function register_route(): void {
 		register_rest_route( self::REST_NAMESPACE, self::ROUTE, [
@@ -56,8 +57,8 @@ class Results_Endpoint {
 		 * link args. Left alone, that would bake this endpoint's own params
 		 * (post_types, posts_per_page, path) into the pagination URLs.
 		 */
-		$original_request_uri      = $_SERVER['REQUEST_URI'] ?? null;
-		$_SERVER['REQUEST_URI']    = $path;
+		$original_request_uri   = $_SERVER['REQUEST_URI'] ?? null;
+		$_SERVER['REQUEST_URI'] = $path;
 
 		try {
 			ob_start();
@@ -89,9 +90,11 @@ class Results_Endpoint {
 			$param = $this->registry->get_query_param( $facet['slug'] );
 			$value = $request->get_param( $param );
 
-			if ( null !== $value ) {
-				$facet_request[ $param ] = $value;
+			if ( null === $value ) {
+				continue;
 			}
+
+			$facet_request[ $param ] = $value;
 		}
 
 		$search = $request->get_param( Facet_Registry::SEARCH_PARAM );

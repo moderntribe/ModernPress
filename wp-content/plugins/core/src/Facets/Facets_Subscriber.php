@@ -125,8 +125,8 @@ class Facets_Subscriber extends Abstract_Subscriber {
 		$indexed = $this->container->get( Facet_Index::class )->rebuild();
 
 		wp_safe_redirect( add_query_arg( [
-			'page'                  => Facets_Settings::PAGE_SLUG,
-			'tribe-facets-indexed'  => $indexed,
+			'page'                 => Facets_Settings::PAGE_SLUG,
+			'tribe-facets-indexed' => $indexed,
 		], admin_url( 'admin.php' ) ) );
 
 		exit;
