@@ -150,7 +150,7 @@ class Directory_Query {
 	 * @param list<array{slug: string, taxonomy: string}> $facets
 	 * @param array<string, list<string>>                 $selected_by_slug
 	 *
-	 * @return array<string, mixed>
+	 * @return array<int|string, mixed>
 	 */
 	public static function build_tax_clauses( array $facets, array $selected_by_slug ): array {
 		$clauses = [];

@@ -191,7 +191,7 @@ class Facet_Registry {
 		}
 
 		if ( ! is_array( $types ) ) {
-			$types = [] !== $types && '' !== $types ? [ (string) $types ] : [];
+			$types = '' !== $types ? [ (string) $types ] : [];
 		}
 
 		$post_types = array_values( array_filter( array_map( 'strval', $types ) ) );

@@ -9,7 +9,7 @@ use Tribe\Plugin\Components\Blocks\Directory_Grid_Controller;
 
 $c = Directory_Grid_Controller::factory( [
 	'attributes'    => $attributes,
-	'context'       => $block->context ?? [],
+	'context'       => $block->context,
 	'block_classes' => 'b-directory-grid',
 ] );
 ?>

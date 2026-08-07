@@ -9,7 +9,7 @@ use Tribe\Plugin\Components\Blocks\Filter_Bar_Controller;
 
 $c = Filter_Bar_Controller::factory( [
 	'attributes'    => $attributes,
-	'context'       => $block->context ?? [],
+	'context'       => $block->context,
 	'block_classes' => 'b-filter-bar',
 ] );
 
