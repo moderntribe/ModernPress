@@ -106,7 +106,7 @@ const handleResize = () => {
  * @function handleKeyboardEvents
  *
  * @description trigger custom events from `keyup` keyboard interactions.
- * @param {event} e
+ * @param {Event} e
  */
 const handleKeyboardEvents = ( e ) => {
 	if ( e.key === 'Escape' ) {

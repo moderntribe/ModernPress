@@ -6,6 +6,7 @@
 const isJson = ( str ) => {
 	try {
 		JSON.parse( str );
+		// eslint-disable-next-line no-unused-vars
 	} catch ( e ) {
 		return false;
 	}
@@ -24,7 +25,8 @@ const canLocalStore = () => {
 		result = window.localStorage.getItem( mod ) === mod.toString();
 		window.localStorage.removeItem( mod );
 		return result;
-	} catch ( _error ) {
+		// eslint-disable-next-line no-unused-vars
+	} catch ( e ) {
 		return result;
 	}
 };

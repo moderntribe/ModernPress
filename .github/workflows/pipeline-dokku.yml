@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cloning repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           ref: ${{ inputs.branch }}
@@ -68,7 +68,7 @@ jobs:
           mv .deploy/config/local-config-dokku.php local-config.php
 
       - name: Setup node version
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: './.nvmrc'
           cache: 'npm'
@@ -81,7 +81,7 @@ jobs:
         run: npm run dist
 
       - name: 'Install 1Password CLI'
-        uses: 1password/install-cli-action@v1
+        uses: 1password/install-cli-action@v4
 
       - name: 'Create auth.json via 1Password CLI'
         env:

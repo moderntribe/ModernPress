@@ -5,8 +5,8 @@
  * ------------------------------------------------------------------------- */
 
 :root {
-	--grid-margin: var(--wp--custom--spacing--grid-margin, clamp(1rem, -0.3rem + 6.5vw, 7.5rem));
-	--grid-gutter: var(--wp--custom--spacing--grid-gutter, clamp(1.5rem, 1.2rem + 1.5vw, 3rem));
+	--grid-margin: var(--wp--custom--spacing--grid-margin, round(down, clamp(1rem, -0.3rem + 6.5vw, 7.5rem), 2px));
+	--grid-gutter: var(--wp--custom--spacing--grid-gutter, round(down, clamp(1.5rem, 1.2rem + 1.5vw, 3rem), 2px));
 	--grid-content-width: var(--wp--style--global--content-size, 840px);
 	--grid-wide-width: var(--wp--style--global--wide-size, 1136px);
 
