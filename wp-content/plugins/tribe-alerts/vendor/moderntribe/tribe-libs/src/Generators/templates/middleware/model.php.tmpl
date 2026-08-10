@@ -1,0 +1,40 @@
+<?php declare(strict_types=1);
+
+namespace Tribe\Project\Blocks\Middleware\%1$s\Model_Middleware;
+
+use Tribe\Libs\ACF\Traits\With_Get_Field;
+use Tribe\Project\Block_Middleware\Contracts\Abstract_Model_Middleware;
+use Tribe\Project\Blocks\Contracts\Model;
+use Tribe\Project\Blocks\Middleware\%1$s\Field_Middleware\%1$s_Field_Middleware;
+
+class %1$s_Model_Middleware extends Abstract_Model_Middleware {
+
+	use With_Get_Field;
+
+	public const CLASSES = 'classes';
+
+	/**
+	 * @TODO Customize a block's model data.
+	 *
+	 * @param  \Tribe\Project\Blocks\Contracts\Model  $model
+	 *
+	 * @return \Tribe\Project\Blocks\Contracts\Model
+	 */
+	protected function append_data( Model $model ): Model {
+		$css_class = $this->get( %1$s_Field_Middleware::FIELD_CSS_CLASS, '' );
+
+		if ( ! $css_class ) {
+			return $model;
+		}
+
+		// Merge this CSS class into existing model css classes before passing to the controller.
+		$data = [
+			self::CLASSES => [
+				sanitize_html_class( sanitize_title( $css_class ) ),
+			],
+		];
+
+		return $model->set_data( array_merge_recursive( $model->get_data(), $data ) );
+	}
+
+}

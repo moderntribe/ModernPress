@@ -1,0 +1,24 @@
+<?php declare(strict_types=1);
+
+namespace Tribe\Project\Blocks\Types\%1$s;
+
+%5$suse Tribe\Project\Blocks\Types\Base_Model;
+use %2$s\%3$s;
+
+/**
+ * Class %1$s_Model
+ *
+ * Responsible for mapping values from the block to arguments
+ * for the component.
+ */
+class %1$s_Model extends Base_Model {
+	%6$s
+	public function %4$s(): array {
+		// TODO: map values from the block to the controller
+		return [
+			%3$s::ATTRS   => $this->get_attrs(),
+			%3$s::CLASSES => $this->get_classes(),%7$s
+		];
+	}
+
+}

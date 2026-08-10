@@ -1,0 +1,8 @@
+{
+  "http-basic": {
+    "connect.advancedcustomfields.com": {
+      "username": "{{op://${OP_VAULT:-Engineering}/${OP_ITEM:-MT-Composer-Auth}/ACF/license}}",
+      "password": "{{op://${OP_VAULT:-Engineering}/${OP_ITEM:-MT-Composer-Auth}/url}}"
+    }
+  }
+}

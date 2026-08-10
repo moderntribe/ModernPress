@@ -1,0 +1,50 @@
+<?php declare(strict_types=1);
+
+namespace %2$s;
+
+use Tribe\Libs\Utils\Markup_Utils;
+use Tribe\Project\Templates\Components\Abstract_Controller;
+
+class %1$s extends Abstract_Controller {
+
+	public const ATTRS   = 'attrs';
+	public const CLASSES = 'classes';
+	%3$s
+	/**
+	 * @var string[]
+	 */
+	private array $attrs;
+
+	/**
+	 * @var string[]
+	 */
+	private array $classes;
+	%4$s
+	public function __construct( array $args = [] ) {
+		$args = $this->parse_args( $args );
+
+		$this->attrs   = (array) $args[ self::ATTRS ];
+		$this->classes = (array) $args[ self::CLASSES ];%5$s
+	}
+
+	public function get_attributes(): string {
+		return Markup_Utils::concat_attrs( $this->attrs );
+	}
+
+	public function get_classes(): string {
+		return Markup_Utils::class_attribute( $this->classes );
+	}
+
+	protected function defaults(): array {
+		return [
+			self::ATTRS   => [],
+			self::CLASSES => [],
+			%6$s
+		];
+	}
+
+	protected function required(): array {
+		return [];
+	}
+
+}

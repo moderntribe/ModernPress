@@ -1,0 +1,18 @@
+title: monolog-wp-cli
+description: Public documentation for mhcg/monolog-wp-cli
+url: https://markheydon.me.uk
+baseurl: /monolog-wp-cli
+theme: minima
+
+markdown: kramdown
+kramdown:
+  input: GFM
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+relative_links:
+  enabled: true
+  collections: true

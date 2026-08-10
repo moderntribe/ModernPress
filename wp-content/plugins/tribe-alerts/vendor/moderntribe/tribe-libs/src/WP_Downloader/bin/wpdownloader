@@ -1,0 +1,27 @@
+#!/usr/bin/env php
+<?php 
+declare (strict_types=1);
+namespace Tribe\Alert_Scoped;
+
+use Tribe\Alert_Scoped\DI\ContainerBuilder;
+use Tribe\Alert_Scoped\Symfony\Component\Console\Application;
+use Tribe\Alert_Scoped\Tribe\Libs\WP_Downloader\Commands;
+(static function () {
+    $autoloaders = [\dirname(__DIR__, 3) . '/vendor/autoload.php', __DIR__ . '/vendor/autoloader.php'];
+    foreach ($autoloaders as $autoloader) {
+        if (\file_exists($autoloader)) {
+            require_once $autoloader;
+            break;
+        }
+    }
+    $builder = new ContainerBuilder();
+    $builder->addDefinitions(\dirname(__DIR__) . '/config.php');
+    $container = $builder->build();
+    $app = new Application();
+    $app->add($container->get(Commands\WordPress_Downloader::class));
+    $app->add($container->get(Commands\Plugin_Downloader::class));
+    $app->add($container->get(Commands\File_Copier::class));
+    $app->setName('WP Downloader');
+    $result = $app->run();
+    exit($result);
+})();
