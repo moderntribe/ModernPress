@@ -97,6 +97,7 @@ class Facet_Renderer {
 						<label class="tribe-facet__label" for="<?php echo esc_attr( $input_id ); ?>">
 							<input
 								type="checkbox"
+								class="screen-reader-text"
 								id="<?php echo esc_attr( $input_id ); ?>"
 								name="<?php echo esc_attr( $param ); ?>[]"
 								value="<?php echo esc_attr( $term->slug ); ?>"
@@ -136,6 +137,7 @@ class Facet_Renderer {
 						<label class="tribe-facet__label" for="<?php echo esc_attr( $input_id ); ?>">
 							<input
 								type="radio"
+								class="screen-reader-text"
 								id="<?php echo esc_attr( $input_id ); ?>"
 								name="<?php echo esc_attr( $param ); ?>"
 								value="<?php echo esc_attr( $term->slug ); ?>"
@@ -171,13 +173,15 @@ class Facet_Renderer {
 		<div class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" data-facet="<?php echo esc_attr( $slug ); ?>">
 			<?php if ( $fancy ) : ?>
 				<div class="tribe-facet__fancy">
+					<?php // Owns the facet's control id so the label toggles this, not the hidden select. ?>
 					<button
 						type="button"
+						id="<?php echo esc_attr( $id ); ?>"
 						class="tribe-facet__fancy-trigger"
 						aria-haspopup="listbox"
 						aria-expanded="false"
 						aria-controls="<?php echo esc_attr( $id . '-list' ); ?>"
-						data-placeholder="<?php echo esc_attr__( 'Select', 'tribe' ); ?>"
+						data-placeholder="<?php echo esc_attr__( 'Any', 'tribe' ); ?>"
 						data-selected-template="<?php echo esc_attr( $this->get_selected_template() ); ?>"
 					>
 						<span class="tribe-facet__fancy-trigger-label">
@@ -186,11 +190,12 @@ class Facet_Renderer {
 					</button>
 			<?php endif; ?>
 			<select
-				id="<?php echo esc_attr( $id ); ?>"
+				id="<?php echo esc_attr( $fancy ? $id . '-input' : $id ); ?>"
 				name="<?php echo esc_attr( $param . ( $multiple ? '[]' : '' ) ); ?>"
-				class="tribe-facet__select<?php echo $fancy ? ' tribe-facet__select--fancy' : ''; ?>"
+				class="tribe-facet__select<?php echo $fancy ? ' tribe-facet__select--fancy screen-reader-text' : ''; ?>"
 				<?php echo $multiple ? ' multiple' : ''; ?>
-				<?php echo $fancy ? ' data-fancy-dropdown="true"' : ''; ?>
+				<?php // Fancy: the trigger and listbox are the keyboard UI, this only carries form state. ?>
+				<?php echo $fancy ? ' data-fancy-dropdown="true" tabindex="-1"' : ''; ?>
 			>
 				<?php if ( ! $multiple ) : ?>
 					<option value=""><?php echo esc_html__( 'Any', 'tribe' ); ?></option>
@@ -257,7 +262,7 @@ class Facet_Renderer {
 		) );
 
 		return match ( true ) {
-			[] === $labels        => __( 'Select', 'tribe' ),
+			[] === $labels        => __( 'Any', 'tribe' ),
 			1 === count( $labels ) => $labels[0],
 			default                => sprintf( $this->get_selected_template(), number_format_i18n( count( $labels ) ) ),
 		};

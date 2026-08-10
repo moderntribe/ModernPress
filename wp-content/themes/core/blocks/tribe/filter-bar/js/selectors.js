@@ -12,7 +12,7 @@ export const CLASSES = {
 	mobileTrigger: 'b-filter-bar__mobile-trigger',
 	pagination: 'b-directory-grid__pagination',
 	facet: 'tribe-facet',
-	facetSearch: 'tribe-facet--search',
+	facetSearchInput: 'tribe-facet__search-input',
 	facetReset: 'tribe-facet--reset',
 	fancy: 'tribe-facet__fancy',
 	fancyTrigger: 'tribe-facet__fancy-trigger',
@@ -50,7 +50,7 @@ export const SELECTORS = {
 	facetApply: '[data-js="facet-apply"]',
 
 	activeFacet: 'input:checked, option:checked',
-	searchInput: `.${ CLASSES.facetSearch } input[type="search"]`,
+	searchInput: `.${ CLASSES.facetSearchInput }`,
 	checkboxesRadios: 'input[type="checkbox"], input[type="radio"]',
 	textInputs: 'input[type="search"], input[type="text"]',
 	selects: 'select',

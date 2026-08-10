@@ -8,7 +8,9 @@ import { SELECTORS } from './selectors';
 export const getFocusables = ( root ) =>
 	[ ...root.querySelectorAll( SELECTORS.focusable ) ].filter(
 		( node ) =>
-			! node.hasAttribute( 'disabled' ) && node.offsetParent !== null
+			! node.hasAttribute( 'disabled' ) &&
+			node.tabIndex >= 0 &&
+			node.offsetParent !== null
 	);
 
 const trapFocus = ( e, dialog ) => {

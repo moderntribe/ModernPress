@@ -4,6 +4,12 @@
  *
  * ------------------------------------------------------------------------- */
 
+/*
+ * Pagination tokens. Imported because the Query Pagination block's CSS only
+ * loads on pages containing that block.
+ */
+@import '../../core/querypagination/_variables.pcss';
+
 .b-directory-grid {
 	container: directory-grid / inline-size;
 	transition: opacity var(--transition);
@@ -33,12 +39,62 @@
 	}
 }
 
+/* -------------------------------------------------------------------------
+ * Pagination
+ *
+ * paginate_links() markup, styled to match the core Query Pagination block.
+ * Shared rules live in blocks/core/querypagination/_mixins.pcss.
+ * ------------------------------------------------------------------------- */
+
 .b-directory-grid__pagination {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: var(--spacer-20);
-	margin-top: var(--spacer-50);
+
+	@mixin pagination-row;
+	@mixin pagination-links;
+
+	/* paginate_links() wraps items in a list that also carries .page-numbers. */
+	ul.page-numbers {
+
+		@mixin pagination-numbers-row;
+		padding: 0;
+		list-style: none;
+	}
+
+	li {
+		margin: 0;
+	}
+
+	li .page-numbers:not(.prev, .next) {
+
+		@mixin pagination-number;
+	}
+
+	/* Prev/next render as text links, so the chevron comes from a pseudo. */
+	li .prev,
+	li .next {
+
+		@mixin pagination-prev-next;
+
+		&:hover,
+		&:focus:not(:focus-visible) {
+			color: var(--pagination-prev-next-hover-color);
+
+			&::before,
+			&::after {
+				background-color: var(--pagination-prev-next-icon-hover-color);
+			}
+		}
+	}
+
+	li .prev::before {
+
+		@mixin pagination-arrow-icon;
+	}
+
+	li .next::after {
+
+		@mixin pagination-arrow-icon;
+		mask-image: var(--icon-chevron-right);
+	}
 }
 
 .b-directory-grid__empty {
