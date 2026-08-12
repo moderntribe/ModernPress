@@ -35,8 +35,9 @@ class Filter_Bar_Controller extends Abstract_Block_Controller {
 	public function __construct( array $args = [] ) {
 		parent::__construct( $args );
 
-		$this->filter_bar_position = $this->context[ self::FILTER_BAR_POSITION_CONTEXT ] ?? 'top';
-		$post_types                = $this->context[ self::POST_TYPES_CONTEXT ] ?? [ 'post' ];
+		$position                  = (string) $this->get_context_value( self::FILTER_BAR_POSITION_CONTEXT, 'top' );
+		$this->filter_bar_position = 'sidebar' === $position ? 'sidebar' : 'top';
+		$post_types                = $this->get_context_value( self::POST_TYPES_CONTEXT, [ 'post' ] );
 		$this->post_types          = is_array( $post_types )
 			? array_values( array_filter( array_map( 'sanitize_key', $post_types ) ) )
 			: [ 'post' ];
@@ -193,11 +194,17 @@ class Filter_Bar_Controller extends Abstract_Block_Controller {
 				continue;
 			}
 
-			$facet                  = $by_slug[ $slug ];
-			$facet['displayLabel']  = isset( $item['displayLabel'] ) ? (string) $item['displayLabel'] : null;
-			$facet['display_label'] = ( $facet['displayLabel'] ?? '' ) !== ''
-				? (string) $facet['displayLabel']
-				: (string) $facet['label'];
+			$facet    = $by_slug[ $slug ];
+			$override = isset( $item['displayLabel'] ) ? trim( (string) $item['displayLabel'] ) : '';
+
+			// Ignore overrides that merely repeat the settings label (legacy stamp).
+			if ( '' === $override || $override === (string) $facet['label'] ) {
+				$facet['displayLabel']  = null;
+				$facet['display_label'] = (string) $facet['label'];
+			} else {
+				$facet['displayLabel']  = $override;
+				$facet['display_label'] = $override;
+			}
 
 			$resolved[] = $facet;
 		}

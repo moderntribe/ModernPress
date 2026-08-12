@@ -34,22 +34,28 @@ const SortableFacet = ( { facet, onRemove, onDisplayLabelChange } ) => {
 	const [ isModalOpen, setIsModalOpen ] = useState( false );
 	const [ draftLabel, setDraftLabel ] = useState( '' );
 
-	const displayLabel = facet.displayLabel ?? facet.label;
+	const label = facet.label ?? facet.slug;
+	const displayLabel = facet.displayLabel;
+	const hasOverride =
+		typeof displayLabel === 'string' &&
+		displayLabel.trim() !== '' &&
+		displayLabel !== label;
 
 	const openModal = useCallback( () => {
-		setDraftLabel( displayLabel );
+		setDraftLabel( hasOverride ? displayLabel : '' );
 		setIsModalOpen( true );
-	}, [ displayLabel ] );
+	}, [ displayLabel, hasOverride ] );
 
 	const closeModal = useCallback( () => setIsModalOpen( false ), [] );
 
 	const applyLabel = useCallback( () => {
+		const next = draftLabel.trim();
 		onDisplayLabelChange(
 			facet.slug,
-			draftLabel.trim() !== '' ? draftLabel.trim() : undefined
+			next !== '' && next !== label ? next : undefined
 		);
 		closeModal();
-	}, [ facet.slug, draftLabel, onDisplayLabelChange, closeModal ] );
+	}, [ facet.slug, draftLabel, label, onDisplayLabelChange, closeModal ] );
 
 	const style = {
 		transform: CSS.Transform.toString( transform ),
@@ -76,8 +82,8 @@ const SortableFacet = ( { facet, onRemove, onDisplayLabelChange } ) => {
 							<Icon icon={ dragHandle } size={ 32 } />
 						</FlexItem>
 						<FlexItem style={ { flex: 1 } }>
-							{ facet.label }
-							{ displayLabel !== facet.label && (
+							{ label }
+							{ hasOverride && (
 								<span
 									style={ {
 										display: 'block',
@@ -131,7 +137,7 @@ const SortableFacet = ( { facet, onRemove, onDisplayLabelChange } ) => {
 						) }
 						value={ draftLabel }
 						onChange={ setDraftLabel }
-						placeholder={ facet.label }
+						placeholder={ label }
 					/>
 					<Flex
 						justify="flex-end"
@@ -186,6 +192,47 @@ export default function Edit( {
 		} );
 	}, [ tribeFacets, contextPostTypes ] );
 
+	// Block context never reaches a ServerSideRender preview, so send it along.
+	const previewContext = useMemo(
+		() => ( {
+			tribePreviewContext: {
+				filterBarPosition: filterBarPosition ?? 'top',
+				postTypes: contextPostTypes ?? [ 'post' ],
+			},
+		} ),
+		[ filterBarPosition, contextPostTypes ]
+	);
+
+	const catalogBySlug = useMemo( () => {
+		const map = new Map();
+		tribeFacets.forEach( ( facet ) => {
+			map.set( facet.slug, facet );
+		} );
+		return map;
+	}, [ tribeFacets ] );
+
+	// Merge saved order/overrides with live settings so label/type never go stale.
+	const activeFacets = useMemo(
+		() =>
+			facets.map( ( facet ) => {
+				const live = catalogBySlug.get( facet.slug );
+				const label = live?.label ?? facet.label ?? facet.slug;
+				const displayLabel =
+					typeof facet.displayLabel === 'string' &&
+					facet.displayLabel.trim() !== '' &&
+					facet.displayLabel !== label
+						? facet.displayLabel
+						: undefined;
+
+				return {
+					slug: facet.slug,
+					label,
+					displayLabel,
+				};
+			} ),
+		[ facets, catalogBySlug ]
+	);
+
 	const [ selectedFacet, setSelectedFacet ] = useState(
 		availableFacets[ 0 ]?.slug ?? ''
 	);
@@ -215,9 +262,6 @@ export default function Edit( {
 				...facets,
 				{
 					slug: mappedFacet.slug,
-					label: mappedFacet.label,
-					type: mappedFacet.type ?? '',
-					displayLabel: mappedFacet.label,
 				},
 			],
 		} );
@@ -252,17 +296,18 @@ export default function Edit( {
 	const handleDisplayLabelChange = useCallback(
 		( slug, value ) => {
 			setAttributes( {
-				facets: facets.map( ( f ) =>
-					f.slug === slug
-						? {
-								...f,
-								displayLabel:
-									value && value.trim() !== ''
-										? value.trim()
-										: undefined,
-						  }
-						: f
-				),
+				facets: facets.map( ( f ) => {
+					if ( f.slug !== slug ) {
+						return f;
+					}
+
+					const next = { slug: f.slug };
+					if ( value && value.trim() !== '' ) {
+						next.displayLabel = value.trim();
+					}
+
+					return next;
+				} ),
 			} );
 		},
 		[ facets, setAttributes ]
@@ -275,6 +320,7 @@ export default function Edit( {
 			<ServerSideRender
 				block={ metadata.name }
 				attributes={ attributes }
+				urlQueryArgs={ previewContext }
 			/>
 			{ isSelected && (
 				<InspectorControls>
@@ -287,25 +333,20 @@ export default function Edit( {
 									'4px solid var(--wp-admin-theme-color)',
 							} }
 						>
-							{ filterBarPosition === 'top' && (
-								<p>
-									{ __(
-										'The filter bar will be displayed at the top. Dropdown and fancy dropdown facets work well here.',
-										'tribe'
-									) }
-								</p>
-							) }
-							{ filterBarPosition === 'sidebar' && (
-								<p>
-									{ __(
-										'The filter bar will be displayed in the sidebar. Checkboxes and radio facets work well here. Mobile type is used in the flyout.',
-										'tribe'
-									) }
-								</p>
-							) }
+							<p>
+								{ filterBarPosition === 'sidebar'
+									? __(
+											'This filter bar uses the sidebar layout. On smaller screens it opens as a flyout.',
+											'tribe'
+									  )
+									: __(
+											'This filter bar appears above the directory results.',
+											'tribe'
+									  ) }
+							</p>
 							<p style={ { marginBottom: '0' } }>
 								{ __(
-									'Change position and post types on the parent Faceted Directory block.',
+									'Change position and post types on the parent Faceted Directory block. Control types are set under Tribe → Facets.',
 									'tribe'
 								) }
 							</p>
@@ -321,9 +362,11 @@ export default function Edit( {
 								onDragEnd={ handleDragEnd }
 							>
 								<SortableContext
-									items={ facets.map( ( f ) => f.slug ) }
+									items={ activeFacets.map(
+										( f ) => f.slug
+									) }
 								>
-									{ facets.map( ( facet ) => (
+									{ activeFacets.map( ( facet ) => (
 										<SortableFacet
 											key={ facet.slug }
 											facet={ facet }
@@ -346,7 +389,7 @@ export default function Edit( {
 								__next40pxDefaultSize
 								value={ selectedFacet }
 								options={ availableFacets.map( ( facet ) => ( {
-									label: `${ facet.label } (${ facet.type })`,
+									label: facet.label,
 									value: facet.slug,
 									disabled: facets.some(
 										( f ) => f.slug === facet.slug

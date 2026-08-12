@@ -42,6 +42,13 @@ class Facet_Types {
 	}
 
 	/**
+	 * Types that use a sidebar/mobile accordion (and thus the "starts expanded" setting).
+	 */
+	public static function is_accordion_type( string $type ): bool {
+		return in_array( $type, [ self::CHECKBOXES, self::RADIO ], true );
+	}
+
+	/**
 	 * Validate the three responsive facet types.
 	 *
 	 * An empty sidebar/mobile value supports facets saved before those fields

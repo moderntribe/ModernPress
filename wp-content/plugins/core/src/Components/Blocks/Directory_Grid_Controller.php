@@ -32,7 +32,7 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 
 		$this->block_classes .= ' b-directory-grid__template';
 
-		$from_context = $this->context[ self::POST_TYPES_CONTEXT ] ?? null;
+		$from_context = $this->get_context_value( self::POST_TYPES_CONTEXT );
 		$from_attrs   = $this->attributes['postTypes'] ?? [ 'post' ];
 		$post_types   = is_array( $from_context ) ? $from_context : $from_attrs;
 

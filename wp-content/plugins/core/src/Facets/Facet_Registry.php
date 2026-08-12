@@ -176,15 +176,18 @@ class Facet_Registry {
 	 * }|null
 	 */
 	private function normalize_row( array $row ): ?array {
-		$label        = trim( (string) ( $row[ Facets_Settings::FACET_LABEL ] ?? '' ) );
-		$slug         = sanitize_title( (string) ( $row[ Facets_Settings::FACET_SLUG ] ?? '' ) );
-		$taxonomy     = (string) ( $row[ Facets_Settings::FACET_TAXONOMY ] ?? '' );
-		$layout_types = Facet_Types::normalize_layout_types(
-			(string) ( $row[ Facets_Settings::FACET_TYPE ] ?? Facet_Types::CHECKBOXES ),
-			(string) ( $row[ Facets_Settings::FACET_SIDEBAR_TYPE ] ?? '' ),
-			(string) ( $row[ Facets_Settings::FACET_MOBILE_TYPE ] ?? '' )
-		);
-		$types        = $row[ Facets_Settings::FACET_POST_TYPES ] ?? [];
+		$label    = trim( (string) ( $row[ Facets_Settings::FACET_LABEL ] ?? '' ) );
+		$slug     = sanitize_title( (string) ( $row[ Facets_Settings::FACET_SLUG ] ?? '' ) );
+		$taxonomy = (string) ( $row[ Facets_Settings::FACET_TAXONOMY ] ?? '' );
+		$top      = (string) ( $row[ Facets_Settings::FACET_TYPE ] ?? Facet_Types::FANCY_DROPDOWN );
+		$types    = $row[ Facets_Settings::FACET_POST_TYPES ] ?? [];
+
+		// Default true so existing rows (pre-toggle) keep their per-layout types.
+		$customize = (bool) ( $row[ Facets_Settings::FACET_CUSTOMIZE_LAYOUT ] ?? true );
+		$sidebar   = $customize ? (string) ( $row[ Facets_Settings::FACET_SIDEBAR_TYPE ] ?? '' ) : '';
+		$mobile    = $customize ? (string) ( $row[ Facets_Settings::FACET_MOBILE_TYPE ] ?? '' ) : '';
+
+		$layout_types = Facet_Types::normalize_layout_types( $top, $sidebar, $mobile );
 
 		if ( '' === $label || '' === $slug || '' === $taxonomy ) {
 			return null;
@@ -200,6 +203,11 @@ class Facet_Registry {
 			return null;
 		}
 
+		$sidebar_open = Facet_Types::is_accordion_type( $layout_types['sidebar_type'] )
+			&& (bool) ( $row[ Facets_Settings::FACET_SIDEBAR_ACCORDION_OPEN ] ?? false );
+		$mobile_open  = Facet_Types::is_accordion_type( $layout_types['mobile_type'] )
+			&& (bool) ( $row[ Facets_Settings::FACET_MOBILE_ACCORDION_OPEN ] ?? false );
+
 		return [
 			'slug'         => $slug,
 			'label'        => $label,
@@ -210,8 +218,8 @@ class Facet_Registry {
 			'top_type'     => $layout_types['top_type'],
 			'sidebar_type' => $layout_types['sidebar_type'],
 			'mobile_type'  => $layout_types['mobile_type'],
-			'sidebar_open' => (bool) ( $row[ Facets_Settings::FACET_SIDEBAR_ACCORDION_OPEN ] ?? false ),
-			'mobile_open'  => (bool) ( $row[ Facets_Settings::FACET_MOBILE_ACCORDION_OPEN ] ?? false ),
+			'sidebar_open' => $sidebar_open,
+			'mobile_open'  => $mobile_open,
 			'source'       => 'taxonomy',
 		];
 	}
