@@ -31,3 +31,23 @@
 		@mixin t-animated-underline-hover;
 	}
 }
+
+/*
+ * Checkbox indicator. Positioning is left to the consumer: checkbox/radio
+ * labels place it absolutely so wrapped text stays aligned, while fancy
+ * dropdown options lay it out as a flex item.
+ */
+@define-mixin facet-checkbox-box {
+	content: "";
+	display: block;
+	width: 24px;
+	height: 24px;
+	flex-shrink: 0;
+	border: 1px solid var(--color-neutral-30);
+}
+
+@define-mixin facet-checkbox-box-checked {
+	border-color: var(--color-black);
+	background: var(--icon-list-check) center no-repeat;
+	background-size: 16px 14px;
+}

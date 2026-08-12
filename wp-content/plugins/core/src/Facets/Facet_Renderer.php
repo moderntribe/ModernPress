@@ -227,7 +227,7 @@ class Facet_Renderer {
 									aria-selected="<?php echo $is_selected ? 'true' : 'false'; ?>"
 									data-value="<?php echo esc_attr( $term->slug ); ?>"
 								>
-									<?php echo esc_html( $term->name ); ?>
+									<span class="tribe-facet__label-text t-body t-animated-underline"><?php echo esc_html( $term->name ); ?></span>
 								</button>
 							</li>
 						<?php endforeach; ?>
