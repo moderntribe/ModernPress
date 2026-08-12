@@ -59,6 +59,7 @@ class Facets_Settings extends Settings_Sub_Page {
 				->fields( [
 					Text::make( esc_html__( 'Label', 'tribe' ), self::FACET_LABEL )
 						->required()
+						->helperText( esc_html__( 'Default visual label for the Facet.', 'tribe' ) )
 						->column( 50 ),
 					Text::make( esc_html__( 'Slug', 'tribe' ), self::FACET_SLUG )
 						->required()
@@ -69,6 +70,7 @@ class Facets_Settings extends Settings_Sub_Page {
 						->stylized()
 						->required()
 						->format( 'value' )
+						->helperText( esc_html__( 'The taxonomy that the facet should use.', 'tribe' ) )
 						->column( 50 ),
 					Select::make( esc_html__( 'Post Types', 'tribe' ), self::FACET_POST_TYPES )
 						->choices( $this->get_post_type_choices() )
@@ -103,6 +105,12 @@ class Facets_Settings extends Settings_Sub_Page {
 						->conditionalLogic( [
 							ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 ),
 						] ),
+					TrueFalse::make( esc_html__( 'Sidebar Starts Expanded', 'tribe' ), self::FACET_SIDEBAR_ACCORDION_OPEN )
+						->stylized( esc_html__( 'Open', 'tribe' ), esc_html__( 'Closed', 'tribe' ) )
+						->default( false )
+						->helperText( esc_html__( 'Expand this facet by default in the desktop sidebar.', 'tribe' ) )
+						->column( 50 )
+						->conditionalLogic( $this->accordion_open_conditionals( self::FACET_SIDEBAR_TYPE ) ),
 					Select::make( esc_html__( 'Mobile Flyout Type', 'tribe' ), self::FACET_MOBILE_TYPE )
 						->choices( $mobile_choices )
 						->stylized()
@@ -114,12 +122,6 @@ class Facets_Settings extends Settings_Sub_Page {
 						->conditionalLogic( [
 							ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 ),
 						] ),
-					TrueFalse::make( esc_html__( 'Sidebar Starts Expanded', 'tribe' ), self::FACET_SIDEBAR_ACCORDION_OPEN )
-						->stylized( esc_html__( 'Open', 'tribe' ), esc_html__( 'Closed', 'tribe' ) )
-						->default( false )
-						->helperText( esc_html__( 'Expand this facet by default in the desktop sidebar.', 'tribe' ) )
-						->column( 50 )
-						->conditionalLogic( $this->accordion_open_conditionals( self::FACET_SIDEBAR_TYPE ) ),
 					TrueFalse::make( esc_html__( 'Mobile Starts Expanded', 'tribe' ), self::FACET_MOBILE_ACCORDION_OPEN )
 						->stylized( esc_html__( 'Open', 'tribe' ), esc_html__( 'Closed', 'tribe' ) )
 						->default( false )
