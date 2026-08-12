@@ -36,7 +36,7 @@ if ( '' === $flyout_id || '' === $flyout_title_id ) {
 	</span>
 </div>
 <fieldset class="b-filter-bar__responsive-facets b-filter-bar__responsive-facets--sidebar" data-facet-layout="sidebar">
-	<legend class="screen-reader-text"><?php esc_html_e( 'Filters', 'tribe' ); ?></legend>
+	<legend class="screen-reader-only"><?php esc_html_e( 'Filters', 'tribe' ); ?></legend>
 	<div class="b-filter-bar__grid">
 		<?php get_template_part( 'components/filter-bar/facets', null, [
 			'controller' => $c,
@@ -68,7 +68,7 @@ if ( '' === $flyout_id || '' === $flyout_title_id ) {
 		</header>
 		<div class="b-filter-bar__flyout-body">
 			<fieldset class="b-filter-bar__responsive-facets b-filter-bar__responsive-facets--mobile" data-facet-layout="mobile" disabled>
-				<legend class="screen-reader-text"><?php esc_html_e( 'Filters', 'tribe' ); ?></legend>
+				<legend class="screen-reader-only"><?php esc_html_e( 'Filters', 'tribe' ); ?></legend>
 				<div class="b-filter-bar__grid">
 				<?php get_template_part( 'components/filter-bar/facets', null, [
 					'controller' => $c,

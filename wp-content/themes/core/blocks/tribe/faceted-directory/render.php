@@ -24,6 +24,6 @@ $c = Faceted_Directory_Controller::factory( [
 		<div class="b-faceted-directory__inner">
 			<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- inner blocks. ?>
 		</div>
-		<p class="screen-reader-text" role="status" aria-live="polite" data-js="directory-status"></p>
+		<p class="screen-reader-only" role="status" aria-live="polite" data-js="directory-status"></p>
 	</form>
 </section>

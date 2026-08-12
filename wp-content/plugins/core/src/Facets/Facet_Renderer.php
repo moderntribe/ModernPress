@@ -97,7 +97,7 @@ class Facet_Renderer {
 						<label class="tribe-facet__label" for="<?php echo esc_attr( $input_id ); ?>">
 							<input
 								type="checkbox"
-								class="screen-reader-text"
+								class="screen-reader-only"
 								id="<?php echo esc_attr( $input_id ); ?>"
 								name="<?php echo esc_attr( $param ); ?>[]"
 								value="<?php echo esc_attr( $term->slug ); ?>"
@@ -137,7 +137,7 @@ class Facet_Renderer {
 						<label class="tribe-facet__label" for="<?php echo esc_attr( $input_id ); ?>">
 							<input
 								type="radio"
-								class="screen-reader-text"
+								class="screen-reader-only"
 								id="<?php echo esc_attr( $input_id ); ?>"
 								name="<?php echo esc_attr( $param ); ?>"
 								value="<?php echo esc_attr( $term->slug ); ?>"
@@ -192,7 +192,7 @@ class Facet_Renderer {
 			<select
 				id="<?php echo esc_attr( $fancy ? $id . '-input' : $id ); ?>"
 				name="<?php echo esc_attr( $param . ( $multiple ? '[]' : '' ) ); ?>"
-				class="tribe-facet__select<?php echo $fancy ? ' tribe-facet__select--fancy screen-reader-text' : ''; ?>"
+				class="tribe-facet__select<?php echo $fancy ? ' tribe-facet__select--fancy screen-reader-only' : ''; ?>"
 				<?php echo $multiple ? ' multiple' : ''; ?>
 				<?php // Fancy: the trigger and listbox are the keyboard UI, this only carries form state. ?>
 				<?php echo $fancy ? ' data-fancy-dropdown="true" tabindex="-1"' : ''; ?>
