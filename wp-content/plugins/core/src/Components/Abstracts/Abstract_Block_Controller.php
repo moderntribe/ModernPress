@@ -26,11 +26,18 @@ abstract class Abstract_Block_Controller extends Abstract_Controller {
 	private string $block_animation_classes;
 	private string $block_animation_styles;
 
+	/**
+	 * Whether editor-preview query args may stand in for missing block context.
+	 * Disabled for public endpoints that share these controllers.
+	 */
+	private bool $allow_preview_context;
+
 	public function __construct( array $args = [] ) {
 		$this->attributes                 = $args['attributes'] ?? [];
 		$this->context                    = $args['context'] ?? [];
 		$this->block_classes              = $args['block_classes'] ?? '';
 		$this->block_styles               = $args['block_styles'] ?? '';
+		$this->allow_preview_context      = (bool) ( $args['allow_preview_context'] ?? true );
 		$this->block_animation_attributes = $this->attributes ? new Block_Animation_Attributes( $this->attributes ) : false;
 		$this->block_animation_classes    = $this->block_animation_attributes ? $this->block_animation_attributes->get_classes() : '';
 		$this->block_animation_styles     = $this->block_animation_attributes ? $this->block_animation_attributes->get_styles() : '';
@@ -80,7 +87,12 @@ abstract class Abstract_Block_Controller extends Abstract_Controller {
 	 * @return array<string, mixed>
 	 */
 	private function get_preview_context(): array {
-		if ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST || ! current_user_can( 'edit_posts' ) ) {
+		if (
+			! $this->allow_preview_context
+			|| ! defined( 'REST_REQUEST' )
+			|| ! REST_REQUEST
+			|| ! current_user_can( 'edit_posts' )
+		) {
 			return [];
 		}
 

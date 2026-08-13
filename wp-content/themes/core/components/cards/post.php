@@ -60,5 +60,5 @@ $c = Post_Card_Controller::factory( [
 			<?php endif; ?>
 		</div>
 	</div>
-	<a href="<?php echo esc_url( $c->get_post_permalink() ); ?>" class="c-post-card__link-overlay" aria-label="<?php echo sprintf( '%s %s', esc_html__( 'Read more about', 'tribe' ), $c->get_post_title() ); ?>"></a>
+	<a href="<?php echo esc_url( $c->get_post_permalink() ); ?>" class="c-post-card__link-overlay" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: post title. */ __( 'Read more about %s', 'tribe' ), $c->get_post_title() ) ); ?>"></a>
 </article>

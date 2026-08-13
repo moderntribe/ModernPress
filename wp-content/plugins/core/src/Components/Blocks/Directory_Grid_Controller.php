@@ -39,12 +39,9 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 		$this->post_types      = is_array( $post_types )
 			? array_values( array_filter( array_map( 'sanitize_key', $post_types ) ) )
 			: [ 'post' ];
+		$this->post_types      = $this->filter_public_post_types( $this->post_types );
 		$this->posts_per_page  = absint( $this->attributes['postsPerPage'] ?? 12 );
 		$this->show_pagination = (bool) ( $this->attributes['showPagination'] ?? false );
-
-		if ( [] === $this->post_types ) {
-			$this->post_types = [ 'post' ];
-		}
 
 		$this->set_query( $args['request'] ?? null );
 	}
@@ -118,6 +115,21 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 		);
 
 		$this->query = new \WP_Query( $args );
+	}
+
+	/**
+	 * @param list<string> $post_types
+	 *
+	 * @return list<string>
+	 */
+	private function filter_public_post_types( array $post_types ): array {
+		$allowed = get_post_types( [ 'public' => true ] );
+
+		unset( $allowed['attachment'] );
+
+		$sanitized = array_values( array_intersect( $post_types, array_keys( $allowed ) ) );
+
+		return [] === $sanitized ? [ 'post' ] : $sanitized;
 	}
 
 }

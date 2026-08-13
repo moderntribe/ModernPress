@@ -4,6 +4,14 @@ namespace Tribe\Plugin\Facets;
 
 class Directory_Query {
 
+	/**
+	 * Max selected terms accepted per facet from the request.
+	 *
+	 * Untrusted lists are sanitized then truncated so prepared IN (...) clauses
+	 * and tax_query arrays cannot be inflated without bound.
+	 */
+	private const int MAX_TERMS_PER_FACET = 50;
+
 	public function __construct(
 		private Facet_Registry $registry,
 		private Facet_Index $index,
@@ -127,9 +135,13 @@ class Directory_Query {
 			$values = explode( ',', (string) $raw );
 		}
 
-		return array_values( array_filter( array_map( static function ( mixed $value ): string {
-			return sanitize_title( (string) $value );
-		}, $values ) ) );
+		return array_values( array_slice(
+			array_filter( array_map( static function ( mixed $value ): string {
+				return sanitize_title( (string) $value );
+			}, $values ) ),
+			0,
+			self::MAX_TERMS_PER_FACET
+		) );
 	}
 
 	/**

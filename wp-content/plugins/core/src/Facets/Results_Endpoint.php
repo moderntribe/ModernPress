@@ -42,14 +42,15 @@ class Results_Endpoint {
 		$per_page = min( self::MAX_POSTS_PER_PAGE, $per_page );
 
 		$controller = Directory_Grid_Controller::factory( [
-			'attributes'      => [
+			'attributes'            => [
 				'postTypes'      => $post_types,
 				'postsPerPage'   => $per_page,
 				'showPagination' => rest_sanitize_boolean( $request->get_param( 'show_pagination' ) ),
 			],
-			'request'         => $this->get_facet_request( $request, $paged ),
-			'pagination_base' => $path,
-			'block_classes'   => 'b-directory-grid',
+			'request'               => $this->get_facet_request( $request, $paged ),
+			'pagination_base'       => $path,
+			'block_classes'         => 'b-directory-grid',
+			'allow_preview_context' => false,
 		] );
 
 		/**
@@ -126,6 +127,9 @@ class Results_Endpoint {
 
 	/**
 	 * Relative path used as the pagination link base.
+	 *
+	 * Rejects scheme/host and normalizes backslashes so values like `/\evil.com`
+	 * cannot become protocol-relative URLs in pagination hrefs.
 	 */
 	private function sanitize_path( string $path ): string {
 		$parsed = wp_parse_url( $path, PHP_URL_PATH );
@@ -133,6 +137,10 @@ class Results_Endpoint {
 		if ( ! is_string( $parsed ) || '' === $parsed ) {
 			return '/';
 		}
+
+		// Browsers treat `\` as `/`; collapse so `/\evil` cannot become `//evil`.
+		$parsed = str_replace( '\\', '/', $parsed );
+		$parsed = (string) preg_replace( '#/+#', '/', $parsed );
 
 		return '/' . ltrim( $parsed, '/' );
 	}
