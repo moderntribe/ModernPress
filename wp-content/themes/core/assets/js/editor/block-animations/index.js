@@ -142,16 +142,9 @@ const animationControls = createHigherOrderComponent( ( BlockEdit ) => {
 			animationPosition,
 		} = attributes;
 
-		let blockClass =
-			attributes.className !== undefined ? attributes.className : '';
 		const blockStyles = { ...props.style };
 
 		if ( animationType !== undefined && animationType !== 'none' ) {
-			// set block class for animation direction & animation position, if it's not set to the default
-			blockClass = `${
-				blockClass !== '' ? blockClass + ' ' : ''
-			}is-animated-on-scroll-${ animationPosition } tribe-animation-type-${ animationType } tribe-animation-direction-${ animationDirection }`;
-
 			// set block styles for animation duration
 			if ( animationDuration !== undefined && animationDuration ) {
 				blockStyles[ '--tribe-animation-speed' ] = animationDuration;
@@ -165,31 +158,14 @@ const animationControls = createHigherOrderComponent( ( BlockEdit ) => {
 				blockStyles[ '--tribe-animation-delay' ] = animationDelay;
 			}
 
-			// set block class for disabling animation delays on mobile
-			if (
-				animationMobileDisableDelay !== undefined &&
-				animationMobileDisableDelay
-			) {
-				blockClass = `${ blockClass } tribe-animation-mobile-disable-delay`;
-			}
-
 			// set block styles for animation easing
 			if ( animationEasing !== undefined && animationEasing ) {
 				blockStyles[ '--tribe-animation-easing' ] = animationEasing;
-			}
-
-			// set block class for triggering animation multiple times
-			if ( animationTrigger !== undefined && animationTrigger ) {
-				blockClass = `${ blockClass } tribe-animate-multiple`;
 			}
 		}
 
 		const blockProps = {
 			...props,
-			attributes: {
-				...attributes,
-				className: blockClass,
-			},
 			style: blockStyles,
 		};
 
