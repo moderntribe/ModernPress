@@ -3,6 +3,7 @@
 namespace Tribe\Plugin\Blocks;
 
 use DI;
+use Tribe\Plugin\Blocks\Filters\Accordion_Filter;
 use Tribe\Plugin\Blocks\Filters\Contracts\Filter_Factory;
 use Tribe\Plugin\Blocks\Filters\Paragraph_Filter;
 use Tribe\Plugin\Core\Interfaces\Definer_Interface;
@@ -102,6 +103,7 @@ class Blocks_Definer implements Definer_Interface {
 			] ),
 
 			self::FILTERS         => DI\add( [
+				DI\get( Accordion_Filter::class ),
 				DI\get( Paragraph_Filter::class ),
 			] ),
 
