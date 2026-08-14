@@ -5,7 +5,8 @@ on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entr
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 @@ [2026.08]
-- CHore WordPress Core update to 7.0.3, plugin, composer & npm package updates.
+- Chore: WordPress Core update to 7.0.3, plugin, composer & npm package updates.
+- Added: Accordion block now has a toggle for enabling schema.org schema markup on the specific Accordion block.
 
 ## [2026.06]
 - Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
