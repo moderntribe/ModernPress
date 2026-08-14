@@ -236,10 +236,15 @@
 	scrollbar-width: thin;
 }
 
+/* Always present for the live region; takes no space until it has text. */
 .tribe-facet--dropdown .tribe-facet__dropdown-empty {
 	margin: 0;
 	padding: var(--spacer-10) var(--spacer-20) var(--spacer-20);
 	color: var(--color-text-secondary);
+
+	&:empty {
+		display: none;
+	}
 }
 
 .tribe-facet--dropdown .tribe-facet__dropdown-option {

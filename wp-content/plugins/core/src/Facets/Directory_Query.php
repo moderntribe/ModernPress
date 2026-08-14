@@ -252,21 +252,20 @@ class Directory_Query {
 					continue;
 				}
 
-				$children = get_term_children( $term->term_id, $taxonomy );
+				// child_of is recursive, and hide_empty must stay off so a
+				// container term between a selection and its posts is included.
+				$descendants = get_terms( [
+					'taxonomy'   => $taxonomy,
+					'child_of'   => $term->term_id,
+					'fields'     => 'slugs',
+					'hide_empty' => false,
+				] );
 
-				if ( is_wp_error( $children ) ) {
+				if ( ! is_array( $descendants ) ) {
 					continue;
 				}
 
-				foreach ( $children as $child_id ) {
-					$child = get_term( (int) $child_id, $taxonomy );
-
-					if ( ! ( $child instanceof \WP_Term ) ) {
-						continue;
-					}
-
-					$expanded[] = $child->slug;
-				}
+				$expanded = array_merge( $expanded, array_map( 'strval', $descendants ) );
 			}
 
 			$selections[ $slug ] = array_values( array_unique( $expanded ) );

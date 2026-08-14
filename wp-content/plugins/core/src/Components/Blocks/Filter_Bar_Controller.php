@@ -32,15 +32,22 @@ class Filter_Bar_Controller extends Abstract_Block_Controller {
 	 */
 	protected array $request;
 
+	/**
+	 * Namespaces this bar's control ids, so two directories on one page cannot
+	 * emit the same id and point every label at the first one.
+	 */
+	protected string $id_prefix;
+
 	public function __construct( array $args = [] ) {
 		parent::__construct( $args );
 
 		$position                  = (string) $this->get_context_value( self::FILTER_BAR_POSITION_CONTEXT, 'top' );
 		$this->filter_bar_position = 'sidebar' === $position ? 'sidebar' : 'top';
 		$post_types                = $this->get_context_value( self::POST_TYPES_CONTEXT, [ 'post' ] );
-		$this->post_types          = is_array( $post_types )
-			? array_values( array_filter( array_map( 'sanitize_key', $post_types ) ) )
-			: [ 'post' ];
+		$this->post_types          = Facet_Registry::filter_public_post_types(
+			is_array( $post_types ) ? array_values( $post_types ) : []
+		);
+		$this->id_prefix           = wp_unique_id( 'facet-' );
 		$this->request             = $args['request'] ?? $this->get_request_params();
 		$this->facets              = $this->resolve_facets( $this->attributes['facets'] ?? [] );
 	}
@@ -154,10 +161,15 @@ class Filter_Bar_Controller extends Abstract_Block_Controller {
 	/**
 	 * ID of the primary control rendered for labels.
 	 *
+	 * Produces the `for` half of the pair that Facet_Renderer::get_control_id()
+	 * puts on the control itself; the two must agree.
+	 *
 	 * @param array<string, mixed> $facet
 	 */
 	public function get_control_id( array $facet, string $layout = 'top' ): string {
-		return 'facet-' . sanitize_html_class( (string) $facet['slug'] ) . '-' . sanitize_html_class( $layout );
+		return sanitize_html_class( $this->id_prefix )
+			. '-' . sanitize_html_class( (string) $facet['slug'] )
+			. '-' . sanitize_html_class( $layout );
 	}
 
 	/**
@@ -196,6 +208,11 @@ class Filter_Bar_Controller extends Abstract_Block_Controller {
 
 			$facet    = $by_slug[ $slug ];
 			$override = isset( $item['displayLabel'] ) ? trim( (string) $item['displayLabel'] ) : '';
+
+			// Render context the renderer cannot work out on its own: which post
+			// types this directory shows, and which bar owns the control ids.
+			$facet['directory_post_types'] = $this->post_types;
+			$facet['id_prefix']            = $this->id_prefix;
 
 			// Ignore overrides that merely repeat the settings label (legacy stamp).
 			if ( '' === $override || $override === (string) $facet['label'] ) {

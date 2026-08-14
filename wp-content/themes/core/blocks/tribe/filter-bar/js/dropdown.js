@@ -61,7 +61,9 @@ const filterOptions = ( wrap ) => {
 	const empty = wrap.querySelector( SELECTORS.dropdownEmpty );
 
 	if ( empty ) {
-		empty.hidden = matches > 0;
+		// Swap the text rather than the hidden attribute: the region has to
+		// already be in the tree for a screen reader to announce the change.
+		empty.textContent = matches > 0 ? '' : empty.dataset.emptyText;
 	}
 };
 

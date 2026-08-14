@@ -3,6 +3,7 @@
 namespace Tribe\Plugin\Components\Blocks;
 
 use Tribe\Plugin\Components\Abstracts\Abstract_Block_Controller;
+use Tribe\Plugin\Facets\Facet_Registry;
 
 class Faceted_Directory_Controller extends Abstract_Block_Controller {
 
@@ -16,15 +17,16 @@ class Faceted_Directory_Controller extends Abstract_Block_Controller {
 	public function __construct( array $args = [] ) {
 		parent::__construct( $args );
 
-		$this->filter_bar_position = $this->attributes['filterBarPosition'] ?? 'top';
-		$post_types                = $this->attributes['postTypes'] ?? [ 'post' ];
-		$this->post_types          = is_array( $post_types )
-			? array_values( array_filter( array_map( 'sanitize_key', $post_types ) ) )
-			: [ 'post' ];
+		// block.json declares an enum, but WordPress does not enforce it at
+		// render time and this value becomes a class name.
+		$this->filter_bar_position = 'sidebar' === ( $this->attributes['filterBarPosition'] ?? '' )
+			? 'sidebar'
+			: 'top';
 
-		if ( [] === $this->post_types ) {
-			$this->post_types = [ 'post' ];
-		}
+		$post_types       = $this->attributes['postTypes'] ?? [ 'post' ];
+		$this->post_types = Facet_Registry::filter_public_post_types(
+			is_array( $post_types ) ? array_values( $post_types ) : []
+		);
 
 		$this->block_classes .= " b-faceted-directory--filter-bar-{$this->filter_bar_position}";
 	}

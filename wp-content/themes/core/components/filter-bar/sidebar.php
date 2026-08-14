@@ -35,6 +35,16 @@ if ( '' === $flyout_id || '' === $flyout_title_id ) {
 		<button type="reset" class="a-btn-link" data-js="filter-clear-all"><?php esc_html_e( 'Clear all', 'tribe' ); ?></button>
 	</span>
 </div>
+<?php
+/*
+ * ponytail: the sidebar and mobile fieldsets below each render the full facet
+ * set, so a large taxonomy ships its terms twice. That is the price of the
+ * "Mobile Flyout Type" setting — the two layouts can render different controls
+ * for the same facet, and the swap is CSS-only so it works without JS. Folding
+ * them into one node would mean dropping per-layout types or re-rendering in
+ * JS. Revisit only if per-layout types are ever dropped.
+ */
+?>
 <fieldset class="b-filter-bar__responsive-facets b-filter-bar__responsive-facets--sidebar" data-facet-layout="sidebar">
 	<legend class="screen-reader-only"><?php esc_html_e( 'Filters', 'tribe' ); ?></legend>
 	<div class="b-filter-bar__grid">

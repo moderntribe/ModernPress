@@ -16,8 +16,16 @@ class Results_Endpoint {
 	public const string REST_NAMESPACE = 'tribe/v1';
 	public const string ROUTE          = '/facets/results';
 
-	private const int MAX_POSTS_PER_PAGE     = 100;
-	private const int DEFAULT_POSTS_PER_PAGE = 12;
+	/**
+	 * Results are published content keyed entirely by the query string, so a
+	 * short shared cache lets an edge or page cache absorb repeat requests —
+	 * a live-filtering UI sends a lot of them. Core still sends no-cache for
+	 * logged-in requests, which is what we want for editors.
+	 *
+	 * ponytail: cache headers only. Actual rate limiting belongs at the edge,
+	 * not in a WordPress callback.
+	 */
+	private const int CACHE_MAX_AGE = MINUTE_IN_SECONDS;
 
 	public function __construct(
 		private Facet_Registry $registry,
@@ -33,13 +41,13 @@ class Results_Endpoint {
 	}
 
 	public function handle( \WP_REST_Request $request ): \WP_REST_Response {
-		$post_types = $this->sanitize_post_types( (array) $request->get_param( 'post_types' ) );
+		$post_types = Facet_Registry::filter_public_post_types( array_values( (array) $request->get_param( 'post_types' ) ) );
 		$paged      = max( 1, absint( $request->get_param( Facet_Registry::PAGE_PARAM ) ) );
 		$path       = $this->sanitize_path( (string) $request->get_param( 'path' ) );
 
+		// The controller bounds this too; passing 0 through lets it apply its
+		// own default rather than duplicating the number here.
 		$per_page = absint( $request->get_param( 'posts_per_page' ) );
-		$per_page = 0 === $per_page ? self::DEFAULT_POSTS_PER_PAGE : $per_page;
-		$per_page = min( self::MAX_POSTS_PER_PAGE, $per_page );
 
 		$controller = Directory_Grid_Controller::factory( [
 			'attributes'            => [
@@ -75,10 +83,14 @@ class Results_Endpoint {
 
 		wp_reset_postdata();
 
-		return new \WP_REST_Response( [
+		$response = new \WP_REST_Response( [
 			'html'  => $html,
 			'found' => $controller->get_found_posts(),
 		] );
+
+		$response->header( 'Cache-Control', 'public, max-age=' . self::CACHE_MAX_AGE );
+
+		return $response;
 	}
 
 	/**
@@ -105,24 +117,6 @@ class Results_Endpoint {
 		}
 
 		return $facet_request;
-	}
-
-	/**
-	 * @param list<mixed> $post_types
-	 *
-	 * @return list<string>
-	 */
-	private function sanitize_post_types( array $post_types ): array {
-		$allowed = get_post_types( [ 'public' => true ] );
-
-		unset( $allowed['attachment'] );
-
-		$sanitized = array_values( array_intersect(
-			array_map( 'sanitize_key', array_map( 'strval', $post_types ) ),
-			array_keys( $allowed )
-		) );
-
-		return [] === $sanitized ? [ 'post' ] : $sanitized;
 	}
 
 	/**

@@ -111,6 +111,29 @@ class Facet_Index {
 	}
 
 	/**
+	 * Term slugs that have published posts of the given types.
+	 *
+	 * `hide_empty` on get_terms() counts every post type sharing a taxonomy, so
+	 * without this a directory lists terms that lead to zero results.
+	 *
+	 * @param list<string> $post_types
+	 *
+	 * @return list<string>|null Null when the index cannot answer.
+	 */
+	public function get_available_term_slugs( string $facet_slug, array $post_types ): ?array {
+		if ( ! $this->is_built() || [] === $post_types ) {
+			return null;
+		}
+
+		$slugs = $this->get_cached(
+			$this->get_term_cache_key( $facet_slug, $post_types ),
+			fn (): array => $this->query_available_term_slugs( $facet_slug, $post_types )
+		);
+
+		return is_array( $slugs ) ? array_map( 'strval', array_values( $slugs ) ) : null;
+	}
+
+	/**
 	 * Reindex a single post.
 	 *
 	 * Rows are computed and compared against what is already stored before
@@ -425,6 +448,46 @@ class Facet_Index {
 		$results = $wpdb->get_col( $wpdb->prepare( $sql, $values ) );
 
 		return array_map( 'intval', $results );
+	}
+
+	/**
+	 * @param list<string> $post_types
+	 *
+	 * @return list<string>
+	 */
+	private function query_available_term_slugs( string $facet_slug, array $post_types ): array {
+		global $wpdb;
+
+		$values = [ $facet_slug ];
+		$where  = 'i.facet_slug = %s';
+
+		$where .= ' AND i.post_type IN ( ' . implode( ', ', array_fill( 0, count( $post_types ), '%s' ) ) . ' )';
+
+		foreach ( $post_types as $post_type ) {
+			$values[] = $post_type;
+		}
+
+		$sql = 'SELECT DISTINCT i.term_slug FROM ' . $this->table_name() . ' i'
+			. " INNER JOIN {$wpdb->posts} p ON p.ID = i.post_id"
+			. " WHERE {$where} AND p.post_status = 'publish'";
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+		$results = $wpdb->get_col( $wpdb->prepare( $sql, $values ) );
+
+		return array_map( 'strval', $results );
+	}
+
+	/**
+	 * Separate prefix from the result-set keys so a facet slug can never
+	 * collide with a selection cache entry.
+	 *
+	 * @param list<string> $post_types
+	 */
+	private function get_term_cache_key( string $facet_slug, array $post_types ): string {
+		sort( $post_types );
+
+		return 'tribe_facet_terms_' . $this->get_cache_version() . '_'
+			. md5( (string) wp_json_encode( [ $facet_slug, $post_types ] ) );
 	}
 
 	/**

@@ -131,6 +131,40 @@ class Facet_Registry {
 	}
 
 	/**
+	 * Post types a directory may query. Attachments are excluded: they are
+	 * public, but they are not directory content.
+	 *
+	 * @return array<string, \WP_Post_Type>
+	 */
+	public static function public_post_types(): array {
+		$post_types = get_post_types( [ 'public' => true ], 'objects' );
+
+		unset( $post_types['attachment'] );
+
+		return $post_types;
+	}
+
+	/**
+	 * Narrow a requested set of post types to the ones a directory may query,
+	 * falling back to posts when nothing survives.
+	 *
+	 * Block attributes and REST params are both untrusted, so every entry point
+	 * runs through here rather than trusting what it was handed.
+	 *
+	 * @param list<mixed> $post_types
+	 *
+	 * @return list<string>
+	 */
+	public static function filter_public_post_types( array $post_types ): array {
+		$sanitized = array_values( array_intersect(
+			array_map( 'sanitize_key', array_map( 'strval', $post_types ) ),
+			array_keys( self::public_post_types() )
+		) );
+
+		return [] === $sanitized ? [ 'post' ] : $sanitized;
+	}
+
+	/**
 	 * @return list<array<string, mixed>>
 	 */
 	private function get_system_facets(): array {

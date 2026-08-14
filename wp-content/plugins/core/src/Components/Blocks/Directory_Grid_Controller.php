@@ -8,6 +8,13 @@ use Tribe\Plugin\Facets\Facet_Registry;
 
 class Directory_Grid_Controller extends Abstract_Block_Controller {
 
+	/**
+	 * Page size bounds. Enforced here rather than at each entry point, so the
+	 * REST endpoint and a hand-edited block attribute get the same ceiling.
+	 */
+	public const int MAX_POSTS_PER_PAGE     = 100;
+	public const int DEFAULT_POSTS_PER_PAGE = 12;
+
 	private const string POST_TYPES_CONTEXT = 'tribe/faceted-directory/postTypes';
 
 	protected \WP_Query $query;
@@ -39,11 +46,13 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 		$from_attrs   = $this->attributes['postTypes'] ?? [ 'post' ];
 		$post_types   = is_array( $from_context ) ? $from_context : $from_attrs;
 
-		$this->post_types      = is_array( $post_types )
-			? array_values( array_filter( array_map( 'sanitize_key', $post_types ) ) )
-			: [ 'post' ];
-		$this->post_types      = $this->filter_public_post_types( $this->post_types );
-		$this->posts_per_page  = absint( $this->attributes['postsPerPage'] ?? 12 );
+		$this->post_types = Facet_Registry::filter_public_post_types(
+			is_array( $post_types ) ? array_values( $post_types ) : []
+		);
+
+		// A zero or missing page size means "use the default", not "one post".
+		$per_page              = absint( $this->attributes['postsPerPage'] ?? 0 ) ?: self::DEFAULT_POSTS_PER_PAGE;
+		$this->posts_per_page  = min( self::MAX_POSTS_PER_PAGE, $per_page );
 		$this->show_pagination = (bool) ( $this->attributes['showPagination'] ?? false );
 
 		$this->set_query( $args['request'] ?? null );
@@ -138,21 +147,6 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 		$this->max_num_pages = null !== $built['total']
 			? (int) ceil( $built['total'] / max( 1, $this->posts_per_page ) )
 			: (int) $this->query->max_num_pages;
-	}
-
-	/**
-	 * @param list<string> $post_types
-	 *
-	 * @return list<string>
-	 */
-	private function filter_public_post_types( array $post_types ): array {
-		$allowed = get_post_types( [ 'public' => true ] );
-
-		unset( $allowed['attachment'] );
-
-		$sanitized = array_values( array_intersect( $post_types, array_keys( $allowed ) ) );
-
-		return [] === $sanitized ? [ 'post' ] : $sanitized;
 	}
 
 }
