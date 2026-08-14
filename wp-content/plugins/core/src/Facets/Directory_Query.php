@@ -21,12 +21,17 @@ class Directory_Query {
 	/**
 	 * Build WP_Query args for a directory grid.
 	 *
+	 * When the index answers the query it has already paginated, so `args`
+	 * describes a single page and `total` carries the real match count that
+	 * WP_Query cannot work out for itself. `total` is null on the tax_query
+	 * path, where WP_Query counts as usual.
+	 *
 	 * @param list<string>         $post_types
 	 * @param array<string, mixed> $request    Typically $_GET (already unslashed).
 	 *
-	 * @return array<string, mixed>
+	 * @return array{args: array<string, mixed>, total: int|null}
 	 */
-	public function build_args( array $post_types, int $posts_per_page, array $request = [], int $paged = 1 ): array {
+	public function build( array $post_types, int $posts_per_page, array $request = [], int $paged = 1 ): array {
 		$post_types = array_values( array_filter( array_map( 'sanitize_key', $post_types ) ) );
 
 		if ( [] === $post_types ) {
@@ -48,17 +53,26 @@ class Directory_Query {
 			$args['s'] = $search;
 		}
 
-		$selections = $this->get_selections( $request );
+		$selections = $this->expand_hierarchy( $this->get_selections( $request ) );
 
-		$indexed_ids = $this->index->is_built()
-			? $this->index->get_post_ids( $selections, $post_types )
+		$page = $this->index->is_built()
+			? $this->index->get_page( $selections, $post_types, $args['posts_per_page'], $args['paged'] )
 			: null;
 
-		if ( null !== $indexed_ids ) {
-			// Empty match set must not fall through to an unfiltered query.
-			$args['post__in'] = [] === $indexed_ids ? [ 0 ] : $indexed_ids;
+		if ( null !== $page ) {
+			// The index already applied LIMIT/OFFSET, so WP_Query fetches this
+			// page and nothing else. Empty must not fall through to unfiltered.
+			$args['post__in'] = [] === $page['ids'] ? [ 0 ] : $page['ids'];
+			$args['orderby']  = 'post__in';
+			$args['paged']    = 1;
 
-			return $args;
+			// Counting is the index's job now; skip SQL_CALC_FOUND_ROWS.
+			$args['no_found_rows'] = true;
+
+			return [
+				'args'  => $args,
+				'total' => $page['total'],
+			];
 		}
 
 		$tax_query = self::build_tax_clauses( $this->registry->get_all(), $selections );
@@ -67,7 +81,10 @@ class Directory_Query {
 			$args['tax_query'] = $tax_query; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 		}
 
-		return $args;
+		return [
+			'args'  => $args,
+			'total' => null,
+		];
 	}
 
 	/**
@@ -135,6 +152,10 @@ class Directory_Query {
 			$values = explode( ',', (string) $raw );
 		}
 
+		// Drop nested arrays first: `?facet_topic[a][b]=c` would otherwise reach
+		// the string cast and emit an array-to-string warning on a public URL.
+		$values = array_filter( $values, 'is_scalar' );
+
 		return array_values( array_slice(
 			array_filter( array_map( static function ( mixed $value ): string {
 				return sanitize_title( (string) $value );
@@ -176,10 +197,14 @@ class Directory_Query {
 			}
 
 			$clauses[] = [
-				'taxonomy' => (string) $facet['taxonomy'],
-				'field'    => 'slug',
-				'terms'    => array_values( $terms ),
-				'operator' => 'IN',
+				'taxonomy'         => (string) $facet['taxonomy'],
+				'field'            => 'slug',
+				'terms'            => array_values( $terms ),
+				'operator'         => 'IN',
+				// Descendants are already expanded into $terms when a facet opts
+				// into hierarchy. Off by default keeps this path matching the
+				// index path, which only ever matches the exact rows it stores.
+				'include_children' => false,
 			];
 		}
 
@@ -188,6 +213,66 @@ class Directory_Query {
 		}
 
 		return $clauses;
+	}
+
+	/**
+	 * Expand hierarchical facet selections to include descendant term slugs.
+	 *
+	 * Query-side only: the checked state in the UI and the URL both stay
+	 * limited to the terms the visitor actually chose.
+	 *
+	 * Deliberately uncapped, unlike the request-side MAX_TERMS_PER_FACET —
+	 * descendants come from the taxonomy, not from user input, so there is
+	 * nothing here a request can inflate.
+	 *
+	 * @param array<string, list<string>> $selections
+	 *
+	 * @return array<string, list<string>>
+	 */
+	private function expand_hierarchy( array $selections ): array {
+		foreach ( $this->registry->get_all() as $facet ) {
+			$slug     = $facet['slug'];
+			$taxonomy = $facet['taxonomy'];
+			$terms    = $selections[ $slug ] ?? [];
+
+			if (
+				[] === $terms
+				|| empty( $facet['hierarchical'] )
+				|| ! is_taxonomy_hierarchical( $taxonomy )
+			) {
+				continue;
+			}
+
+			$expanded = $terms;
+
+			foreach ( $terms as $term_slug ) {
+				$term = get_term_by( 'slug', $term_slug, $taxonomy );
+
+				if ( ! $term instanceof \WP_Term ) {
+					continue;
+				}
+
+				$children = get_term_children( $term->term_id, $taxonomy );
+
+				if ( is_wp_error( $children ) ) {
+					continue;
+				}
+
+				foreach ( $children as $child_id ) {
+					$child = get_term( (int) $child_id, $taxonomy );
+
+					if ( ! ( $child instanceof \WP_Term ) ) {
+						continue;
+					}
+
+					$expanded[] = $child->slug;
+				}
+			}
+
+			$selections[ $slug ] = array_values( array_unique( $expanded ) );
+		}
+
+		return $selections;
 	}
 
 }

@@ -77,7 +77,7 @@ class Results_Endpoint {
 
 		return new \WP_REST_Response( [
 			'html'  => $html,
-			'found' => (int) $controller->get_query()->found_posts,
+			'found' => $controller->get_found_posts(),
 		] );
 	}
 

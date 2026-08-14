@@ -4,12 +4,10 @@ namespace Tribe\Plugin\Facets;
 
 class Facet_Types {
 
-	public const string CHECKBOXES     = 'checkboxes';
-	public const string DROPDOWN       = 'dropdown';
-	public const string RADIO          = 'radio';
-	public const string FANCY_DROPDOWN = 'fancy_dropdown';
-	public const string SEARCH         = 'search';
-	public const string RESET          = 'reset';
+	public const string CHECKBOXES = 'checkboxes';
+	public const string DROPDOWN   = 'dropdown';
+	public const string SEARCH     = 'search';
+	public const string RESET      = 'reset';
 
 	/**
 	 * Taxonomy facet UI types (admin + renderer).
@@ -18,10 +16,8 @@ class Facet_Types {
 	 */
 	public static function choices(): array {
 		return [
-			self::CHECKBOXES     => esc_html__( 'Checkboxes', 'tribe' ),
-			self::DROPDOWN       => esc_html__( 'Dropdown', 'tribe' ),
-			self::RADIO          => esc_html__( 'Radio', 'tribe' ),
-			self::FANCY_DROPDOWN => esc_html__( 'Fancy Dropdown', 'tribe' ),
+			self::CHECKBOXES => esc_html__( 'Checkboxes', 'tribe' ),
+			self::DROPDOWN   => esc_html__( 'Dropdown', 'tribe' ),
 		];
 	}
 
@@ -32,8 +28,6 @@ class Facet_Types {
 		return [
 			self::CHECKBOXES,
 			self::DROPDOWN,
-			self::RADIO,
-			self::FANCY_DROPDOWN,
 		];
 	}
 
@@ -45,7 +39,7 @@ class Facet_Types {
 	 * Types that use a sidebar/mobile accordion (and thus the "starts expanded" setting).
 	 */
 	public static function is_accordion_type( string $type ): bool {
-		return in_array( $type, [ self::CHECKBOXES, self::RADIO ], true );
+		return self::CHECKBOXES === $type;
 	}
 
 	/**

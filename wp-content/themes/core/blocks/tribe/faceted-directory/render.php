@@ -24,6 +24,18 @@ $c = Faceted_Directory_Controller::factory( [
 		<div class="b-faceted-directory__inner">
 			<?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- inner blocks. ?>
 		</div>
-		<p class="screen-reader-only" role="status" aria-live="polite" data-js="directory-status"></p>
+		<?php
+		// Result count is formatted client-side, so both forms ship as templates.
+		// ponytail: two forms only. Locales with more plural categories would
+		// need the count sent to the server, or wp.i18n in the view script.
+		?>
+		<p
+			class="screen-reader-only"
+			role="status"
+			aria-live="polite"
+			data-js="directory-status"
+			data-results-singular="<?php echo esc_attr__( '%s result found', 'tribe' ); ?>"
+			data-results-plural="<?php echo esc_attr__( '%s results found', 'tribe' ); ?>"
+		></p>
 	</form>
 </section>

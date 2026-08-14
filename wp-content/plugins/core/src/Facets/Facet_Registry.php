@@ -35,6 +35,8 @@ class Facet_Registry {
 	 *   mobile_type: string,
 	 *   sidebar_open: bool,
 	 *   mobile_open: bool,
+	 *   hierarchical: bool,
+	 *   searchable: bool,
 	 *   source: string
 	 * }>
 	 */
@@ -172,6 +174,8 @@ class Facet_Registry {
 	 *   mobile_type: string,
 	 *   sidebar_open: bool,
 	 *   mobile_open: bool,
+	 *   hierarchical: bool,
+	 *   searchable: bool,
 	 *   source: string
 	 * }|null
 	 */
@@ -179,7 +183,7 @@ class Facet_Registry {
 		$label    = trim( (string) ( $row[ Facets_Settings::FACET_LABEL ] ?? '' ) );
 		$slug     = sanitize_title( (string) ( $row[ Facets_Settings::FACET_SLUG ] ?? '' ) );
 		$taxonomy = (string) ( $row[ Facets_Settings::FACET_TAXONOMY ] ?? '' );
-		$top      = (string) ( $row[ Facets_Settings::FACET_TYPE ] ?? Facet_Types::FANCY_DROPDOWN );
+		$top      = (string) ( $row[ Facets_Settings::FACET_TYPE ] ?? Facet_Types::DROPDOWN );
 		$types    = $row[ Facets_Settings::FACET_POST_TYPES ] ?? [];
 
 		// Default true so existing rows (pre-toggle) keep their per-layout types.
@@ -220,6 +224,10 @@ class Facet_Registry {
 			'mobile_type'  => $layout_types['mobile_type'],
 			'sidebar_open' => $sidebar_open,
 			'mobile_open'  => $mobile_open,
+			// Whether the taxonomy is actually hierarchical is resolved at use
+			// time — taxonomies may not be registered when facets first load.
+			'hierarchical' => (bool) ( $row[ Facets_Settings::FACET_HIERARCHICAL ] ?? false ),
+			'searchable'   => (bool) ( $row[ Facets_Settings::FACET_SEARCHABLE ] ?? false ),
 			'source'       => 'taxonomy',
 		];
 	}

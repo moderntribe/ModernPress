@@ -8,19 +8,24 @@
 namespace Tribe\Plugin\Facets;
 
 require_once __DIR__ . '/Directory_Query.php';
+require_once __DIR__ . '/Facet_Index.php';
 require_once __DIR__ . '/Facet_Types.php';
 
 $layout_types = Facet_Types::normalize_layout_types(
-	Facet_Types::FANCY_DROPDOWN,
-	Facet_Types::RADIO,
+	Facet_Types::DROPDOWN,
+	Facet_Types::CHECKBOXES,
 	Facet_Types::DROPDOWN
 );
-assert( Facet_Types::FANCY_DROPDOWN === $layout_types['top_type'] );
-assert( Facet_Types::RADIO === $layout_types['sidebar_type'] );
+assert( Facet_Types::DROPDOWN === $layout_types['top_type'] );
+assert( Facet_Types::CHECKBOXES === $layout_types['sidebar_type'] );
 assert( Facet_Types::DROPDOWN === $layout_types['mobile_type'] );
 
-$legacy_layout_types = Facet_Types::normalize_layout_types( Facet_Types::FANCY_DROPDOWN, '', Facet_Types::CHECKBOXES );
-assert( Facet_Types::FANCY_DROPDOWN === $legacy_layout_types['sidebar_type'], 'missing sidebar type falls back to the legacy/top type' );
+$legacy_layout_types = Facet_Types::normalize_layout_types( Facet_Types::DROPDOWN, '', Facet_Types::CHECKBOXES );
+assert( Facet_Types::DROPDOWN === $legacy_layout_types['sidebar_type'], 'missing sidebar type falls back to the legacy/top type' );
+
+$retired_layout_types = Facet_Types::normalize_layout_types( 'radio', 'fancy_dropdown' );
+assert( Facet_Types::CHECKBOXES === $retired_layout_types['top_type'], 'retired types fall back to checkboxes' );
+assert( Facet_Types::CHECKBOXES === $retired_layout_types['sidebar_type'], 'an unknown sidebar type inherits the top type' );
 
 $facets = [
 	[ 'slug' => 'topic', 'taxonomy' => 'category' ],
@@ -35,6 +40,7 @@ assert( 1 === count( $one ), 'single facet yields one clause' );
 assert( 'category' === $one[0]['taxonomy'] );
 assert( [ 'news' ] === $one[0]['terms'] );
 assert( ! isset( $one['relation'] ), 'single facet has no relation key' );
+assert( false === $one[0]['include_children'], 'descendants are expanded up front, so tax_query must not add its own' );
 
 $two = Directory_Query::build_tax_clauses( $facets, [
 	'topic'  => [ 'news', 'events' ],
@@ -102,6 +108,32 @@ assert(
 assert(
 	[] === $index_match( $rows, [ 'topic' => [ 'missing' ] ] ),
 	'no matches yields empty set, which callers must turn into post__in [0]'
+);
+
+/**
+ * The index's WHERE builder feeds both the page query and the count query, so
+ * a placeholder/value mismatch would silently corrupt one of them.
+ */
+$single = Facet_Index::build_match_clause( [ 'topic' => [ 'news', 'events' ] ], [] );
+assert(
+	'( ( i.facet_slug = %s AND i.term_slug IN ( %s, %s ) ) )' === $single['where'],
+	'terms within a facet OR together'
+);
+assert( [ 'topic', 'news', 'events' ] === $single['values'], 'facet slug is bound before its terms' );
+
+$typed = Facet_Index::build_match_clause( [ 'topic' => [ 'news' ] ], [ 'post', 'staff' ] );
+assert( str_contains( $typed['where'], 'AND i.post_type IN ( %s, %s )' ), 'post types narrow the match' );
+assert( [ 'topic', 'news', 'post', 'staff' ] === $typed['values'], 'post types are bound last' );
+
+$multi = Facet_Index::build_match_clause( [ 'topic' => [ 'news' ], 'region' => [ 'west' ] ], [] );
+assert( 2 === substr_count( $multi['where'], 'i.facet_slug = %s' ), 'one clause per constrained facet' );
+assert(
+	substr_count( $multi['where'], '%s' ) === count( $multi['values'] ),
+	'every placeholder has exactly one bound value'
+);
+assert(
+	substr_count( $typed['where'], '%s' ) === count( $typed['values'] ),
+	'every placeholder has exactly one bound value, post types included'
 );
 
 fwrite( STDOUT, "Directory_Query_Check: OK\n" );

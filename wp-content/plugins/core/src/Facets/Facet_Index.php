@@ -27,6 +27,8 @@ class Facet_Index {
 	 */
 	private const int TERM_REINDEX_LIMIT = 500;
 
+	private bool $cache_bumped = false;
+
 	public function __construct(
 		private Facet_Registry $registry,
 	) {
@@ -70,84 +72,72 @@ class Facet_Index {
 	}
 
 	/**
-	 * Matching post IDs for the given facet selections.
+	 * One page of matching post IDs, newest first, plus the full match count.
 	 *
-	 * @param array<string, list<string>> $selections   Facet slug => selected term slugs.
+	 * Paginating here rather than handing every match to WP_Query keeps
+	 * `post__in` the size of a page instead of the size of the result set.
+	 *
+	 * @param array<string, list<string>> $selections Facet slug => selected term slugs.
 	 * @param list<string>                $post_types
 	 *
-	 * @return list<int>|null Null when no facet constraints are active.
+	 * @return array{ids: list<int>, total: int}|null Null when no facet constraints are active.
 	 */
-	public function get_post_ids( array $selections, array $post_types ): ?array {
+	public function get_page( array $selections, array $post_types, int $per_page, int $paged ): ?array {
 		$active = array_filter( $selections, static fn ( array $terms ): bool => [] !== $terms );
 
 		if ( [] === $active ) {
 			return null;
 		}
 
-		$cache_key = $this->get_cache_key( $active, $post_types );
-		$cached    = get_transient( $cache_key );
+		$per_page = max( 1, $per_page );
+		$paged    = max( 1, $paged );
 
-		if ( is_array( $cached ) ) {
-			return array_map( 'intval', $cached );
-		}
+		// Cached apart: the total is the same for every page of a selection,
+		// and counting is the more expensive of the two queries.
+		$ids = $this->get_cached(
+			$this->get_cache_key( $active, $post_types, $per_page, $paged ),
+			fn (): array => $this->query_page( $active, $post_types, $per_page, $paged )
+		);
 
-		$ids = $this->query_post_ids( $active, $post_types );
+		$total = $this->get_cached(
+			$this->get_cache_key( $active, $post_types ),
+			fn (): int => $this->query_total( $active, $post_types )
+		);
 
-		set_transient( $cache_key, $ids, self::CACHE_TTL );
-
-		return $ids;
+		return [
+			'ids'   => is_array( $ids ) ? array_map( 'intval', array_values( $ids ) ) : [],
+			'total' => (int) $total,
+		];
 	}
 
 	/**
 	 * Reindex a single post.
+	 *
+	 * Rows are computed and compared against what is already stored before
+	 * anything is written, so a save that did not change this post's facet
+	 * terms writes nothing and invalidates nothing. That matters because
+	 * `set_object_terms` fires once per taxonomy, meaning one save reaches this
+	 * method several times over.
+	 *
+	 * @param bool $stored_rows_known_empty Skip the comparison because the
+	 *                                      caller just emptied the table.
 	 */
-	public function index_post( int $post_id ): void {
+	public function index_post( int $post_id, bool $stored_rows_known_empty = false ): void {
 		$post = get_post( $post_id );
 
 		if ( ! $post instanceof \WP_Post ) {
 			return;
 		}
 
+		$rows = 'publish' === $post->post_status ? $this->build_rows( $post ) : [];
+
+		if ( ! $stored_rows_known_empty && $rows === $this->get_stored_rows( $post_id ) ) {
+			return;
+		}
+
 		$this->delete_post( $post_id );
-
-		if ( 'publish' !== $post->post_status ) {
-			$this->bump_cache_version();
-
-			return;
-		}
-
-		$facets = $this->get_facets_for_post_type( $post->post_type );
-
-		if ( [] === $facets ) {
-			$this->bump_cache_version();
-
-			return;
-		}
-
-		$rows = [];
-
-		foreach ( $this->group_by_taxonomy( $facets ) as $taxonomy => $taxonomy_facets ) {
-			$terms = wp_get_object_terms( $post_id, $taxonomy );
-
-			if ( is_wp_error( $terms ) || ! is_array( $terms ) ) {
-				continue;
-			}
-
-			foreach ( $taxonomy_facets as $facet ) {
-				foreach ( $terms as $term ) {
-					$rows[] = [
-						$post_id,
-						$post->post_type,
-						$facet['slug'],
-						(int) $term->term_id,
-						$term->slug,
-					];
-				}
-			}
-		}
-
 		$this->insert_rows( $rows );
-		$this->bump_cache_version();
+		$this->bump_cache_version_once();
 	}
 
 	public function delete_post( int $post_id ): void {
@@ -155,6 +145,8 @@ class Facet_Index {
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$wpdb->delete( $this->table_name(), [ 'post_id' => $post_id ], [ '%d' ] );
+
+		$this->bump_cache_version_once();
 	}
 
 	/**
@@ -198,7 +190,9 @@ class Facet_Index {
 			] );
 
 			foreach ( $ids as $id ) {
-				$this->index_post( (int) $id );
+				// The table was just truncated, so skip the per-post read that
+				// change detection would otherwise do for every row.
+				$this->index_post( (int) $id, true );
 				$indexed++;
 			}
 
@@ -255,21 +249,27 @@ class Facet_Index {
 	}
 
 	/**
+	 * Shared WHERE fragment and bound values for the page and count queries.
+	 *
+	 * AND across facets, OR within a facet. The AND half is enforced by the
+	 * caller's HAVING clause, since a post matches only when it carries a row
+	 * for every constrained facet.
+	 *
+	 * Pure, so the self-check can assert its shape without a database.
+	 *
 	 * @param array<string, list<string>> $selections
 	 * @param list<string>                $post_types
 	 *
-	 * @return list<int>
+	 * @return array{where: string, values: list<string>}
 	 */
-	private function query_post_ids( array $selections, array $post_types ): array {
-		global $wpdb;
-
+	public static function build_match_clause( array $selections, array $post_types ): array {
 		$clauses = [];
 		$values  = [];
 
 		foreach ( $selections as $slug => $terms ) {
 			$placeholders = implode( ', ', array_fill( 0, count( $terms ), '%s' ) );
-			$clauses[]    = "( facet_slug = %s AND term_slug IN ( {$placeholders} ) )";
-			$values[]     = $slug;
+			$clauses[]    = "( i.facet_slug = %s AND i.term_slug IN ( {$placeholders} ) )";
+			$values[]     = (string) $slug;
 
 			foreach ( $terms as $term ) {
 				$values[] = $term;
@@ -280,23 +280,170 @@ class Facet_Index {
 
 		if ( [] !== $post_types ) {
 			$type_placeholders = implode( ', ', array_fill( 0, count( $post_types ), '%s' ) );
-			$where            .= " AND post_type IN ( {$type_placeholders} )";
+			$where            .= " AND i.post_type IN ( {$type_placeholders} )";
 
 			foreach ( $post_types as $post_type ) {
 				$values[] = $post_type;
 			}
 		}
 
-		$values[] = count( $selections );
+		return [
+			'where'  => $where,
+			'values' => $values,
+		];
+	}
 
-		$sql = 'SELECT post_id FROM ' . $this->table_name()
-			. " WHERE {$where}"
-			. ' GROUP BY post_id HAVING COUNT( DISTINCT facet_slug ) = %d';
+	/**
+	 * Read-through transient wrapper.
+	 *
+	 * Only a literal `false` counts as a miss, so an empty page and a zero
+	 * total both cache rather than recomputing on every request.
+	 */
+	private function get_cached( string $key, callable $compute ): mixed {
+		$cached = get_transient( $key );
+
+		if ( false !== $cached ) {
+			return $cached;
+		}
+
+		$value = $compute();
+
+		set_transient( $key, $value, self::CACHE_TTL );
+
+		return $value;
+	}
+
+	/**
+	 * The rows a post should have, in a comparable order.
+	 *
+	 * @return list<array{int, string, string, int, string}>
+	 */
+	private function build_rows( \WP_Post $post ): array {
+		$facets = $this->get_facets_for_post_type( $post->post_type );
+
+		if ( [] === $facets ) {
+			return [];
+		}
+
+		$rows = [];
+
+		foreach ( $this->group_by_taxonomy( $facets ) as $taxonomy => $taxonomy_facets ) {
+			$terms = wp_get_object_terms( $post->ID, $taxonomy );
+
+			if ( is_wp_error( $terms ) || ! is_array( $terms ) ) {
+				continue;
+			}
+
+			foreach ( $taxonomy_facets as $facet ) {
+				foreach ( $terms as $term ) {
+					$rows[] = [
+						(int) $post->ID,
+						(string) $post->post_type,
+						(string) $facet['slug'],
+						(int) $term->term_id,
+						(string) $term->slug,
+					];
+				}
+			}
+		}
+
+		return self::sort_rows( $rows );
+	}
+
+	/**
+	 * The rows a post currently has, in the same order build_rows() produces.
+	 *
+	 * @return list<array{int, string, string, int, string}>
+	 */
+	private function get_stored_rows( int $post_id ): array {
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT post_id, post_type, facet_slug, term_id, term_slug FROM ' . $this->table_name() . ' WHERE post_id = %d',
+				$post_id
+			),
+			ARRAY_A
+		);
+
+		if ( ! is_array( $results ) ) {
+			return [];
+		}
+
+		return self::sort_rows( array_map(
+			static fn ( array $row ): array => [
+				(int) $row['post_id'],
+				(string) $row['post_type'],
+				(string) $row['facet_slug'],
+				(int) $row['term_id'],
+				(string) $row['term_slug'],
+			],
+			$results
+		) );
+	}
+
+	/**
+	 * Join to wp_posts for ordering rather than denormalizing post_date: it is
+	 * an eq_ref join on the primary key of rows already being read, and it
+	 * keeps the status check authoritative if a row ever goes stale.
+	 *
+	 * @param array{where: string, values: list<string>} $match
+	 */
+	private function match_sql( array $match ): string {
+		global $wpdb;
+
+		return 'FROM ' . $this->table_name() . ' i'
+			. " INNER JOIN {$wpdb->posts} p ON p.ID = i.post_id"
+			. " WHERE {$match['where']} AND p.post_status = 'publish'";
+	}
+
+	/**
+	 * @param array<string, list<string>> $selections
+	 * @param list<string>                $post_types
+	 *
+	 * @return list<int>
+	 */
+	private function query_page( array $selections, array $post_types, int $per_page, int $paged ): array {
+		global $wpdb;
+
+		$match    = self::build_match_clause( $selections, $post_types );
+		$values   = $match['values'];
+		$values[] = count( $selections );
+		$values[] = $per_page;
+		$values[] = ( $paged - 1 ) * $per_page;
+
+		// post_date joins the GROUP BY rather than being aggregated so the sort
+		// stays index-friendly; it is functionally dependent on post_id anyway.
+		$sql = 'SELECT i.post_id ' . $this->match_sql( $match )
+			. ' GROUP BY i.post_id, p.post_date'
+			. ' HAVING COUNT( DISTINCT i.facet_slug ) = %d'
+			. ' ORDER BY p.post_date DESC, i.post_id DESC'
+			. ' LIMIT %d OFFSET %d';
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 		$results = $wpdb->get_col( $wpdb->prepare( $sql, $values ) );
 
 		return array_map( 'intval', $results );
+	}
+
+	/**
+	 * @param array<string, list<string>> $selections
+	 * @param list<string>                $post_types
+	 */
+	private function query_total( array $selections, array $post_types ): int {
+		global $wpdb;
+
+		$match    = self::build_match_clause( $selections, $post_types );
+		$values   = $match['values'];
+		$values[] = count( $selections );
+
+		$sql = 'SELECT COUNT(*) FROM ( SELECT i.post_id ' . $this->match_sql( $match )
+			. ' GROUP BY i.post_id'
+			. ' HAVING COUNT( DISTINCT i.facet_slug ) = %d ) matches';
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+		return (int) $wpdb->get_var( $wpdb->prepare( $sql, $values ) );
 	}
 
 	/**
@@ -369,10 +516,13 @@ class Facet_Index {
 	}
 
 	/**
+	 * Key for a page of results, or for the selection's total when per_page and
+	 * paged are omitted.
+	 *
 	 * @param array<string, list<string>> $selections
 	 * @param list<string>                $post_types
 	 */
-	private function get_cache_key( array $selections, array $post_types ): string {
+	private function get_cache_key( array $selections, array $post_types, int $per_page = 0, int $paged = 0 ): string {
 		ksort( $selections );
 
 		foreach ( $selections as &$terms ) {
@@ -382,7 +532,8 @@ class Facet_Index {
 		unset( $terms );
 		sort( $post_types );
 
-		return 'tribe_facets_' . $this->get_cache_version() . '_' . md5( (string) wp_json_encode( [ $selections, $post_types ] ) );
+		return 'tribe_facets_' . $this->get_cache_version() . '_'
+			. md5( (string) wp_json_encode( [ $selections, $post_types, $per_page, $paged ] ) );
 	}
 
 	private function get_cache_version(): int {
@@ -391,6 +542,41 @@ class Facet_Index {
 
 	private function bump_cache_version(): void {
 		update_option( self::CACHE_VERSION_OPTION, $this->get_cache_version() + 1, false );
+	}
+
+	/**
+	 * At most one bump per request.
+	 *
+	 * A bump invalidates every cached result set, so the second and third
+	 * calls within one save (or one bulk edit) buy nothing but option writes.
+	 *
+	 * ponytail: a facet query running between two writes in the same request
+	 * could cache against the already-bumped version. Nothing does that today
+	 * — indexing happens on save, querying on render. Upgrade path is bumping
+	 * on shutdown instead.
+	 */
+	private function bump_cache_version_once(): void {
+		if ( $this->cache_bumped ) {
+			return;
+		}
+
+		$this->cache_bumped = true;
+
+		$this->bump_cache_version();
+	}
+
+	/**
+	 * Deterministic order, so two row sets can be compared with ===.
+	 *
+	 * @param list<array{int, string, string, int, string}> $rows
+	 *
+	 * @return list<array{int, string, string, int, string}>
+	 */
+	private static function sort_rows( array $rows ): array {
+		// usort reindexes, so the result is already a list.
+		usort( $rows, static fn ( array $a, array $b ): int => $a <=> $b );
+
+		return $rows;
 	}
 
 }

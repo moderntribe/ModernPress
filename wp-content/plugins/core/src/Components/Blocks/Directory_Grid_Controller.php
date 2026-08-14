@@ -11,6 +11,9 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 	private const string POST_TYPES_CONTEXT = 'tribe/faceted-directory/postTypes';
 
 	protected \WP_Query $query;
+	protected int $found_posts;
+	protected int $max_num_pages;
+	protected int $paged;
 
 	/**
 	 * @var list<string>
@@ -50,8 +53,20 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 		return $this->query;
 	}
 
+	/**
+	 * Total matches across every page. Prefer this over the WP_Query property:
+	 * on the indexed path WP_Query only ever sees one page.
+	 */
+	public function get_found_posts(): int {
+		return $this->found_posts;
+	}
+
+	public function get_max_num_pages(): int {
+		return $this->max_num_pages;
+	}
+
 	public function should_show_pagination(): bool {
-		return $this->show_pagination && $this->query->max_num_pages > 1;
+		return $this->show_pagination && $this->max_num_pages > 1;
 	}
 
 	/**
@@ -88,8 +103,8 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 			'format'    => '?' . Facet_Registry::PAGE_PARAM . '=%#%',
 			'add_args'  => tribe_project()->container()->get( Directory_Query::class )
 				->get_active_query_args( $this->request ),
-			'total'     => (int) $this->query->max_num_pages,
-			'current'   => max( 1, (int) ( $this->query->get( 'paged' ) ?: 1 ) ),
+			'total'     => $this->max_num_pages,
+			'current'   => $this->paged,
 			'type'      => 'list',
 			'prev_text' => __( 'Previous', 'tribe' ),
 			'next_text' => __( 'Next', 'tribe' ),
@@ -105,16 +120,24 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$request     ??= wp_unslash( $_GET );
 		$this->request = is_array( $request ) ? $request : [];
-		$paged         = absint( $this->request[ Facet_Registry::PAGE_PARAM ] ?? get_query_var( 'paged' ) ?: 1 );
+		$this->paged   = max( 1, absint( $this->request[ Facet_Registry::PAGE_PARAM ] ?? get_query_var( 'paged' ) ?: 1 ) );
 
-		$args = tribe_project()->container()->get( Directory_Query::class )->build_args(
+		$built = tribe_project()->container()->get( Directory_Query::class )->build(
 			$this->post_types,
 			$this->posts_per_page,
 			$this->request,
-			$paged
+			$this->paged
 		);
 
-		$this->query = new \WP_Query( $args );
+		$this->query = new \WP_Query( $built['args'] );
+
+		// The index paginates before WP_Query sees the results, so its totals
+		// are the only ones that describe the whole match set.
+		$this->found_posts = $built['total'] ?? (int) $this->query->found_posts;
+
+		$this->max_num_pages = null !== $built['total']
+			? (int) ceil( $built['total'] / max( 1, $this->posts_per_page ) )
+			: (int) $this->query->max_num_pages;
 	}
 
 	/**

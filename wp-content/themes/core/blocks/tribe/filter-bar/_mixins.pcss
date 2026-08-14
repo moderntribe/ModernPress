@@ -20,10 +20,47 @@
 	}
 }
 
+/*
+ * Search field affordances shared by the keyword search facet and the
+ * dropdown's option filter: a masked icon on the right, and a focus state
+ * that lifts the field off its resting fill and darkens the icon.
+ *
+ * The consumer owns --icon-size and its own field metrics. Each wrapper holds
+ * exactly one input, hence the bare `input` selector.
+ */
+@define-mixin facet-search-field {
+	position: relative;
+
+	&::after {
+		content: "";
+		position: absolute;
+		top: 50%;
+		right: var(--spacer-20);
+		width: var(--icon-size);
+		height: var(--icon-size);
+		mask: var(--icon-search) center no-repeat;
+		mask-size: contain;
+		background-color: var(--filter-bar-control-icon-color);
+		transform: translateY(-50%);
+	}
+
+	&:has(input:focus) {
+
+		input {
+			background-color: var(--filter-bar-control-background-color);
+			border-color: var(--color-border);
+		}
+
+		&::after {
+			background-color: var(--color-border);
+		}
+	}
+}
+
 @define-mixin facet-checkbox-hover-focus {
 
 	&::before {
-		border-color: var(--color-black);
+		border-color: var(--filter-bar-checkbox-hover-border-color);
 	}
 
 	.tribe-facet__label-text {
@@ -33,9 +70,9 @@
 }
 
 /*
- * Checkbox indicator. Positioning is left to the consumer: checkbox/radio
- * labels place it absolutely so wrapped text stays aligned, while fancy
- * dropdown options lay it out as a flex item.
+ * Checkbox indicator. Positioning is left to the consumer: checkbox labels
+ * place it absolutely so wrapped text stays aligned, while dropdown options
+ * lay it out as a flex item.
  */
 @define-mixin facet-checkbox-box {
 	content: "";
@@ -43,11 +80,27 @@
 	width: 24px;
 	height: 24px;
 	flex-shrink: 0;
-	border: 1px solid var(--color-neutral-30);
+	border: 1px solid var(--filter-bar-checkbox-border-color);
 }
 
 @define-mixin facet-checkbox-box-checked {
-	border-color: var(--color-black);
-	background: var(--icon-list-check) center no-repeat;
-	background-size: 16px 14px;
+	border-color: var(--filter-bar-checkbox-hover-border-color);
+}
+
+/*
+ * The tick. Drawn on a second pseudo over the box, since masking the box
+ * itself would take the border with it. Masked rather than a background
+ * image so the tick follows the theme.
+ *
+ * The consumer positions it over its own box.
+ */
+@define-mixin facet-checkbox-check {
+	content: "";
+	display: block;
+	position: absolute;
+	width: 16px;
+	height: 14px;
+	mask: var(--icon-list-check) center no-repeat;
+	mask-size: contain;
+	background-color: var(--filter-bar-checkbox-check-color);
 }

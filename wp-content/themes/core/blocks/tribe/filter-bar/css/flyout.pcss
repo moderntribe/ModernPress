@@ -76,14 +76,14 @@
 	z-index: 1000;
 	display: flex;
 	flex-direction: column;
-	background-color: var(--color-white);
+	background-color: var(--filter-bar-control-background-color);
 	box-shadow: var(--filter-bar-flyout-shadow);
 	border-top-left-radius: var(--border-radius-l);
 	border-top-right-radius: var(--border-radius-l);
 	overflow: auto;
 	visibility: hidden;
 	opacity: 0;
-	color: var(--color-black);
+	color: var(--color-text);
 	transition: visibility 0.2s, opacity 0.2s;
 
 	&[aria-hidden="false"].is-open {
@@ -135,7 +135,7 @@
 	border: 0;
 	background: none;
 	cursor: pointer;
-	color: var(--color-black);
+	color: var(--color-text);
 
 	@media (--has-hover) {
 
@@ -176,7 +176,7 @@
 .b-filter-bar__flyout-body {
 	flex: 1;
 	overflow: auto;
-	scrollbar-color: var(--color-neutral-50) var(--color-neutral-30);
+	scrollbar-color: var(--filter-bar-scrollbar-thumb-color) var(--filter-bar-scrollbar-track-color);
 	scrollbar-width: thin;
 
 	@container faceted-directory (min-width: 992px) {

@@ -25,8 +25,6 @@ import { arrayMove, SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import metadata from './block.json';
 
-import './editor.pcss';
-
 const SortableFacet = ( { facet, onRemove, onDisplayLabelChange } ) => {
 	const { attributes, listeners, setNodeRef, transform, transition } =
 		useSortable( { id: facet.slug } );

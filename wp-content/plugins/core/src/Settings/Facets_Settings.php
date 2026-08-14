@@ -31,6 +31,9 @@ class Facets_Settings extends Settings_Sub_Page {
 	public const string FACET_SIDEBAR_TYPE     = 'sidebar_type';
 	public const string FACET_MOBILE_TYPE      = 'mobile_type';
 
+	public const string FACET_HIERARCHICAL = 'hierarchical';
+	public const string FACET_SEARCHABLE   = 'searchable';
+
 	public const string FACET_SIDEBAR_ACCORDION_OPEN = 'sidebar_accordion_open';
 	public const string FACET_MOBILE_ACCORDION_OPEN  = 'mobile_accordion_open';
 
@@ -96,14 +99,24 @@ class Facets_Settings extends Settings_Sub_Page {
 						->choices( $type_choices )
 						->stylized()
 						->required()
-						->default( Facet_Types::FANCY_DROPDOWN )
+						->default( Facet_Types::DROPDOWN )
 						->format( 'value' )
-						->helperText( esc_html__( 'Default control used across filter bar layouts. Fancy Dropdown works well above the directory; Checkboxes work well in the sidebar.', 'tribe' ) )
+						->helperText( esc_html__( 'Default control used across filter bar layouts. Dropdown works well above the directory; Checkboxes work well in the sidebar.', 'tribe' ) )
 						->column( 50 ),
 					TrueFalse::make( esc_html__( 'Customize by Layout', 'tribe' ), self::FACET_CUSTOMIZE_LAYOUT )
 						->stylized( esc_html__( 'Yes', 'tribe' ), esc_html__( 'No', 'tribe' ) )
 						->default( true )
 						->helperText( esc_html__( 'When off, sidebar and mobile use the Display Type. Turn on to set different controls per layout.', 'tribe' ) )
+						->column( 50 ),
+					TrueFalse::make( esc_html__( 'Show Hierarchy', 'tribe' ), self::FACET_HIERARCHICAL )
+						->stylized( esc_html__( 'Yes', 'tribe' ), esc_html__( 'No', 'tribe' ) )
+						->default( false )
+						->helperText( esc_html__( 'Nest child terms under their parents, indented one level each. Selecting a parent also matches posts in its children. Ignored for taxonomies that are not hierarchical.', 'tribe' ) )
+						->column( 50 ),
+					TrueFalse::make( esc_html__( 'Searchable', 'tribe' ), self::FACET_SEARCHABLE )
+						->stylized( esc_html__( 'Yes', 'tribe' ), esc_html__( 'No', 'tribe' ) )
+						->default( false )
+						->helperText( esc_html__( 'Add a search box that filters this facet\'s terms as you type. Applies to Dropdown only.', 'tribe' ) )
 						->column( 50 ),
 
 					Tab::make( esc_html__( 'Layout Overrides', 'tribe' ), self::TAB_LAYOUT )
@@ -164,7 +177,7 @@ class Facets_Settings extends Settings_Sub_Page {
 	}
 
 	/**
-	 * Show "starts expanded" when the effective layout type is checkboxes or radio.
+	 * Show "starts expanded" when the effective layout type is checkboxes.
 	 *
 	 * When layout customization is off, the Display Type is the effective type.
 	 * When on, the layout-specific field is — empty (inherit) falls through to
@@ -173,42 +186,34 @@ class Facets_Settings extends Settings_Sub_Page {
 	 * @return list<\Extended\ACF\ConditionalLogic>
 	 */
 	private function accordion_open_conditionals( string $layout_type_field, bool $is_mobile = false ): array {
-		$accordion_types = [ Facet_Types::CHECKBOXES, Facet_Types::RADIO ];
-		$conditionals    = [];
+		$type = Facet_Types::CHECKBOXES;
 
-		foreach ( $accordion_types as $type ) {
-			$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '!=', 1 )
-				->and( self::FACET_TYPE, '==', $type );
-		}
-
-		foreach ( $accordion_types as $type ) {
-			$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
-				->and( $layout_type_field, '==', $type );
-		}
+		$conditionals = [
+			ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '!=', 1 )
+				->and( self::FACET_TYPE, '==', $type ),
+			ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
+				->and( $layout_type_field, '==', $type ),
+		];
 
 		if ( $is_mobile ) {
-			foreach ( $accordion_types as $type ) {
-				// Mobile empty → sidebar when sidebar is set.
-				$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
-					->and( self::FACET_MOBILE_TYPE, '==empty' )
-					->and( self::FACET_SIDEBAR_TYPE, '==', $type );
+			// Mobile empty → sidebar when sidebar is set.
+			$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
+				->and( self::FACET_MOBILE_TYPE, '==empty' )
+				->and( self::FACET_SIDEBAR_TYPE, '==', $type );
 
-				// Mobile + sidebar empty → Display Type.
-				$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
-					->and( self::FACET_MOBILE_TYPE, '==empty' )
-					->and( self::FACET_SIDEBAR_TYPE, '==empty' )
-					->and( self::FACET_TYPE, '==', $type );
-			}
+			// Mobile + sidebar empty → Display Type.
+			$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
+				->and( self::FACET_MOBILE_TYPE, '==empty' )
+				->and( self::FACET_SIDEBAR_TYPE, '==empty' )
+				->and( self::FACET_TYPE, '==', $type );
 
 			return $conditionals;
 		}
 
-		foreach ( $accordion_types as $type ) {
-			// Sidebar empty → Display Type.
-			$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
-				->and( $layout_type_field, '==empty' )
-				->and( self::FACET_TYPE, '==', $type );
-		}
+		// Sidebar empty → Display Type.
+		$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
+			->and( $layout_type_field, '==empty' )
+			->and( self::FACET_TYPE, '==', $type );
 
 		return $conditionals;
 	}

@@ -173,7 +173,7 @@ const copyFacetState = ( source, target ) => {
 			}
 
 			if ( sourceControl instanceof window.HTMLInputElement ) {
-				if ( [ 'checkbox', 'radio' ].includes( sourceControl.type ) ) {
+				if ( sourceControl.type === 'checkbox' ) {
 					return sourceControl.checked ? [ sourceControl.value ] : [];
 				}
 
@@ -192,7 +192,7 @@ const copyFacetState = ( source, target ) => {
 		}
 
 		if ( control instanceof window.HTMLInputElement ) {
-			if ( [ 'checkbox', 'radio' ].includes( control.type ) ) {
+			if ( control.type === 'checkbox' ) {
 				control.checked = selectedValues.includes( control.value );
 
 				return;

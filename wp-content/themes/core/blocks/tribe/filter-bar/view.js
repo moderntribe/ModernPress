@@ -3,7 +3,7 @@
  */
 
 import { bindFlyoutEvents, updateClearAllVisibility } from './js/flyout';
-import { initFancyDropdowns, syncFancyDropdowns } from './js/fancy-dropdown';
+import { initDropdowns, syncDropdowns } from './js/dropdown';
 import { refreshResults, bindPagination, clearFacetInputs } from './js/results';
 import { bindFacetClears, updateFacetClearVisibility } from './js/facet-clear';
 import { SELECTORS } from './js/selectors';
@@ -51,9 +51,10 @@ const initFormBehavior = ( form ) => {
 	form.addEventListener( 'input', ( event ) => {
 		const target = event.target;
 
+		// Match the keyword search facet specifically. A dropdown's option
+		// filter is also type="search" but must never hit the server.
 		if (
-			! target ||
-			target.type !== 'search' ||
+			! target?.matches?.( SELECTORS.searchInput ) ||
 			isMobileFlyoutControl( target )
 		) {
 			return;
@@ -72,7 +73,7 @@ const initFormBehavior = ( form ) => {
 
 		event.preventDefault();
 		clearFacetInputs( form );
-		syncFancyDropdowns( form );
+		syncDropdowns( form );
 		updateFacetClearVisibility( form );
 		refreshResults( form );
 		form.querySelectorAll( SELECTORS.filterBar ).forEach(
@@ -85,14 +86,14 @@ const initFormBehavior = ( form ) => {
 };
 
 const init = () => {
-	initFancyDropdowns();
+	initDropdowns();
 
 	document
 		.querySelectorAll( SELECTORS.filterBarSidebar )
 		.forEach( ( block ) => {
 			bindFlyoutEvents( block );
 			block.addEventListener( 'tribe-facets-layout-change', () => {
-				syncFancyDropdowns( block );
+				syncDropdowns( block );
 				updateFacetClearVisibility( block );
 			} );
 		} );

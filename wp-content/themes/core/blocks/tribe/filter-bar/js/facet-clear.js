@@ -1,12 +1,11 @@
 /**
  * Per-facet clear controls.
  *
- * Radios in particular can't be deselected by clicking, so each facet gets its
- * own clear button. Buttons ship hidden and only appear where selections exist.
+ * Buttons ship hidden and only appear where selections exist.
  */
 
 import { clearFacetInputs } from './results';
-import { syncFancyDropdowns } from './fancy-dropdown';
+import { syncDropdowns } from './dropdown';
 import { SELECTORS } from './selectors';
 
 const hasSelections = ( facet ) =>
@@ -41,7 +40,7 @@ export const bindFacetClears = ( form ) => {
 
 		event.preventDefault();
 		clearFacetInputs( facet );
-		syncFancyDropdowns( facet );
+		syncDropdowns( facet );
 
 		// Let the form-level change handler decide whether to refresh now
 		// (top / desktop sidebar) or wait for "Show results" (mobile flyout).
@@ -51,7 +50,7 @@ export const bindFacetClears = ( form ) => {
 		// instead of letting it fall to the document.
 		if ( button.hidden ) {
 			const target =
-				facet.querySelector( SELECTORS.fancyTrigger ) ??
+				facet.querySelector( SELECTORS.dropdownTrigger ) ??
 				facet.querySelector( SELECTORS.focusable );
 
 			target?.focus();

@@ -35,7 +35,7 @@ const getGridConfig = ( grid ) => {
  * @param {Element} root Form or facet wrapper.
  */
 export const clearFacetInputs = ( root ) => {
-	root.querySelectorAll( SELECTORS.checkboxesRadios ).forEach( ( input ) => {
+	root.querySelectorAll( SELECTORS.checkboxes ).forEach( ( input ) => {
 		input.checked = false;
 	} );
 
@@ -94,13 +94,16 @@ const buildRequestUrl = ( form, grid, paged ) => {
 
 const announce = ( form, found ) => {
 	const region = form.querySelector( SELECTORS.liveRegion );
+	const template =
+		found === 1
+			? region?.dataset.resultsSingular
+			: region?.dataset.resultsPlural;
 
-	if ( ! region ) {
+	if ( ! template ) {
 		return;
 	}
 
-	region.textContent =
-		found === 1 ? '1 result found' : `${ found } results found`;
+	region.textContent = template.replace( '%s', String( found ) );
 };
 
 const pushUrl = ( form, paged ) => {
