@@ -1,0 +1,41 @@
+name: tribe-alerts
+recipe: wordpress
+env_file:
+  - dev/lando/.env
+
+excludes:
+  - .vscode
+  - .github
+
+config:
+  php: '8.3'
+  via: nginx
+  database: mysql
+  webroot: dev/public
+
+proxy:
+  appserver_nginx:
+    - tribe-alert.lndo.site
+
+services:
+  appserver:
+    xdebug: true
+    overrides:
+      volumes:
+        - './:/app/dev/public/wp-content/plugins/tribe-alerts/'
+      environment:
+        PHP_IDE_CONFIG: "serverName=tribe-alerts"
+        XDEBUG_SESSION_START: lando
+
+  mailhog:
+    type: mailhog
+    portforward: true
+    hogfrom:
+      - appserver
+
+events:
+  post-start:
+    - appserver: composer install
+    - appserver: bash /app/dev/lando/install-wp.sh
+  post-destroy:
+    - appserver: rm ./dev/public/wp-config.php

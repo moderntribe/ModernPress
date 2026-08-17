@@ -1,0 +1,15 @@
+<?php declare(strict_types=1);
+
+use %1$s\%2$s;
+
+/**
+ * @var array $args Arguments passed to the template
+ */
+$c = %2$s::factory( $args );
+?>
+<div
+	<?php echo $c->get_classes(); ?>
+	<?php echo $c->get_attributes(); ?>
+>
+
+</div>

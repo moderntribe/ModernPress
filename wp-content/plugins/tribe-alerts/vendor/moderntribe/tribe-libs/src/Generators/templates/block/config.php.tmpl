@@ -1,0 +1,60 @@
+<?php declare(strict_types=1);
+
+namespace Tribe\Project\Blocks\Types\%1$s;
+
+use Tribe\Libs\ACF\Block;
+use Tribe\Libs\ACF\Block_Config;
+use Tribe\Libs\ACF\Field;
+use Tribe\Libs\ACF\Field_Section;%4$s
+
+class %1$s extends Block_Config%5$s {
+
+	public const NAME = '%2$s';
+
+	public const SECTION_CONTENT  = 's-content';
+	public const SECTION_SETTINGS = 's-settings';
+
+	public const TITLE       = 'title';
+	public const DESCRIPTION = 'description';
+	%7$s
+	public function add_block(): void {
+		$this->set_block( new Block( self::NAME, [
+			'title'       => esc_html__( '%3$s', 'tribe' ),
+			'description' => esc_html__( 'A custom block by Modern Tribe', 'tribe' ), // TODO: describe the block
+			// TODO: set SVG icon
+			'icon'        => '<svg viewBox="0 0 146.3 106.3" xmlns="http://www.w3.org/2000/svg"><path fill="#16d690" d="M145.2 106.3l-72.6-64L26.5 1.2 0 106.3z"/><path fill="#21a6cb" d="M145.2 106.3H0l72.6-64 46-41.1z"/><path fill="#008f8f" d="M72.6 42.3l72.6 64H0z"/></svg>',
+			'keywords'    => [ esc_html__( 'placeholder', 'tribe' ) ], // TODO: select appropriate keywords
+			'category'    => %9$s, // core categories: text, media, design, widgets, theme, embed
+			'supports'    => [
+				'align'  => false,
+				'anchor' => true,
+				'html'   => false,
+			],
+		] ) );
+	}
+
+	/**
+	 * Register Fields for block
+	 */
+	public function add_fields(): void {
+		// Content Fields
+		$this->add_section( new Field_Section( self::SECTION_CONTENT, esc_html__( 'Content', 'tribe' ), 'accordion' ) )
+			->add_field( new Field( self::NAME . '_' . self::TITLE, [
+					'label' => esc_html__( 'Title', 'tribe' ),
+					'name'  => self::TITLE,
+					'type'  => 'text',
+				] )
+			)->add_field( new Field( self::NAME . '_' . self::DESCRIPTION, [
+					'label'        => esc_html__( 'Description', 'tribe' ),
+					'name'         => self::DESCRIPTION,
+					'type'         => 'wysiwyg',
+					'toolbar'      => 'basic',
+					'media_upload' => 0,
+				] )
+			);
+
+		// Setting Fields
+		$this->add_section( new Field_Section( self::SECTION_SETTINGS, esc_html__( 'Settings', 'tribe' ), 'accordion' ) );%8$s
+	}
+	%6$s
+}

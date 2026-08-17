@@ -1,0 +1,24 @@
+<?php
+
+declare (strict_types=1);
+namespace Tribe\Alert_Scoped\Args\Arrayable;
+
+/**
+ * An arguments object which provides a vanilla `fromArray()` method.
+ */
+trait ProvidesFromArray
+{
+    /**
+     * @param array<string, mixed> $args
+     * @return static
+     */
+    public static final function fromArray(array $args) : self
+    {
+        /** @phpstan-ignore new.staticInAbstractClassStaticMethod */
+        $class = new static();
+        foreach ($args as $key => $value) {
+            $class->{$key} = $value;
+        }
+        return $class;
+    }
+}
