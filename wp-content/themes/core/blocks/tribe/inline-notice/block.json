@@ -30,7 +30,7 @@
 		},
 		"selectedIcon": {
 			"type": "string",
-			"default": "icon-circle-information"
+			"default": "tribe/circle-information"
 		},
 		"selectedIconColor": {
 			"type": "string",

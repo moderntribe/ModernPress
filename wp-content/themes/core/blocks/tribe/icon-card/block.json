@@ -6,7 +6,7 @@
 	"title": "Icon Card",
 	"category": "theme",
 	"icon": "media-document",
-	"description": "A card that utilizes the Icon Picker block to include an icon alongside text and a link.",
+	"description": "A card that includes an icon alongside text and a link.",
 	"attributes": {
 		"isRounded": {
 			"type": "boolean",
@@ -30,7 +30,7 @@
 		},
 		"selectedIcon": {
 			"type": "string",
-			"default": "icon-ai-sparkle"
+			"default": "tribe/ai-sparkle"
 		},
 		"selectedIconColor": {
 			"type": "string",

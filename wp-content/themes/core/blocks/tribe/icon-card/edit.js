@@ -8,6 +8,7 @@ import {
 import {
 	BaseControl,
 	Button,
+	Flex,
 	Modal,
 	PanelBody,
 	Popover,
@@ -17,10 +18,8 @@ import {
 	ToolbarGroup,
 } from '@wordpress/components';
 import { ServerSideRender } from '@wordpress/server-side-render';
-import { useMemo, useState } from '@wordpress/element';
-import IconPicker from 'components/IconPicker';
-import { formatIconName } from 'blocks/tribe/icon-picker/utils';
-import { ICONS_LIST } from 'blocks/tribe/icon-picker/icons/icons-list';
+import { RawHTML, useMemo, useState } from '@wordpress/element';
+import IconPicker, { useRegisteredIcon } from 'components/IconPicker';
 
 import './editor.pcss';
 
@@ -33,7 +32,6 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 		iconPadding,
 		iconLabel,
 		iconSize,
-		searchQuery,
 		selectedIconColor,
 		selectedBgColor,
 		title,
@@ -46,18 +44,7 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 
 	const [ isModalOpen, setIsModalOpen ] = useState( false );
 
-	/**
-	 * Selected icon component based on the selectedIcon attribute
-	 */
-	const SelectedIconComponent =
-		ICONS_LIST.find( ( icon ) => icon.key === selectedIcon )?.component ||
-		null;
-
-	/**
-	 * Ensure selectedIcon is valid
-	 */
-	const validIcon =
-		ICONS_LIST.find( ( { key } ) => key === selectedIcon ) || null;
+	const validIcon = useRegisteredIcon( selectedIcon );
 
 	/**
 	 * Use internal state instead of a ref to make sure that the component
@@ -152,7 +139,6 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 						iconPadding={ iconPadding }
 						iconLabel={ iconLabel }
 						iconSize={ iconSize }
-						searchQuery={ searchQuery }
 						selectedIconColor={ selectedIconColor }
 						selectedBgColor={ selectedBgColor }
 						onChange={ ( changed ) => setAttributes( changed ) }
@@ -178,42 +164,48 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 						<BaseControl
 							__nextHasNoMarginBottom
 							id="icon-component"
-							className="controls-tribe-icon-picker icon-preview icon-card"
+							className="controls-tribe-icon-picker"
 						>
-							{ validIcon ? (
-								<>
-									<div
-										className="icon-image"
-										style={ {
-											backgroundColor:
-												selectedBgColor ||
-												'transparent',
-											color: selectedIconColor || 'white',
-											borderRadius: isRounded
-												? '50%'
-												: '0',
-										} }
-									>
-										<SelectedIconComponent
-											id="icon-component"
-											style={ {
-												color: selectedIconColor,
-											} }
-										/>
-									</div>
-									<p className="icon-name">
-										{ formatIconName( validIcon.name ) }
-									</p>
-								</>
-							) : (
-								__( 'No Icon Selected', 'tribe' )
-							) }
-							<Button
-								isPrimary
-								onClick={ () => setIsModalOpen( true ) }
+							<Flex
+								direction="column"
+								align="center"
+								gap={ 2 }
+								expanded={ false }
 							>
-								{ __( 'Open Icon Picker', 'tribe' ) }
-							</Button>
+								{ validIcon ? (
+									<>
+										<div
+											className="icon-image"
+											style={ {
+												backgroundColor:
+													selectedBgColor ||
+													'transparent',
+												color:
+													selectedIconColor ||
+													'white',
+												borderRadius: isRounded
+													? '50%'
+													: '0',
+											} }
+										>
+											<RawHTML>
+												{ validIcon.content }
+											</RawHTML>
+										</div>
+										<p className="icon-name">
+											{ validIcon.label }
+										</p>
+									</>
+								) : (
+									__( 'No Icon Selected', 'tribe' )
+								) }
+								<Button
+									isPrimary
+									onClick={ () => setIsModalOpen( true ) }
+								>
+									{ __( 'Open Icon Picker', 'tribe' ) }
+								</Button>
+							</Flex>
 						</BaseControl>
 						<TextControl
 							__next40pxDefaultSize

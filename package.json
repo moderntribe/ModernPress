@@ -29,7 +29,6 @@
 		"@dnd-kit/core": "^6.3.1",
 		"@dnd-kit/sortable": "^10.0.0",
 		"@dnd-kit/utilities": "^3.2.2",
-		"@svgr/cli": "^8.1",
 		"@wordpress/icons": "^15.0.0",
 		"delegate": "^3.2.0",
 		"imagesloaded": "^5.0.0",
@@ -80,12 +79,6 @@
 		"create-block": "cd \"$npm_package_config_coreThemeBlocksDir/tribe\" && npx @wordpress/create-block --no-plugin --namespace tribe --template $npm_package_config_coreBlockTemplatesDir",
 		"packages-update": "wp-scripts packages-update",
 		"check-engines": "wp-scripts check-engines",
-		"check-licenses": "wp-scripts check-licenses",
-		"icon-picker": "npm run icon-picker:cleanup-components && npm run icon-picker:generate-components && rm -f $npm_package_config_coreThemeBlocksDir/tribe/icon-picker/icons/components/index.js && npm run icon-picker:generate-icons-list && npm run icon-picker:strip-react-import && npm run icon-picker:lint",
-		"icon-picker:generate-components": "svgr --icon --out-dir=$npm_package_config_coreThemeBlocksDir/tribe/icon-picker/icons/components $npm_package_config_coreThemeBlocksDir/tribe/icon-picker/icons/svg",
-		"icon-picker:cleanup-components": "node $npm_package_config_coreThemeBlocksDir/tribe/icon-picker/scripts/cleanup-components.js",
-		"icon-picker:generate-icons-list": "node $npm_package_config_coreThemeBlocksDir/tribe/icon-picker/scripts/generate-icons-list.js",
-		"icon-picker:lint": "wp-scripts lint-js \"$npm_package_config_coreThemeBlocksDir/tribe/icon-picker/**/*.js\" --fix",
-		"icon-picker:strip-react-import": "node $npm_package_config_coreThemeBlocksDir/tribe/icon-picker/scripts/strip-react-import.js"
+		"check-licenses": "wp-scripts check-licenses"
 	}
 }
