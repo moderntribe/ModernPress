@@ -56,9 +56,9 @@
 	padding-bottom: calc(var(--spacer-20) + var(--tabs-list-border-width));
 
 	/**
-	 * Below tablet, the before element acts as a bottom border for the tabs,
-	 * as the tab list border doesn't span the scroll width.
-	 * The after element is always the animated "active" border.
+	 * The before element acts as a bottom border for the tabs, as the tab list
+	 * border doesn't span the scroll width. The after element is always the
+	 * animated "active" border.
 	 */
 	&::before,
 	&::after {
@@ -90,12 +90,7 @@
 		}
 	}
 
-	/* remove the right margin from the last child */
-	&:last-child {
-		margin-inline-end: 0 !important;
-	}
-
-	/* on hover, change the color and activate the after element */
+	/* On hover, change the color and activate the after element */
 	@media (--has-hover) {
 
 		&:hover {
@@ -107,19 +102,10 @@
 		}
 	}
 
+	/* Use inset focus visible here due to vertical overflows being hidden */
 	&:focus-visible {
 
-		/* use inset focus visible here due to vertical overflows being hidden */
 		@mixin inset-focus-visible;
-	}
-
-	/* above tablet - add margin, hide before "border" element */
-	@media (--mq-tablet) {
-		margin-inline-end: var(--spacer-40) !important; /* override more specific margin */
-
-		&::before {
-			display: none !important;
-		}
 	}
 }
 
