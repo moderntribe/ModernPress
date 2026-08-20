@@ -52,7 +52,7 @@ class Icon_Picker {
 			$args['label'] = $this->icon_label;
 		}
 
-		return wp_get_icon( $name, $args );
+		return \wp_get_icon( $name, $args );
 	}
 
 	/**
