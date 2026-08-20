@@ -9,7 +9,7 @@ class Icons {
 	private const SVG_DIR = 'assets/media/icons/picker';
 
 	public function register_icon_collection(): void {
-		\wp_register_icon_collection(
+		wp_register_icon_collection(
 			self::COLLECTION,
 			[
 				'label'       => __( 'Modern Tribe', 'tribe' ),
@@ -24,7 +24,7 @@ class Icons {
 		foreach ( glob( $dir . '/*.svg' ) ?: [] as $file ) {
 			$slug = basename( $file, '.svg' );
 
-			\wp_register_icon(
+			wp_register_icon(
 				self::COLLECTION . '/' . $slug,
 				[
 					'label'     => ucwords( str_replace( '-', ' ', $slug ) ),
