@@ -317,3 +317,13 @@
 	box-shadow: 0 0 0 3px var(--focus-contrast-dark), 0 0 0 5px var(--focus-contrast-light);
 	outline: 0;
 }
+
+/* -------------------------------------------------------------------------
+ * Inset Focus Visible
+ * Box-shadow is required to display double border in all browsers
+ * ------------------------------------------------------------------------- */
+
+@define-mixin inset-focus-visible {
+	box-shadow: inset 0 0 0 3px var(--focus-contrast-dark), inset 0 0 0 5px var(--focus-contrast-light);
+	outline: 0;
+}
