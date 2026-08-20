@@ -7,7 +7,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 ## [2026.08]
 
 - Chore: WordPress Core update to 7.0.3, plugin, composer & npm package updates.
-- Removed: Horizontal Tabs / Horizontal Tab block
+- Removed: Tribe Horizontal Tabs / Tribe Horizontal Tab block
 - Added: Support core Tabs block
 
 ## [2026.06]
