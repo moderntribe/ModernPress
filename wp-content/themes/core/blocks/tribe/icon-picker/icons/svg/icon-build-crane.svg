@@ -1,8 +1,0 @@
-<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M62 42H46V50H62V42Z" stroke="currentColor" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
-<path d="M10 62V2H20V62" stroke="currentColor" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
-<path d="M10 20H2V12L10 10" stroke="currentColor" stroke-width="2" stroke-miterlimit="10"/>
-<path d="M20 10L62 12V20H20" stroke="currentColor" stroke-width="2" stroke-miterlimit="10"/>
-<path d="M2 62H28" stroke="currentColor" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
-<path d="M54 28V42" stroke="currentColor" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
-</svg>

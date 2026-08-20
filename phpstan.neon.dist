@@ -10,6 +10,10 @@ parameters:
 	bootstrapFiles:
 		- vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
 		- vendor/php-stubs/acf-pro-stubs/acf-pro-stubs.php
+	scanFiles:
+		# The Icons API arrived in WordPress 7.1, but php-stubs/wordpress-stubs is held at 6.9 by
+		# szepeviktor/phpstan-wordpress. Read core's own declarations until the stubs catch up.
+		- wp-includes/icons.php
 	tmpDir: .phpstan-cache/
 	reportUnmatchedIgnoredErrors: false
 	ignoreErrors:

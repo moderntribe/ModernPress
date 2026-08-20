@@ -1,14 +1,65 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useState } from '@wordpress/element';
+import { RawHTML, useMemo, useState } from '@wordpress/element';
+import { useSelect } from '@wordpress/data';
+import { store as coreDataStore } from '@wordpress/core-data';
 import {
+	Button,
+	Flex,
 	RangeControl,
+	SelectControl,
+	Spinner,
 	TabPanel,
 	TextControl,
 	ToggleControl,
 } from '@wordpress/components';
 import DynamicColorPicker from 'components/DynamicColorPicker';
-import { formatIconName } from 'blocks/tribe/icon-picker/utils';
-import { ICONS_LIST } from 'blocks/tribe/icon-picker/icons/icons-list';
+
+/**
+ * Map saved `icon-ai-sparkle` keys to registered `tribe/ai-sparkle` names.
+ *
+ * @param {string} name Saved icon attribute value.
+ * @return {string} Namespaced icon name, or an empty string.
+ */
+export function normalizeIconName( name ) {
+	if ( ! name ) {
+		return '';
+	}
+
+	if ( name.includes( '/' ) ) {
+		return name;
+	}
+
+	const slug = name.startsWith( 'icon-' ) ? name.slice( 5 ) : name;
+	return `tribe/${ slug }`;
+}
+
+/**
+ * @param {string} iconName Saved icon attribute value.
+ * @return {Object|null} Registered icon entity, or null when none is selected.
+ */
+export function useRegisteredIcon( iconName ) {
+	const name = normalizeIconName( iconName );
+
+	return useSelect(
+		( select ) =>
+			name
+				? select( coreDataStore ).getEntityRecord(
+						'root',
+						'icon',
+						name
+				  )
+				: null,
+		[ name ]
+	);
+}
+
+function IconMarkup( { html } ) {
+	if ( ! html ) {
+		return null;
+	}
+
+	return <RawHTML>{ html }</RawHTML>;
+}
 
 export default function IconPicker( {
 	selectedIcon,
@@ -16,49 +67,68 @@ export default function IconPicker( {
 	iconPadding,
 	iconLabel,
 	iconSize,
-	searchQuery,
 	selectedIconColor,
 	selectedBgColor,
 	onChange,
 } ) {
-	const sortedIcons = useMemo(
-		() =>
-			[ ...ICONS_LIST ].sort( ( a, b ) => a.key.localeCompare( b.key ) ),
+	const selectedName = normalizeIconName( selectedIcon );
+	const [ searchQuery, setSearchQuery ] = useState( '' );
+	const [ collectionSlug, setCollectionSlug ] = useState( '' );
+
+	const collections = useSelect(
+		( select ) =>
+			select( coreDataStore ).getEntityRecords(
+				'root',
+				'iconCollection'
+			),
 		[]
 	);
-	const [ filteredIcons, setFilteredIcons ] = useState( sortedIcons );
 
-	/**
-	 * By default, the Icon Picker will use the color palette defined in
-	 * theme.json. By defining a custom array of colors and passing it to the
-	 * DynamicColorPicker components, we can give a custom set of
-	 * colors to the editor.
-	 */
-	// const COLORS = [
-	// 	{ name: __( 'Blue', 'tribe' ), color: '#0078d4' },
-	// 	{ name: __( 'Purple', 'tribe' ), color: '#8661c5' },
-	// 	{ name: __( 'Gray', 'tribe' ), color: '#737373' },
-	// 	{ name: __( 'Light Gray', 'tribe' ), color: '#d2d2d2' },
-	// 	{ name: __( 'Dark Gray', 'tribe' ), color: '#505050' },
-	// 	{ name: __( 'Teal', 'tribe' ), color: '#008575' },
-	// 	{ name: __( 'White', 'tribe' ), color: '#ffffff' },
-	// 	{ name: __( 'Transparent', 'tribe' ), color: 'transparent' },
-	// ];
+	const { icons, hasResolvedIcons } = useSelect(
+		( select ) => {
+			const query = collectionSlug ? { collection: collectionSlug } : {};
+			const { getEntityRecords, hasFinishedResolution } =
+				select( coreDataStore );
 
-	useEffect( () => {
-		setFilteredIcons(
-			sortedIcons.filter( ( { key } ) =>
-				key
-					.toLowerCase()
-					.includes( ( searchQuery || '' ).toLowerCase() )
-			)
-		);
-	}, [ searchQuery, sortedIcons ] );
+			return {
+				icons: getEntityRecords( 'root', 'icon', query ),
+				hasResolvedIcons: hasFinishedResolution( 'getEntityRecords', [
+					'root',
+					'icon',
+					query,
+				] ),
+			};
+		},
+		[ collectionSlug ]
+	);
+
+	const filteredIcons = useMemo( () => {
+		if ( ! icons ) {
+			return [];
+		}
+
+		const query = searchQuery.trim().toLowerCase();
+		const list = query
+			? icons.filter(
+					( { name, label } ) =>
+						name.toLowerCase().includes( query ) ||
+						( label || '' ).toLowerCase().includes( query )
+			  )
+			: icons;
+
+		return [ ...list ].sort( ( a, b ) => a.name.localeCompare( b.name ) );
+	}, [ icons, searchQuery ] );
+
+	const collectionOptions = [
+		{ label: __( 'All', 'tribe' ), value: '' },
+		...( collections || [] ).map( ( collection ) => ( {
+			label: collection.label,
+			value: collection.slug,
+		} ) ),
+	];
 
 	return (
 		<TabPanel
-			className="tribe-icon-picker-tab-panel"
-			activeClass="active-tab"
 			tabs={ [
 				{ name: 'icon', title: __( 'Icon', 'tribe' ) },
 				{ name: 'colors', title: __( 'Colors', 'tribe' ) },
@@ -68,58 +138,56 @@ export default function IconPicker( {
 			{ ( tab ) => {
 				if ( tab.name === 'icon' ) {
 					return (
-						<div className="icon-picker">
+						<Flex direction="column" gap={ 4 } expanded={ false }>
+							<SelectControl
+								__next40pxDefaultSize
+								__nextHasNoMarginBottom
+								label={ __( 'Collection', 'tribe' ) }
+								value={ collectionSlug }
+								options={ collectionOptions }
+								onChange={ setCollectionSlug }
+							/>
 							<TextControl
 								__next40pxDefaultSize
 								__nextHasNoMarginBottom
 								label={ __( 'Search Icons', 'tribe' ) }
 								value={ searchQuery }
-								onChange={ ( value ) =>
-									onChange( { searchQuery: value } )
-								}
+								onChange={ setSearchQuery }
 							/>
-							<div className="icon-grid">
-								{ filteredIcons.map(
-									( {
-										key,
-										component: IconComponent,
-										name,
-									} ) =>
-										IconComponent && (
-											<div
-												key={ key }
-												className={ `icon-item ${
-													selectedIcon === key
-														? 'selected'
-														: ''
-												}` }
-												role="button"
-												tabIndex={ 0 }
-												onClick={ () =>
-													onChange( {
-														selectedIcon: key,
-													} )
-												}
-												onKeyDown={ ( e ) => {
-													if (
-														e.key === 'Enter' ||
-														e.key === ' '
-													) {
-														onChange( {
-															selectedIcon: key,
-														} );
-													}
-												} }
-											>
-												<IconComponent
-													title={ formatIconName(
-														name
-													) }
+							{ ! hasResolvedIcons ? (
+								<Flex
+									justify="center"
+									role="status"
+									aria-label={ __( 'Loading…', 'tribe' ) }
+								>
+									<Spinner />
+								</Flex>
+							) : (
+								<div className="icon-grid">
+									{ filteredIcons.map( ( icon ) => (
+										<Button
+											__next40pxDefaultSize
+											key={ icon.name }
+											className="icon-item"
+											label={ icon.label }
+											showTooltip
+											isPressed={
+												selectedName === icon.name
+											}
+											icon={
+												<IconMarkup
+													html={ icon.content }
 												/>
-											</div>
-										)
-								) }
-							</div>
+											}
+											onClick={ () =>
+												onChange( {
+													selectedIcon: icon.name,
+												} )
+											}
+										/>
+									) ) }
+								</div>
+							) }
 							<TextControl
 								__next40pxDefaultSize
 								__nextHasNoMarginBottom
@@ -133,12 +201,12 @@ export default function IconPicker( {
 									'tribe'
 								) }
 							/>
-						</div>
+						</Flex>
 					);
 				}
 				if ( tab.name === 'colors' ) {
 					return (
-						<>
+						<Flex direction="column" gap={ 4 } expanded={ false }>
 							<DynamicColorPicker
 								controlLabel={ __( 'Icon Color', 'tribe' ) }
 								colorAttribute={ 'selectedIconColor' }
@@ -159,12 +227,12 @@ export default function IconPicker( {
 									onChange( { ...changed } )
 								}
 							/>
-						</>
+						</Flex>
 					);
 				}
 				if ( tab.name === 'dimensions' ) {
 					return (
-						<>
+						<Flex direction="column" gap={ 4 } expanded={ false }>
 							<RangeControl
 								__next40pxDefaultSize
 								__nextHasNoMarginBottom
@@ -198,7 +266,7 @@ export default function IconPicker( {
 									onChange( { isRounded: value } )
 								}
 							/>
-						</>
+						</Flex>
 					);
 				}
 			} }
