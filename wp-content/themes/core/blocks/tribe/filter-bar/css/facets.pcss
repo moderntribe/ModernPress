@@ -11,6 +11,10 @@
 	margin: 0;
 	padding: 0;
 	list-style: none;
+
+	.b-filter-bar__flyout & {
+		gap: var(--spacer-40);
+	}
 }
 
 /*
@@ -52,53 +56,20 @@
  * Filter Bar - Checkbox Facets
  * ------------------------------------------------------------------------- */
 
-.tribe-facet--checkboxes {
+/* The checkbox itself is screen-reader-only, so :focus-within is the label's
+ * only route to a focus state. */
+.tribe-facet--checkboxes .tribe-facet__label {
 
-	.tribe-facet__label {
-		position: relative;
-		cursor: pointer;
-		padding-left: calc(24px + var(--spacer-10));
+	@mixin facet-checkbox-control;
 
-		&::before {
+	&:focus-within {
 
-			@mixin facet-checkbox-box;
-			position: absolute;
-			top: 0;
-			left: 0;
-			border-radius: 0;
-		}
+		@mixin facet-checkbox-hover-focus;
+	}
 
-		@media (--has-hover) {
+	&:has(input[type="checkbox"]:checked) {
 
-			&:hover {
-
-				@mixin facet-checkbox-hover-focus;
-			}
-		}
-
-		&:focus-within {
-
-			@mixin facet-checkbox-hover-focus;
-		}
-
-		&:has(input[type="checkbox"]:checked) {
-
-			&::before {
-
-				@mixin facet-checkbox-box-checked;
-			}
-
-			&::after {
-
-				@mixin facet-checkbox-check;
-				top: 5px;
-				left: 4px;
-			}
-
-			.tribe-facet__label-text {
-				font-weight: var(--font-weight-bold);
-			}
-		}
+		@mixin facet-checkbox-control-checked;
 	}
 }
 
@@ -261,30 +232,9 @@
 }
 
 .tribe-facet--dropdown .tribe-facet__dropdown-option {
-	position: relative;
-	display: flex;
-	align-items: center;
-	gap: var(--spacer-10);
-	width: 100%;
-	padding: var(--spacer-10);
-	border: 0;
-	background: transparent;
-	color: var(--color-text);
-	text-align: left;
-	cursor: pointer;
+	--facet-checkbox-inset: var(--spacer-10);
 
-	&::before {
-
-		@mixin facet-checkbox-box;
-	}
-
-	@media (--has-hover) {
-
-		&:hover {
-
-			@mixin facet-checkbox-hover-focus;
-		}
-	}
+	@mixin facet-checkbox-control;
 
 	&:focus-visible {
 
@@ -294,22 +244,7 @@
 
 	&[aria-selected="true"] {
 
-		&::before {
-
-			@mixin facet-checkbox-box-checked;
-		}
-
-		&::after {
-
-			@mixin facet-checkbox-check;
-			top: 50%;
-			left: calc(var(--spacer-10) + 4px);
-			transform: translateY(-50%);
-		}
-
-		.tribe-facet__label-text {
-			font-weight: var(--font-weight-bold);
-		}
+		@mixin facet-checkbox-control-checked;
 	}
 }
 

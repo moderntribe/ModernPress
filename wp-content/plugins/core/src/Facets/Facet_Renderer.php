@@ -102,7 +102,7 @@ class Facet_Renderer {
 								value="<?php echo esc_attr( $term->slug ); ?>"
 								<?php checked( $checked ); ?>
 							/>
-							<span class="tribe-facet__label-text t-body t-animated-underline"><?php echo esc_html( $term->name ); ?></span>
+							<span class="tribe-facet__label-text t-body t-transparent-underline"><?php echo esc_html( $term->name ); ?></span>
 						</label>
 					</li>
 				<?php endforeach; ?>
@@ -199,7 +199,7 @@ class Facet_Renderer {
 									aria-selected="<?php echo $is_selected ? 'true' : 'false'; ?>"
 									data-value="<?php echo esc_attr( $term->slug ); ?>"
 								>
-									<span class="tribe-facet__label-text t-body t-animated-underline"><?php echo esc_html( $term->name ); ?></span>
+									<span class="tribe-facet__label-text t-body t-transparent-underline"><?php echo esc_html( $term->name ); ?></span>
 								</button>
 							</li>
 						<?php endforeach; ?>
