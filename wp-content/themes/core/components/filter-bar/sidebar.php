@@ -32,7 +32,7 @@ if ( '' === $flyout_id || '' === $flyout_title_id ) {
 		<span class="b-filter-bar__trigger-text"><?php esc_html_e( 'Search & Refine', 'tribe' ); ?></span>
 	</button>
 	<span class="b-filter-bar__clear-wrap" data-js="filter-clear-wrap" hidden>
-		<button type="reset" class="a-btn-link" data-js="filter-clear-all"><?php esc_html_e( 'Clear all', 'tribe' ); ?></button>
+		<button type="reset" class="t-body" data-js="filter-clear-all"><?php esc_html_e( 'Clear all', 'tribe' ); ?></button>
 	</span>
 </div>
 <?php

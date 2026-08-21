@@ -63,7 +63,7 @@ class Facet_Renderer {
 		ob_start();
 		?>
 		<div class="tribe-facet tribe-facet--reset" data-facet="<?php echo esc_attr( $slug ); ?>">
-			<button type="reset" class="a-btn-link tribe-facet__reset-button">
+			<button type="reset" class="t-body tribe-facet__reset-button">
 				<?php echo esc_html( $label ); ?>
 			</button>
 		</div>
@@ -302,7 +302,7 @@ class Facet_Renderer {
 		?>
 		<button
 			type="button"
-			class="a-btn-link tribe-facet__clear"
+			class="t-body tribe-facet__clear"
 			data-js="facet-clear"
 			aria-label="<?php echo esc_attr( sprintf( /* translators: %s: facet label. */ __( 'Clear %s selections', 'tribe' ), $label ) ); ?>"
 			<?php echo $hidden ? ' hidden' : ''; ?>

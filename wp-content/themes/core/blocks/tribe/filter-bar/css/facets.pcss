@@ -29,27 +29,45 @@
 	}
 }
 
+/*
+ * Every clear affordance in the feature: per-facet, the reset facet, and the
+ * mobile trigger's. Design wants plain body text with an underline rather than
+ * any of the a-btn-* styles, so the markup carries t-body and the button chrome
+ * comes off here.
+ *
+ * The transparent-underline mixin is only here for the theme's thickness,
+ * offset and transition tokens — these rest underlined and drop it on hover,
+ * the inverse of everywhere else that mixin is used.
+ */
 .tribe-facet__reset-button,
-.tribe-facet__clear {
+.tribe-facet__clear,
+.b-filter-bar__clear-wrap button[type="reset"] {
+
+	@mixin t-transparent-underline;
+	margin: 0;
 	padding: 0;
 	border: 0;
 	background: none;
+	color: inherit;
+	text-decoration-color: currentcolor;
 	cursor: pointer;
+
+	@media (--has-hover) {
+
+		&:hover {
+			text-decoration-color: transparent;
+		}
+	}
+
+	/* a-btn-link brought its own focus ring; match the rest of the bar. */
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
 }
 
 .tribe-facet__clear {
 	margin-top: var(--spacer-20);
-}
-
-/* -------------------------------------------------------------------------
- * Filter Bar - Reset Facet
- * ------------------------------------------------------------------------- */
-
-.b-filter-bar__clear-wrap button[type="reset"] {
-	border: 0;
-	padding: 0;
-	margin: 0;
-	background-color: transparent;
 }
 
 /* -------------------------------------------------------------------------
