@@ -43,6 +43,12 @@
 			.b-filter-bar__facet[data-grid-slot="reset"] {
 				grid-area: reset;
 			}
+
+			/* An empty reset row still contributes its row gap, padding the
+			   bar while "Clear all" is hidden. */
+			&:not(:has(.b-filter-bar__facet[data-grid-slot="reset"]:not([hidden]))) {
+				grid-template-areas: "facet-1 facet-2 facet-3 search";
+			}
 		}
 	}
 }

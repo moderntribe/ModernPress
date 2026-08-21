@@ -9,6 +9,7 @@ export const CLASSES = {
 	directory: 'b-faceted-directory',
 	filterBar: 'b-filter-bar',
 	filterGrid: 'b-filter-bar__grid',
+	facetWrapper: 'b-filter-bar__facet',
 	mobileTrigger: 'b-filter-bar__mobile-trigger',
 	pagination: 'b-directory-grid__pagination',
 	facet: 'tribe-facet',
@@ -32,6 +33,7 @@ export const SELECTORS = {
 	paginationLink: `.${ CLASSES.pagination } a[href]`,
 
 	filterBar: `.${ CLASSES.filterBar }`,
+	facetWrapper: `.${ CLASSES.facetWrapper }`,
 	filterBarSidebar: `.${ CLASSES.filterBar }[data-filter-bar-position="sidebar"]`,
 	filterGrid: `.${ CLASSES.filterGrid }`,
 	mobileTrigger: `.${ CLASSES.mobileTrigger }`,
@@ -49,6 +51,7 @@ export const SELECTORS = {
 
 	facet: `.${ CLASSES.facet }`,
 	facetItem: `.${ CLASSES.facetItem }`,
+	facetReset: `.${ CLASSES.facetReset }`,
 	facetClear: '[data-js="facet-clear"]',
 	facetApply: '[data-js="facet-apply"]',
 

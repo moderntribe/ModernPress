@@ -131,19 +131,25 @@ export const hasActiveFilters = ( block ) => {
 	return checked.length > 0 || hasSearchValue;
 };
 
+/**
+ * Toggle every "Clear all" control in a bar: the mobile trigger's link and the
+ * reset facet, which top and desktop sidebar layouts render inline.
+ *
+ * @param {Element} block Filter bar.
+ */
 export const updateClearAllVisibility = ( block ) => {
-	const wrap = block.querySelector( SELECTORS.clearWrap );
+	const active = hasActiveFilters( block );
+	const resets = [ ...block.querySelectorAll( SELECTORS.facetReset ) ].map(
+		// The facet wrapper carries the grid slot and sidebar divider, so
+		// hiding the inner node alone would leave a gap behind.
+		( reset ) => reset.closest( SELECTORS.facetWrapper ) ?? reset
+	);
 
-	if ( ! wrap ) {
-		return;
-	}
-
-	if ( ! hasActiveFilters( block ) ) {
-		wrap.setAttribute( 'hidden', '' );
-		return;
-	}
-
-	wrap.removeAttribute( 'hidden' );
+	[ ...block.querySelectorAll( SELECTORS.clearWrap ), ...resets ].forEach(
+		( element ) => {
+			element.hidden = ! active;
+		}
+	);
 };
 
 /**

@@ -2,7 +2,11 @@
  * Front-end behavior for the Filter Bar block.
  */
 
-import { bindFlyoutEvents, updateClearAllVisibility } from './js/flyout';
+import {
+	bindFlyoutEvents,
+	getFocusables,
+	updateClearAllVisibility,
+} from './js/flyout';
 import { initDropdowns, syncDropdowns } from './js/dropdown';
 import { refreshResults, bindPagination, clearFacetInputs } from './js/results';
 import { bindFacetClears, updateFacetClearVisibility } from './js/facet-clear';
@@ -30,6 +34,11 @@ const isMobileFlyoutControl = ( element ) => {
 	return Boolean( mobileFacets && ! mobileFacets.disabled );
 };
 
+const syncClearAll = ( form ) =>
+	form
+		.querySelectorAll( SELECTORS.filterBar )
+		.forEach( updateClearAllVisibility );
+
 const initFormBehavior = ( form ) => {
 	form.addEventListener( 'submit', ( event ) => {
 		event.preventDefault();
@@ -38,6 +47,8 @@ const initFormBehavior = ( form ) => {
 
 	form.addEventListener( 'change', ( event ) => {
 		const target = event.target;
+
+		syncClearAll( form );
 
 		// Mobile flyout: wait for "Show results". Desktop sidebar + top: live.
 		if ( ! target || isMobileFlyoutControl( target ) ) {
@@ -53,10 +64,13 @@ const initFormBehavior = ( form ) => {
 
 		// Match the keyword search facet specifically. A dropdown's option
 		// filter is also type="search" but must never hit the server.
-		if (
-			! target?.matches?.( SELECTORS.searchInput ) ||
-			isMobileFlyoutControl( target )
-		) {
+		if ( ! target?.matches?.( SELECTORS.searchInput ) ) {
+			return;
+		}
+
+		syncClearAll( form );
+
+		if ( isMobileFlyoutControl( target ) ) {
 			return;
 		}
 
@@ -76,9 +90,17 @@ const initFormBehavior = ( form ) => {
 		syncDropdowns( form );
 		updateFacetClearVisibility( form );
 		refreshResults( form );
-		form.querySelectorAll( SELECTORS.filterBar ).forEach(
-			updateClearAllVisibility
-		);
+		syncClearAll( form );
+
+		// The inline reset facet just hid itself, so hand focus to the first
+		// control in its own facet grid — never the wider bar, which would let
+		// focus escape an open mobile flyout. The flyout's own "Clear all"
+		// already returns focus to the mobile trigger.
+		if ( target.closest( SELECTORS.facetReset ) ) {
+			const grid = target.closest( SELECTORS.filterGrid );
+
+			getFocusables( grid ?? form )[ 0 ]?.focus();
+		}
 	} );
 
 	bindFacetClears( form );
@@ -100,9 +122,7 @@ const init = () => {
 
 	document.querySelectorAll( SELECTORS.form ).forEach( ( form ) => {
 		initFormBehavior( form );
-		form.querySelectorAll( SELECTORS.filterBar ).forEach(
-			updateClearAllVisibility
-		);
+		syncClearAll( form );
 	} );
 
 	// ponytail: browser history restores via a reload rather than replaying
