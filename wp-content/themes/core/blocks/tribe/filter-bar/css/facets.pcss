@@ -38,6 +38,17 @@
 }
 
 /* -------------------------------------------------------------------------
+ * Filter Bar - Reset Facet
+ * ------------------------------------------------------------------------- */
+
+.b-filter-bar__clear-wrap button[type="reset"] {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	background-color: transparent;
+}
+
+/* -------------------------------------------------------------------------
  * Filter Bar - Checkbox Facets
  * ------------------------------------------------------------------------- */
 
@@ -217,9 +228,10 @@
 	background-color: var(--filter-bar-field-background-color);
 	color: var(--color-text);
 
+	&:focus,
 	&:focus-visible {
-
-		@mixin focus-visible;
+		outline: 0;
+		border-color: var(--filter-bar-checkbox-hover-border-color);
 	}
 
 	&::-webkit-search-cancel-button {
