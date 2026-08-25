@@ -1,0 +1,130 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Tabs - FE / Editor Styles
+ *
+ * ------------------------------------------------------------------------- */
+
+@import '_variables.pcss';
+
+/* -------------------------------------------------------------------------
+ * Tabs - Tab List
+ *
+ * Because the tab list itself doesn't have a wrapper, we have to make this
+ * a block element (instead of flex) so we can properly make it horizontally
+ * scrollable. This also means the bottom border has to be a pseudo-element
+ * that contains itself vertically inside the tab list via a negative offset.
+ * ------------------------------------------------------------------------- */
+
+.wp-block-tab-list {
+	display: block !important; /* override more specific selector */
+	position: relative;
+	text-wrap: nowrap;
+	white-space: nowrap;
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding-bottom: var(--tabs-list-scrollbar-offset);
+	text-align: left;
+
+	&.is-content-justification-center {
+		text-align: center;
+	}
+
+	&.is-content-justification-right {
+		text-align: right;
+	}
+
+	&::before {
+		content: '';
+		display: block;
+		position: absolute;
+		min-width: 100%;
+		width: max-content;
+		top: calc(100% - var(--tabs-list-border-width) - var(--tabs-list-scrollbar-offset));
+		left: 0;
+		border-bottom: var(--tabs-list-border-width) solid var(--tabs-list-border);
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Tabs - Button
+ *
+ * Because the tab list is a block element and horizontally scrollable, we
+ * have to make the buttons inline-block so they can be properly aligned
+ * within the tab list. The active bottom borders of the buttons are offset
+ * so that they don't appear outside of the hidden vertical overflow.
+ *
+ * The tab list border width is added to the bottom button padding so that
+ * we don't lose any of the actual padding we want.
+ * ------------------------------------------------------------------------- */
+
+.wp-block-tab-list button {
+
+	@mixin t-body;
+	display: inline-block;
+	padding-bottom: calc(var(--spacer-20) + var(--tabs-list-border-width));
+
+	/**
+	 * The before element acts as a bottom border for the tabs, as the tab list
+	 * border doesn't span the scroll width. The after element is always the
+	 * animated "active" border.
+	 */
+	&::before,
+	&::after {
+		content: '';
+		display: block;
+		position: absolute;
+		width: 100%;
+		top: calc(100% - var(--tabs-list-border-width));
+		bottom: auto;
+		left: 0;
+		z-index: 1;
+		border-bottom: var(--tabs-list-border-width) solid var(--tabs-list-border);
+		transition: var(--transition);
+	}
+
+	&::after {
+		width: 0;
+		z-index: 2;
+		border-bottom-color: var(--tabs-tab-active-border);
+	}
+
+	/* On select, bold the tab and change the color, activate the after element */
+	&[aria-selected="true"] {
+		font-weight: var(--font-weight-bold);
+		color: var(--tabs-tab-active-color);
+
+		&::after {
+			width: 100%;
+		}
+	}
+
+	/* On hover, change the color and activate the after element */
+	@media (--has-hover) {
+
+		&:hover {
+			color: var(--tabs-tab-active-color);
+
+			&::after {
+				width: 100%;
+			}
+		}
+	}
+
+	/* Use inset focus visible here due to vertical overflows being hidden */
+	&:focus-visible {
+
+		@mixin inset-focus-visible;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Tabs - Tab Panel
+ * ------------------------------------------------------------------------- */
+
+.wp-block-tab-panel {
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+}
