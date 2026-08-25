@@ -23,7 +23,15 @@
 	overflow-x: auto;
 	overflow-y: hidden;
 	padding-bottom: var(--tabs-list-scrollbar-offset);
-	text-align: center;
+	text-align: left;
+
+	&.is-content-justification-center {
+		text-align: center;
+	}
+
+	&.is-content-justification-right {
+		text-align: right;
+	}
 
 	&::before {
 		content: '';
