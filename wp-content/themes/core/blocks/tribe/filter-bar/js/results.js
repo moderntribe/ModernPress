@@ -10,6 +10,9 @@ import { SELECTORS } from './selectors';
 
 const PAGE_PARAM = 'facet_page';
 
+/** @type {WeakMap<HTMLFormElement, AbortController>} */
+const inflight = new WeakMap();
+
 const getGridConfig = ( grid ) => {
 	let postTypes = [];
 
@@ -122,11 +125,16 @@ export const refreshResults = async ( form, paged = 1 ) => {
 		return;
 	}
 
+	inflight.get( form )?.abort();
+	const request = new AbortController();
+	inflight.set( form, request );
+
 	grid.setAttribute( 'aria-busy', 'true' );
 
 	try {
 		const response = await fetch( buildRequestUrl( form, grid, paged ), {
 			headers: { Accept: 'application/json' },
+			signal: request.signal,
 		} );
 
 		if ( ! response.ok ) {
@@ -138,11 +146,18 @@ export const refreshResults = async ( form, paged = 1 ) => {
 		grid.innerHTML = data.html;
 		announce( form, data.found );
 		pushUrl( form, paged );
-	} catch {
+	} catch ( error ) {
+		if ( error?.name === 'AbortError' ) {
+			return;
+		}
+
 		// Fall back to a normal navigation so the user still gets results.
 		form.submit();
 	} finally {
-		grid.setAttribute( 'aria-busy', 'false' );
+		if ( inflight.get( form ) === request ) {
+			inflight.delete( form );
+			grid.setAttribute( 'aria-busy', 'false' );
+		}
 	}
 };
 
