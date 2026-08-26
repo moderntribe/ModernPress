@@ -55,7 +55,9 @@ class Directory_Query {
 
 		$selections = $this->expand_hierarchy( $this->get_selections( $request ) );
 
-		$page = $this->index->is_built()
+		// The index paginates before WP_Query runs, so `s` would only search
+		// that page and totals would ignore search. Use tax_query instead.
+		$page = ( '' === $search && $this->index->is_built() )
 			? $this->index->get_page( $selections, $post_types, $args['posts_per_page'], $args['paged'] )
 			: null;
 
