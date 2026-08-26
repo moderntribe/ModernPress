@@ -1,14 +1,14 @@
 # PHP – Agent Reference
 
 ModernPress PHP for `wp-content/plugins/core`, `wp-content/themes/core`, and
-`wp-content/mu-plugins`. Match existing `core` patterns before inventing new ones.
-Prefer the simplest solution that meets the current requirement.
+`wp-content/mu-plugins`. Prefer the simplest solution that meets the current requirement.
 
-> When this doc and the codebase conflict, the codebase wins.
+> Follow existing code patterns where they are consistent with these standards. Existing
+> legacy or inconsistent implementations should not be treated as precedent.
 
 ## Golden rules
 
-1. Follow existing patterns in the `core` plugin/theme before adding a new one.
+1. Prefer existing `core` patterns that match these standards; do not copy legacy or inconsistent code as a model.
 2. Simplest thing that works; add abstraction only for a concrete reason (see below).
 3. Readable over clever: no nested inline ternaries; use early returns.
 4. One responsibility per class and per method.
@@ -129,7 +129,9 @@ Register in `Core.php` `$subscribers` array:
 My_Feature_Subscriber::class,
 ```
 
-Mirror nearest existing subscribers under `wp-content/plugins/core/src/**/*_Subscriber.php`.
+Mirror nearest existing subscribers under `wp-content/plugins/core/src/**/*_Subscriber.php`
+that follow the closure + container pattern above — not older callback styles.
+
 ## Architecture
 
 - **Subscribers** register hooks only. Use closures that resolve services:
@@ -279,7 +281,7 @@ Scoped runs are OK for narrow edits. Never change dependencies without explicit 
 
 ## Before proposing PHP as done
 
-- [ ] Follows an existing `core` pattern; adds no ungrounded abstraction
+- [ ] Follows a standards-consistent `core` pattern (not legacy outliers); adds no ungrounded abstraction
 - [ ] No nested inline ternaries; early returns; simple conditionals
 - [ ] Classes/methods single-purpose with clear names
 - [ ] Everything typed; all output escaped; subscriber hooks use container closures (not `[ $this, '…' ]`)
