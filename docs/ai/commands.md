@@ -2,7 +2,7 @@
 
 ## Environment
 
-All commands assume you are in the repo root. The local environment runs under **Lando**. Start it with `lando start` before running PHP or WP-CLI commands.
+All commands assume you are in the repo root. The local environment runs under **Lando**. Lando must be running before running PHP or WP-CLI commands, or when trying work on or view the local environment. When the local environment is needed, first check if it is running using `lando info`. If not, start it with `lando start`.
 
 ## PHP / Composer
 

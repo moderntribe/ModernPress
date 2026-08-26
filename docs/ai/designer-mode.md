@@ -20,7 +20,7 @@ Stop and ask before touching any of these:
 - Any `.php` file
 - Any `.js` file
 - `block.json`
-- `composer.json`, `package.json`, `package-lock.json`
+- `composer.json`, `composer.lock`, `package.json`, `package-lock.json`
 - Any file outside `wp-content/themes/core/`
 
 ## Git Workflow (enforced every session)
