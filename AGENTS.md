@@ -49,7 +49,7 @@ Valid values: `developer`, `designer`
 - Use `lando wp` for WP-CLI commands — never bare `wp`
 - Do not add composer or npm packages without asking first
 - Match existing block naming conventions (block folder name = block slug)
-- For PHP in `plugins/core` / `themes/core`: follow `docs/ai/php.md` — match existing patterns, no nested ternaries, thin templates, hooks only in subscribers via closures that resolve container services (not `[ $this, 'method' ]`)
+- For PHP in `plugins/core` / `themes/core`: follow `docs/ai/php.md` — prefer standards-consistent existing patterns (not legacy outliers), no nested ternaries, thin templates, hooks only in subscribers via closures that resolve container services (not `[ $this, 'method' ]`)
 - Comments: short and informative only when code is not self-explanatory. Huge / obvious / essay-style comments (especially comment-heavy diffs for tiny code changes) fail review — remove them before done
 - PR descriptions and commit messages: same bar — short, informative, template sections filled without essays or chat dumps
 
