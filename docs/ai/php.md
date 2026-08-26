@@ -182,18 +182,8 @@ while ( $query->have_posts() ) {
 
 ### Blocks (PHP)
 
-- Do not put block logic in `render.php`. Keep templates thin.
-- Trivial attribute reads (≈1–6 lines) can stay in the template. Anything that transforms
-  attributes, branches, loops meaningfully, or computes values belongs in a controller.
-- Dynamic block controllers extend
-  `Tribe\Plugin\Components\Abstracts\Abstract_Block_Controller`; follow existing
-  controllers in `wp-content/plugins/core/src/Components/Blocks`.
-- Theme block PHP usually extends `Tribe\Plugin\Blocks\Block_Base` (core-block extensions)
-  or uses plugin controllers for dynamic `tribe/*` render templates.
-- Use `get_block_wrapper_attributes()` for wrappers. Use PHPCS escape-output ignores only
-  for intentionally safe pre-escaped markup (wrapper attrs, rendered inner blocks).
-
-See also `docs/ai/blocks.md` for block file layout and JS registration.
+Block PHP specifics (thin `render.php`, controllers, wrappers) live in
+`docs/ai/blocks.md` — read that on block tasks (and this file for general PHP standards).
 
 ## Pragmatic OOP & simplicity
 
@@ -265,10 +255,10 @@ escaped value.
 
 ## Complexity limits (guidelines)
 
-- Method length: aim ≤ ~30 lines; extract when a method grows past one clear job.
-- Nesting depth: ≤ 2 levels; use guard clauses to flatten.
-- Ternaries: never nested; a single simple `?:` / `??` is fine.
-- Parameters: ≤ ~4; pass an args array or object beyond that (matches `factory([...])`).
+- Method length: aim for ~30 lines; extract when a method grows past one clear job.
+- Nesting depth: ~2 levels; use guard clauses to flatten.
+- Ternaries: avoid nested; a single simple `?:` / `??` is fine.
+- Parameters: approximately ~4 params; pass an args array or object beyond that (matches `factory([...])`).
 - Class size: if a class needs "and" to describe it, split it.
 
 ## PHPCS / PHPStan
