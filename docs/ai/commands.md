@@ -9,12 +9,15 @@ All commands assume you are in the repo root. The local environment runs under *
 ```bash
 lando composer install               # install dependencies
 lando composer require <package>     # add a package (ask before doing this)
-lando composer phpcs                 # lint PHP
+lando composer phpcs                 # lint PHP (ModernTribe ruleset)
 lando composer phpcbf                # auto-fix PHP lint errors
-lando composer phpstan               # static analysis
+lando composer phpstan               # static analysis (level 5)
 ```
 
 > Bare `composer <cmd>` also works if Composer is installed on the host; prefer `lando composer` to keep the PHP version consistent.
+
+For PHP work, treat both `phpcs` and `phpstan` as done-gates (scoped runs OK for narrow
+edits). See `docs/ai/php.md` for coding standards and the review checklist.
 
 ## JS / CSS (npm)
 

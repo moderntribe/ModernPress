@@ -61,6 +61,16 @@ Blocks self-register via `Block_Registrar.php` — no manual step required. The 
 
 If a block needs server-side PHP logic (e.g., custom REST endpoints, block bindings), add a class in `wp-content/plugins/core/src/Blocks/` and register it in `Blocks_Definer.php`.
 
+## PHP render / controllers
+
+Follow `docs/ai/php.md` for full coding standards. Block-specific rules:
+
+- Keep `render.php` thin: factory a controller, wrapper attributes, simple loops/conditionals, escaped output. No business logic in the template.
+- Trivial attribute reads (≈1–6 lines) may stay in the template. Anything that transforms attributes, branches, loops meaningfully, or computes values belongs in a controller.
+- Dynamic block controllers extend `Tribe\Plugin\Components\Abstracts\Abstract_Block_Controller`; mirror existing controllers in `wp-content/plugins/core/src/Components/Blocks`.
+- Theme block PHP usually extends `Tribe\Plugin\Blocks\Block_Base` (core-block extensions) or uses plugin controllers for dynamic `tribe/*` render templates.
+- Use `get_block_wrapper_attributes()` for wrappers. PHPCS escape-output ignores only for intentionally safe pre-escaped markup (wrapper attrs, rendered inner blocks).
+
 ## JS Entry Point (`index.js`)
 
 ```js
