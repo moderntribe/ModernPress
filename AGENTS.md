@@ -39,7 +39,6 @@ Valid values: `developer`, `designer`
 | Any PHP task | Read `docs/ai/php.md` (ModernPress coding standards) | "Add a new plugin integration", "Create a new ACF global settings group for admins" |
 | Run / build / lint / test | Read `docs/ai/commands.md` | "Rebuild frontend assets", "lint the latest code changes before committing" |
 | Any CSS task | Read `docs/ai/css.md` | "Add a new class to the heading block" | "Add extra margin above this element" |
-| Open / update a PR or write commit messages | Read `docs/ai/prs.md` | "Open a pull request", "Draft the PR description" |
 | `user_role = designer` | Read `docs/ai/designer-mode.md` | |
 
 ## Hard Rules
@@ -52,7 +51,7 @@ Valid values: `developer`, `designer`
 - Match existing block naming conventions (block folder name = block slug)
 - For PHP in `plugins/core` / `themes/core`: follow `docs/ai/php.md` — match existing patterns, no nested ternaries, thin templates, hooks only in subscribers via closures that resolve container services (not `[ $this, 'method' ]`)
 - Comments: short and informative only when code is not self-explanatory. Huge / obvious / essay-style comments (especially comment-heavy diffs for tiny code changes) fail review — remove them before done
-- PR descriptions and commit messages: same bar — short, informative, template sections filled without essays or chat dumps; follow `docs/ai/prs.md`
+- PR descriptions and commit messages: same bar — short, informative, template sections filled without essays or chat dumps
 
 ## Critical Gotchas
 

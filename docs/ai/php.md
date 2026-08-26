@@ -57,8 +57,7 @@ explains itself.
 **Hard fail in review / done-gates:** a change that is mostly commentary (e.g. ~20 lines of
 comments around ~1 line of real code, or a long block explaining obvious logic) is
 unacceptable — strip it before proposing the change as done. Needed human context goes in
-a short PR/commit note or chat — not a novel in the source, and not an essay-length PR
-(see `docs/ai/prs.md`).
+a short PR/commit note or chat — not a novel in the source, and not an essay-length PR.
 
 Docblocks: keep them minimal and accurate (types/`@param`/`@return` only when they add
 information the signature does not already convey). Do not pad with fluff.
