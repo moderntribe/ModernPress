@@ -185,15 +185,17 @@ class Facet_Index {
 
 		$post_types = $this->get_indexed_post_types();
 
+		// Mark unavailable before TRUNCATE so requests during rebuild (or after
+		// a fatal) use the taxonomy-query fallback instead of an empty table.
+		update_option( self::BUILT_OPTION, false, false );
+		$this->bump_cache_version();
+
 		global $wpdb;
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$wpdb->query( 'TRUNCATE TABLE ' . $this->table_name() );
 
 		if ( [] === $post_types ) {
-			update_option( self::BUILT_OPTION, false, false );
-			$this->bump_cache_version();
-
 			return 0;
 		}
 
