@@ -70,10 +70,6 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 		return $this->found_posts;
 	}
 
-	public function get_max_num_pages(): int {
-		return $this->max_num_pages;
-	}
-
 	public function should_show_pagination(): bool {
 		return $this->show_pagination && $this->max_num_pages > 1;
 	}
