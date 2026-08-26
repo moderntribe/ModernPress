@@ -234,13 +234,23 @@ class Facet_Index {
 	 * Reindex posts attached to a term, or schedule a rebuild when the term is large.
 	 */
 	public function reindex_term( int $term_id, string $taxonomy ): void {
-		if ( ! $this->is_indexed_taxonomy( $taxonomy ) ) {
-			return;
-		}
-
 		$object_ids = get_objects_in_term( $term_id, $taxonomy );
 
 		if ( is_wp_error( $object_ids ) ) {
+			return;
+		}
+
+		$this->reindex_posts( $taxonomy, $object_ids );
+	}
+
+	/**
+	 * Reindex posts after a term change. Call this from delete_term with the
+	 * hook's object IDs: get_objects_in_term() is empty once the term is gone.
+	 *
+	 * @param list<int|string> $object_ids
+	 */
+	public function reindex_posts( string $taxonomy, array $object_ids ): void {
+		if ( ! $this->is_indexed_taxonomy( $taxonomy ) ) {
 			return;
 		}
 

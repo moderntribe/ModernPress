@@ -51,9 +51,9 @@ class Facets_Subscriber extends Abstract_Subscriber {
 			$this->container->get( Facet_Index::class )->reindex_term( (int) $term_id, (string) $taxonomy );
 		}, 20, 3 );
 
-		add_action( 'pre_delete_term', function ( $term_id, $taxonomy ): void {
-			$this->container->get( Facet_Index::class )->reindex_term( (int) $term_id, (string) $taxonomy );
-		}, 10, 2 );
+		add_action( 'delete_term', function ( $term, $tt_id, $taxonomy, $deleted_term, $object_ids ): void {
+			$this->container->get( Facet_Index::class )->reindex_posts( (string) $taxonomy, (array) $object_ids );
+		}, 10, 5 );
 	}
 
 	private function register_rebuild_hooks(): void {
