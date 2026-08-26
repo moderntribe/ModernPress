@@ -45,9 +45,7 @@ class Directory_Query {
 			'paged'          => max( 1, $paged ),
 		];
 
-		$search = isset( $request[ Facet_Registry::SEARCH_PARAM ] )
-			? sanitize_text_field( (string) $request[ Facet_Registry::SEARCH_PARAM ] )
-			: '';
+		$search = $this->get_search_query( $request );
 
 		if ( '' !== $search ) {
 			$args['s'] = $search;
