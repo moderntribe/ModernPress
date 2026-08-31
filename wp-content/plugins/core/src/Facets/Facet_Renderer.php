@@ -278,9 +278,9 @@ class Facet_Renderer {
 			type="button"
 			class="a-btn tribe-facet__apply"
 			data-js="facet-apply"
-			aria-label="<?php echo esc_attr( sprintf( /* translators: %s: facet label. */ __( 'Filter by %s', 'tribe' ), $label ) ); ?>"
+			aria-label="<?php echo esc_attr( sprintf( /* translators: %s: facet label. */ __( 'Done selecting %s', 'tribe' ), $label ) ); ?>"
 		>
-			<?php echo esc_html__( 'Filter', 'tribe' ); ?>
+			<?php echo esc_html__( 'Done', 'tribe' ); ?>
 		</button>
 		<?php
 
