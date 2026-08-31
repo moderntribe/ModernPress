@@ -14,6 +14,9 @@ if ( ! $c instanceof Filter_Bar_Controller ) {
 
 $flyout_id       = $args['flyout_id'] ?? '';
 $flyout_title_id = $args['flyout_title_id'] ?? '';
+$desktop_layout  = in_array( $args['desktop_layout'] ?? '', [ 'top', 'sidebar' ], true )
+	? $args['desktop_layout']
+	: 'sidebar';
 
 if ( '' === $flyout_id || '' === $flyout_title_id ) {
 	return;
@@ -37,7 +40,7 @@ if ( '' === $flyout_id || '' === $flyout_title_id ) {
 </div>
 <?php
 /*
- * ponytail: the sidebar and mobile fieldsets below each render the full facet
+ * ponytail: the desktop and mobile fieldsets below each render the full facet
  * set, so a large taxonomy ships its terms twice. That is the price of the
  * "Mobile Flyout Type" setting — the two layouts can render different controls
  * for the same facet, and the swap is CSS-only so it works without JS. Folding
@@ -45,12 +48,12 @@ if ( '' === $flyout_id || '' === $flyout_title_id ) {
  * JS. Revisit only if per-layout types are ever dropped.
  */
 ?>
-<fieldset class="b-filter-bar__responsive-facets b-filter-bar__responsive-facets--sidebar" data-facet-layout="sidebar">
+<fieldset class="b-filter-bar__responsive-facets b-filter-bar__responsive-facets--desktop" data-facet-layout="desktop">
 	<legend class="screen-reader-only"><?php esc_html_e( 'Filters', 'tribe' ); ?></legend>
 	<div class="b-filter-bar__grid">
 		<?php get_template_part( 'components/filter-bar/facets', null, [
 			'controller' => $c,
-			'layout'     => 'sidebar',
+			'layout'     => $desktop_layout,
 		] ); ?>
 	</div>
 </fieldset>

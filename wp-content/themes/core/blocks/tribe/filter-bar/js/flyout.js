@@ -1,5 +1,5 @@
 /**
- * Mobile filter flyout (sidebar layout only).
+ * Mobile filter flyout.
  */
 
 import { bodyLock } from 'utils/tools.js';
@@ -113,7 +113,7 @@ export const hasActiveFilters = ( block ) => {
 	const activeFacets =
 		[
 			block.querySelector( SELECTORS.mobileFacets ),
-			block.querySelector( SELECTORS.sidebarFacets ),
+			block.querySelector( SELECTORS.desktopFacets ),
 		].find( ( facets ) => facets && ! facets.disabled ) ?? block;
 	const grid = activeFacets.querySelector( SELECTORS.filterGrid );
 
@@ -153,7 +153,7 @@ export const updateClearAllVisibility = ( block ) => {
 };
 
 /**
- * Copy form state between the desktop sidebar and mobile flyout variants.
+ * Copy form state between the desktop and mobile flyout variants.
  *
  * @param {HTMLFieldSetElement} source Active controls.
  * @param {HTMLFieldSetElement} target Controls about to become active.
@@ -213,26 +213,26 @@ const copyFacetState = ( source, target ) => {
  * Enable only the responsive control set currently visible. Disabled controls
  * are omitted from FormData, preventing duplicate facet values.
  *
- * @param {Element} block Sidebar filter bar.
+ * @param {Element} block Filter bar.
  */
 const syncResponsiveFacets = ( block ) => {
 	const trigger = block.querySelector( SELECTORS.mobileTrigger );
-	const sidebarFacets = block.querySelector( SELECTORS.sidebarFacets );
+	const desktopFacets = block.querySelector( SELECTORS.desktopFacets );
 	const mobileFacets = block.querySelector( SELECTORS.mobileFacets );
 
-	if ( ! trigger || ! sidebarFacets || ! mobileFacets ) {
+	if ( ! trigger || ! desktopFacets || ! mobileFacets ) {
 		return;
 	}
 
 	const isMobile = window.getComputedStyle( trigger ).display !== 'none';
-	const source = isMobile ? sidebarFacets : mobileFacets;
-	const target = isMobile ? mobileFacets : sidebarFacets;
+	const source = isMobile ? desktopFacets : mobileFacets;
+	const target = isMobile ? mobileFacets : desktopFacets;
 
 	if ( ! source.disabled && target.disabled ) {
 		copyFacetState( source, target );
 	}
 
-	sidebarFacets.disabled = isMobile;
+	desktopFacets.disabled = isMobile;
 	mobileFacets.disabled = ! isMobile;
 
 	block.dispatchEvent( new CustomEvent( 'tribe-facets-layout-change' ) );

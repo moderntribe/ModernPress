@@ -53,7 +53,8 @@
 	}
 }
 
-.b-faceted-directory--filter-bar-sidebar .b-filter-bar__facet {
+.b-faceted-directory--filter-bar-sidebar .b-filter-bar__facet,
+.b-filter-bar__flyout .b-filter-bar__facet {
 	padding: var(--spacer-40) var(--grid-margin);
 	border-top: 1px solid var(--color-border-secondary);
 
@@ -78,7 +79,7 @@
 	border: 0;
 }
 
-.b-filter-bar__responsive-facets--sidebar {
+.b-filter-bar__responsive-facets--desktop {
 	display: none;
 
 	@container faceted-directory (min-width: 992px) {

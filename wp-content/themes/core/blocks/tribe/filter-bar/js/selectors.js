@@ -34,11 +34,9 @@ export const SELECTORS = {
 
 	filterBar: `.${ CLASSES.filterBar }`,
 	facetWrapper: `.${ CLASSES.facetWrapper }`,
-	filterBarSidebar: `.${ CLASSES.filterBar }[data-filter-bar-position="sidebar"]`,
 	filterGrid: `.${ CLASSES.filterGrid }`,
 	mobileTrigger: `.${ CLASSES.mobileTrigger }`,
-	sidebarPosition: '[data-filter-bar-position="sidebar"]',
-	sidebarFacets: '[data-facet-layout="sidebar"]',
+	desktopFacets: '[data-facet-layout="desktop"]',
 	mobileFacets: '[data-facet-layout="mobile"]',
 
 	flyout: '[data-js="filter-flyout"]',

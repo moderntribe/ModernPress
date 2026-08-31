@@ -13,23 +13,22 @@ import { bindFacetClears, updateFacetClearVisibility } from './js/facet-clear';
 import { SELECTORS } from './js/selectors';
 
 /**
- * Whether the sidebar is in mobile-flyout mode (trigger visible).
+ * Whether the filter bar is in mobile-flyout mode (trigger visible).
  *
- * Desktop sidebar (≥992px container) hides the trigger and shows facets
- * inline — those should live-update. Mobile keeps the flyout closed until
- * "Show results".
+ * Desktop layouts (≥992px container) hide the trigger and show facets inline —
+ * those should live-update. Mobile keeps the flyout closed until "Show results".
  *
  * @param {Element} element Event target inside the filter bar.
  * @return {boolean} True when the mobile flyout owns the interaction.
  */
 const isMobileFlyoutControl = ( element ) => {
-	const sidebar = element.closest( SELECTORS.sidebarPosition );
+	const block = element.closest( SELECTORS.filterBar );
 
-	if ( ! sidebar ) {
+	if ( ! block ) {
 		return false;
 	}
 
-	const mobileFacets = sidebar.querySelector( SELECTORS.mobileFacets );
+	const mobileFacets = block.querySelector( SELECTORS.mobileFacets );
 
 	return Boolean( mobileFacets && ! mobileFacets.disabled );
 };
@@ -110,15 +109,13 @@ const initFormBehavior = ( form ) => {
 const init = () => {
 	initDropdowns();
 
-	document
-		.querySelectorAll( SELECTORS.filterBarSidebar )
-		.forEach( ( block ) => {
-			bindFlyoutEvents( block );
-			block.addEventListener( 'tribe-facets-layout-change', () => {
-				syncDropdowns( block );
-				updateFacetClearVisibility( block );
-			} );
+	document.querySelectorAll( SELECTORS.filterBar ).forEach( ( block ) => {
+		bindFlyoutEvents( block );
+		block.addEventListener( 'tribe-facets-layout-change', () => {
+			syncDropdowns( block );
+			updateFacetClearVisibility( block );
 		} );
+	} );
 
 	document.querySelectorAll( SELECTORS.form ).forEach( ( form ) => {
 		initFormBehavior( form );
