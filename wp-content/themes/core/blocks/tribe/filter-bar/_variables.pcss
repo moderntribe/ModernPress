@@ -1,0 +1,47 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Filter Bar - Variables
+ *
+ * ------------------------------------------------------------------------- */
+
+:root,
+:--light-themes {
+	--filter-bar-facet-indent: var(--spacer-30);
+
+	--filter-bar-field-background-color: var(--color-neutral-10);
+	--filter-bar-control-background-color: var(--color-white);
+	--filter-bar-control-icon-color: var(--color-neutral-50);
+
+	--filter-bar-checkbox-border-color: var(--color-neutral-30);
+	--filter-bar-checkbox-hover-border-color: var(--color-black);
+	--filter-bar-checkbox-check-color: var(--color-black);
+
+	--filter-bar-flyout-shadow-color: var(--color-black-20);
+	--filter-bar-scrollbar-thumb-color: var(--color-neutral-50);
+	--filter-bar-scrollbar-track-color: var(--color-neutral-30);
+}
+
+/* The page is already neutral-10, so a muted field has to lift off it. */
+:--light-theme {
+	--filter-bar-field-background-color: var(--color-white);
+}
+
+:--dark-themes {
+	--filter-bar-field-background-color: var(--color-neutral-80);
+	--filter-bar-control-background-color: var(--color-neutral-90);
+	--filter-bar-control-icon-color: var(--color-neutral-20);
+
+	--filter-bar-checkbox-border-color: var(--color-neutral-70);
+	--filter-bar-checkbox-hover-border-color: var(--color-white);
+	--filter-bar-checkbox-check-color: var(--color-white);
+
+	--filter-bar-flyout-shadow-color: var(--color-white-20);
+	--filter-bar-scrollbar-thumb-color: var(--color-neutral-20);
+	--filter-bar-scrollbar-track-color: var(--color-neutral-70);
+}
+
+:--brand-theme {
+	--filter-bar-field-background-color: var(--color-dark-blue);
+	--filter-bar-control-background-color: var(--color-dark-blue);
+	--filter-bar-checkbox-border-color: var(--color-dark-blue);
+}

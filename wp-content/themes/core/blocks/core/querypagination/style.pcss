@@ -2,38 +2,17 @@
  *
  * Block - Query Pagination - FE / Editor Styles
  *
+ * Shared look lives in _mixins.pcss so custom pagination markup can match.
+ *
  * ------------------------------------------------------------------------- */
 
 @import '_variables.pcss';
 
 /* Increase specificity to override WordPress default `body .is-layout-flex` styles */
 body nav.wp-block-query-pagination {
-	flex-wrap: nowrap;
-	justify-content: center;
-	gap: var(--wp--preset--spacing--20);
-	margin-top: var(--wp--preset--spacing--50);
 
-	/* Reduce spacing on narrow screens */
-	@media (max-width: 420px) {
-		gap: 0;
-		justify-content: space-between;
-	}
-
-	@media (--mq-tablet) {
-		gap: var(--wp--preset--spacing--40);
-	}
-
-	/* ensure all links within the pagination get the same styling */
-	a {
-		color: var(--pagination-link-color);
-		text-decoration: none;
-		transition: var(--transition);
-
-		&:hover,
-		&:focus:not(:focus-visible) {
-			color: var(--pagination-link-hover-color);
-		}
-	}
+	@mixin pagination-row;
+	@mixin pagination-links;
 }
 
 /* -----------------------------------------------------------------------
@@ -41,47 +20,12 @@ body nav.wp-block-query-pagination {
  * ------------------------------------------------------------------------ */
 
 .wp-block-query-pagination-numbers {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: var(--spacer-30);
-	margin: 0;
 
-	/* Reduce spacing on narrow screens */
-	@media (max-width: 420px) {
-		gap: 0;
-		width: 100%;
-	}
-
-	@media (--mq-tablet) {
-		gap: var(--spacer-40);
-	}
+	@mixin pagination-numbers-row;
 
 	.page-numbers {
-		line-height: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: var(--pagination-numbers-size);
-		width: var(--pagination-numbers-size);
-		border-radius: 100%;
 
-		&:where(:not(.current, .dots)):hover,
-		&:where(:not(.current, .dots)):focus:not(:focus-visible) {
-			background-color: var(--pagination-numbers-hover-background-color);
-		}
-
-		/* Current page indicator */
-		&.current {
-			background-color: var(--pagination-numbers-current-background-color);
-			color: var(--pagination-numbers-current-color);
-		}
-
-		/* Reduce dots width on very short screens */
-		&.dots {
-			width: auto;
-			border-radius: 0;
-		}
+		@mixin pagination-number;
 	}
 }
 
@@ -91,20 +35,8 @@ body nav.wp-block-query-pagination {
 
 .wp-block-query-pagination-previous,
 .wp-block-query-pagination-next {
-	display: flex;
-	align-items: center;
-	gap: var(--spacer-20);
-	margin: 0;
-	font-size: 0;
 
-	/* Reduce spacing on narrow screens */
-	@media (max-width: 380px) {
-		gap: 10px;
-	}
-
-	@media (--mq-tablet) {
-		font-size: inherit;
-	}
+	@mixin pagination-prev-next;
 
 	/* always style pagination prev/next arrows with the same chevron */
 	.is-arrow-chevron,
@@ -116,14 +48,8 @@ body nav.wp-block-query-pagination {
 		margin: 0;
 
 		&::before {
-			content: "";
-			display: block;
-			width: 100%;
-			height: 100%;
-			background-color: var(--pagination-prev-next-icon-color);
-			mask: var(--icon-chevron-left) center no-repeat;
-			mask-size: contain;
-			transition: var(--transition);
+
+			@mixin pagination-arrow-icon;
 		}
 	}
 
