@@ -4,11 +4,15 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+@@ [2026.08]
+- CHore WordPress Core update to 7.0.3, plugin, composer & npm package updates.
+
 ## [2026.06]
 - Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
 
 ## [2026.05]
 
+- Fixed: Carousel `.swiper-wrapper` and `.swiper-slide` set to `height: auto` to prevent image cropping when slides have mixed aspect ratios. Added `--swiper-navigation-border-size` and `--swiper-navigation-hover-border-size` CSS variables for border-width theming.
 - Updated: Prettier config to support `.pcss` files, ensuring PostCSS files use CSS formatting rules.
 - Fixed: Pagination breaking on mobile
 - Updated: Announcement Renderer block adjusted to not be available in the inserter and attributes updated to actual values
