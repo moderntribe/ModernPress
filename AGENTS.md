@@ -1,6 +1,6 @@
 # ModernPress – Agent Instructions
 
-ModernPress WordPress framework. PHP 8.4. Full-site editing theme with custom Gutenberg blocks. Maintained by Modern Tribe.
+ModernPress WordPress framework. Full-site editing theme with custom Gutenberg blocks. Maintained by Modern Tribe.
 
 ## Key Paths
 
@@ -8,7 +8,7 @@ ModernPress WordPress framework. PHP 8.4. Full-site editing theme with custom Gu
 Theme:       wp-content/themes/core/
 Blocks:      wp-content/themes/core/blocks/{core,tribe,outermost}/
 Components:  wp-content/themes/core/components/
-Plugin:      wp-content/plugins/core/src/
+Core plugin: wp-content/plugins/core/src/
 Mu-plugins:  wp-content/mu-plugins/
 Plugins:     wp-content/plugins/
 Assets:      wp-content/themes/core/assets/

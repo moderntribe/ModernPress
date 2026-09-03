@@ -28,7 +28,8 @@ PSR-4 via Composer. Path mirrors namespace:
 ## Baseline style
 
 - Standards: `moderntribe/coding-standards` (`ModernTribe` ruleset) + repo `phpcs.xml.dist`
-- Static analysis: PHPStan **level 5**. PHP **8.4**.
+- Static analysis: PHPStan **level 5**.
+- Before using version-specific syntax, check the running Lando PHP version with `lando php -v`.
 - `<?php declare(strict_types=1);` as the first statement in every PHP file.
 - Modern PHP: short arrays `[]`, typed properties/params/returns, union types
   (`int|null`, `\WP_Term|null`), namespaces, narrowest visibility.
@@ -266,7 +267,7 @@ escaped value.
 ## PHPCS / PHPStan
 
 - Config: `phpcs.xml.dist`
-- PHP version: 8.4
+- PHP version: use the version reported by `lando php -v` in the running Lando environment.
 - Indentation: tabs (tab-width 4)
 - Scanned paths: `plugins/core`, `themes/core`, `mu-plugins`
 - Excluded: `vendor/`, `tests/`, `*-config.php`

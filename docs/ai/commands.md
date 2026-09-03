@@ -6,6 +6,9 @@ All commands assume you are in the repo root. The local environment runs under *
 
 ## PHP / Composer
 
+Before PHP-specific work, run `lando php -v` and use the version provided by the running Lando
+environment rather than assuming a version from these documents.
+
 ```bash
 lando composer install               # install dependencies
 lando composer require <package>     # add a package (ask before doing this)
