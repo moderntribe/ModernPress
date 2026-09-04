@@ -7,10 +7,11 @@
 		"sort-packages": true,
 		"preferred-install": "dist",
 		"allow-plugins": {
-			"ffraenz/private-composer-installer": true,
 			"composer/installers": true,
 			"cweagans/composer-patches": true,
 			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"ffraenz/private-composer-installer": true,
+			"php-http/discovery": true,
 			"phpstan/extension-installer": true
 		},
 		"platform": {
