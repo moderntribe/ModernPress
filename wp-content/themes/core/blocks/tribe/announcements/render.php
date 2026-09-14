@@ -38,7 +38,7 @@ $c = Announcement_Block_Controller::factory( [
 
 	<?php if ( $c->is_dismissible() ) : ?>
 		<div class="b-announcement__dismiss-wrapper">
-			<button type="button" class="b-announcement__dismiss" aria-label="Dismiss announcement">
+			<button type="button" class="b-announcement__dismiss" aria-label="<?php echo esc_attr__( 'Dismiss announcement', 'tribe' ); ?>">
 				<span class="b-announcement__dismiss-text"><?php echo esc_html__( 'Dismiss', 'tribe' ); ?></span>
 			</button>
 		</div>
