@@ -14,6 +14,10 @@ class Login_Settings extends Settings_Sub_Page {
 		return esc_html__( 'Login', 'tribe' );
 	}
 
+	public function get_parent_slug(): string {
+		return Tribe_Settings::PAGE_SLUG;
+	}
+
 	public function get_fields(): array {
 		return [
 			Image::make( esc_html__( 'Login Logo', 'tribe' ), self::LOGIN_LOGO )

@@ -53,5 +53,5 @@ $c = Search_Card_Controller::factory( [
 		<?php endif; ?>
 		<p class="c-search-card__visible-permalink t-body-small"><?php echo esc_html( $c->get_post_permalink() ); ?></p>
 	</div>
-	<a href="<?php echo esc_url( $c->get_post_permalink() ); ?>" class="c-search-card__link-overlay" aria-label="<?php echo sprintf( '%s %s', esc_html__( 'Read more about', 'tribe' ), $c->get_post_title() ); ?>"></a>
+	<a href="<?php echo esc_url( $c->get_post_permalink() ); ?>" class="c-search-card__link-overlay" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: post title. */ __( 'Read more about %s', 'tribe' ), $c->get_post_title() ) ); ?>"></a>
 </article>

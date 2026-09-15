@@ -1,0 +1,39 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Faceted Directory - Styles - FE / Editor
+ *
+ * ------------------------------------------------------------------------- */
+
+.b-faceted-directory {
+	container: faceted-directory / inline-size;
+}
+
+/* -------------------------------------------------------------------------
+ *
+ * Faceted Directory - Inner Block Wrapper
+ *
+ * ------------------------------------------------------------------------- */
+
+.b-faceted-directory__inner {
+	display: flex;
+	flex-direction: column;
+	gap: var(--grid-gutter);
+
+	@container faceted-directory (min-width: 992px) {
+
+		.b-faceted-directory--filter-bar-sidebar & {
+			flex-direction: row;
+
+			& > :first-child {
+				flex: 0 0 384px;
+				max-width: 384px;
+				width: 100%;
+			}
+
+			& > :last-child {
+				flex: 1;
+				width: 100%;
+			}
+		}
+	}
+}

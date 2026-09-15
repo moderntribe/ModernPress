@@ -1,0 +1,119 @@
+/* -------------------------------------------------------------------------
+ *
+ * Mixins: Pagination
+ *
+ * Shared by the core Query Pagination block and any custom pagination that
+ * should look identical (e.g. the Directory Grid). Markup differs between
+ * consumers, so these carry properties only — each consumer supplies its own
+ * selectors.
+ *
+ * ------------------------------------------------------------------------- */
+
+@define-mixin pagination-row {
+	display: flex;
+	align-items: center;
+	flex-wrap: nowrap;
+	justify-content: center;
+	gap: var(--wp--preset--spacing--20);
+	margin-top: var(--wp--preset--spacing--50);
+
+	/* Reduce spacing on narrow screens */
+	@media (max-width: 420px) {
+		gap: 0;
+		justify-content: space-between;
+	}
+
+	@media (--mq-tablet) {
+		gap: var(--wp--preset--spacing--40);
+	}
+}
+
+/* Ensure all links within the pagination get the same styling */
+@define-mixin pagination-links {
+
+	a {
+		color: var(--pagination-link-color);
+		text-decoration: none;
+		transition: var(--transition);
+
+		&:hover,
+		&:focus:not(:focus-visible) {
+			color: var(--pagination-link-hover-color);
+		}
+	}
+}
+
+@define-mixin pagination-numbers-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--spacer-30);
+	margin: 0;
+
+	/* Reduce spacing on narrow screens */
+	@media (max-width: 420px) {
+		gap: 0;
+		width: 100%;
+	}
+
+	@media (--mq-tablet) {
+		gap: var(--spacer-40);
+	}
+}
+
+@define-mixin pagination-number {
+	line-height: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--pagination-numbers-size);
+	width: var(--pagination-numbers-size);
+	border-radius: 100%;
+
+	&:where(:not(.current, .dots)):hover,
+	&:where(:not(.current, .dots)):focus:not(:focus-visible) {
+		background-color: var(--pagination-numbers-hover-background-color);
+	}
+
+	/* Current page indicator */
+	&.current {
+		background-color: var(--pagination-numbers-current-background-color);
+		color: var(--pagination-numbers-current-color);
+	}
+
+	/* Reduce dots width on very short screens */
+	&.dots {
+		width: auto;
+		border-radius: 0;
+	}
+}
+
+@define-mixin pagination-prev-next {
+	display: flex;
+	align-items: center;
+	gap: var(--spacer-20);
+	margin: 0;
+	font-size: 0;
+
+	/* Reduce spacing on narrow screens */
+	@media (max-width: 380px) {
+		gap: 10px;
+	}
+
+	@media (--mq-tablet) {
+		font-size: inherit;
+	}
+}
+
+/* Chevron for previous/next. Defaults to the left-facing icon. */
+@define-mixin pagination-arrow-icon {
+	content: "";
+	display: block;
+	width: 10px;
+	height: 16px;
+	flex-shrink: 0;
+	background-color: var(--pagination-prev-next-icon-color);
+	mask: var(--icon-chevron-left) center no-repeat;
+	mask-size: contain;
+	transition: var(--transition);
+}
