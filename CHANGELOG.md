@@ -8,6 +8,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 - Chore: WordPress Core update to 7.0.3, plugin, composer & npm package updates.
 - Added: Custom Faceted Directory
+- Added: Agent instructions for ModernPress
 
 ## [2026.06]
 
