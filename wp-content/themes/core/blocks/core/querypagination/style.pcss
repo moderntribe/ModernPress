@@ -14,9 +14,8 @@ body nav.wp-block-query-pagination {
 	margin-top: var(--wp--preset--spacing--50);
 
 	/* Reduce spacing on narrow screens */
-	@media (max-width: 420px) {
-		gap: 0;
-		justify-content: space-between;
+	@media (max-width: 380px) {
+		gap: var(--spacer-10);
 	}
 
 	@media (--mq-tablet) {
@@ -48,9 +47,8 @@ body nav.wp-block-query-pagination {
 	margin: 0;
 
 	/* Reduce spacing on narrow screens */
-	@media (max-width: 420px) {
-		gap: 0;
-		width: 100%;
+	@media (max-width: 380px) {
+		gap: var(--spacer-10);
 	}
 
 	@media (--mq-tablet) {
