@@ -8,6 +8,9 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - CHore WordPress Core update to 7.0.3, plugin, composer & npm package updates.
 - Added: Agent instructions for ModernPress
 
+## [2026.07]
+- Fixed: `create-wp-controls.js` was duplicating classes in `getBaseClassName` when `propsClassName` already included `attributeClassName`/`attributeClasses`. Tokens are now deduped across all three sources. [MOOSE-408](https://moderntribe.atlassian.net/browse/MOOSE-408)
+
 ## [2026.06]
 - Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
 
