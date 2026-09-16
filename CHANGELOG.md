@@ -12,6 +12,8 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - Fixed: `create-wp-controls.js` was duplicating classes in `getBaseClassName` when `propsClassName` already included `attributeClassName`/`attributeClasses`. Tokens are now deduped across all three sources. [MOOSE-408](https://moderntribe.atlassian.net/browse/MOOSE-408)
 
 ## [2026.06]
+- Fix: Animation classes accumulating in block "Additional CSS Class(es)" field.
+- Fix: Search card excerpt visibility now correctly checks `has_post_excerpt()` instead of `has_post_date()`.
 - Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
 
 ## [2026.05]
