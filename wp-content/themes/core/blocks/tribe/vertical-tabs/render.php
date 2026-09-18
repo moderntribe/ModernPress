@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use Tribe\Plugin\Components\Blocks\Vertical_Tabs_Block_Controller;
+use Tribe\Plugin\Components\Blocks\Tabs\Vertical_Tabs_Block_Controller;
 
 /**
  * All of the parameters passed to the function where this file is being required are accessible in this scope:
