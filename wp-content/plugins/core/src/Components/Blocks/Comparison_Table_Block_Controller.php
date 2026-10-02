@@ -22,6 +22,11 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 	 */
 	protected array $rows = [];
 
+	/**
+	 * @var array<int, \Tribe\Plugin\Components\Blocks\Comparison_Row_Block_Controller>|null
+	 */
+	protected ?array $row_controllers = null;
+
 	public function __construct( array $args = [] ) {
 		parent::__construct( $args );
 
@@ -66,20 +71,12 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 		return ! empty( $this->columns );
 	}
 
-	public function show_footer_ctas(): bool {
-		return $this->show_footer_ctas;
-	}
-
-	public function cta_placement(): string {
-		return $this->cta_placement;
-	}
-
 	public function ctas_in_header(): bool {
-		return $this->show_footer_ctas() && 'header' === $this->cta_placement();
+		return $this->show_footer_ctas && 'header' === $this->cta_placement;
 	}
 
 	public function ctas_in_footer(): bool {
-		return $this->show_footer_ctas() && 'footer' === $this->cta_placement();
+		return $this->show_footer_ctas && 'footer' === $this->cta_placement;
 	}
 
 	public function mobile_card_view(): bool {
@@ -105,40 +102,13 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 		return wp_json_encode( $settings ) ?: '{}';
 	}
 
-	public function get_column_badge( int $index ): string {
-		return $this->columns[ $index ]['badge'] ?? '';
-	}
-
-	public function get_column_label( int $index ): string {
-		return $this->columns[ $index ]['label'] ?? '';
-	}
-
-	public function get_column_subtitle( int $index ): string {
-		return $this->columns[ $index ]['subtitle'] ?? '';
-	}
-
-	public function get_column_cta_label( int $index ): string {
-		return $this->columns[ $index ]['ctaLabel'] ?? '';
-	}
-
-	public function get_column_cta_url( int $index ): string {
-		return $this->columns[ $index ]['ctaUrl'] ?? '';
-	}
-
-	public function get_column_cta_style( int $index ): string {
-		return $this->columns[ $index ]['ctaStyle'] ?? 'outlined';
-	}
-
-	public function get_column_cta_opens_in_new_tab( int $index ): bool {
-		return ! empty( $this->columns[ $index ]['ctaOpensInNewTab'] );
-	}
-
 	public function has_column_cta( int $index ): bool {
-		return '' !== $this->get_column_cta_label( $index ) && '' !== $this->get_column_cta_url( $index );
+		return '' !== ( $this->columns[ $index ]['ctaLabel'] ?? '' )
+			&& '' !== ( $this->columns[ $index ]['ctaUrl'] ?? '' );
 	}
 
 	public function render_column_badge_markup( int $index ): string {
-		$badge = $this->get_column_badge( $index );
+		$badge = $this->columns[ $index ]['badge'] ?? '';
 
 		if ( '' === $badge ) {
 			return '';
@@ -151,23 +121,20 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 	}
 
 	public function render_table_column_header( int $index ): string {
-		$subtitle        = $this->get_column_subtitle( $index );
-		$subtitle_markup = '' !== $subtitle
-			? sprintf(
-				'<span class="b-comparison-table__column-subtitle t-body-small">%s</span>',
-				esc_html( $subtitle )
-			)
-			: '';
-		$cta_markup      = $this->ctas_in_header() && $this->has_column_cta( $index )
-			? sprintf(
-				'<span class="b-comparison-table__column-cta">%s</span>',
-				$this->render_column_cta_link( $index )
-			)
-			: '';
+		$subtitle_markup = $this->render_optional_column_markup(
+			'span',
+			'b-comparison-table__column-subtitle t-body-small',
+			esc_html( $this->columns[ $index ]['subtitle'] ?? '' )
+		);
+		$cta_markup      = $this->render_optional_column_markup(
+			'span',
+			'b-comparison-table__column-cta',
+			$this->ctas_in_header() ? $this->render_column_cta_link( $index ) : ''
+		);
 		$content         = sprintf(
 			'%s<span class="b-comparison-table__column-label t-display-x-small">%s</span>%s%s',
 			$this->render_column_badge_markup( $index ),
-			esc_html( $this->get_column_label( $index ) ),
+			esc_html( $this->columns[ $index ]['label'] ?? '' ),
 			$subtitle_markup,
 			$cta_markup
 		);
@@ -180,24 +147,21 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 	}
 
 	public function render_card_header( int $index ): string {
-		$subtitle        = $this->get_column_subtitle( $index );
-		$subtitle_markup = '' !== $subtitle
-			? sprintf(
-				'<p class="b-comparison-table__card-subtitle t-body-small">%s</p>',
-				esc_html( $subtitle )
-			)
-			: '';
-		$cta_markup      = $this->ctas_in_header() && $this->has_column_cta( $index )
-			? sprintf(
-				'<div class="b-comparison-table__card-cta">%s</div>',
-				$this->render_column_cta_link( $index )
-			)
-			: '';
+		$subtitle_markup = $this->render_optional_column_markup(
+			'p',
+			'b-comparison-table__card-subtitle t-body-small',
+			esc_html( $this->columns[ $index ]['subtitle'] ?? '' )
+		);
+		$cta_markup      = $this->render_optional_column_markup(
+			'div',
+			'b-comparison-table__card-cta',
+			$this->ctas_in_header() ? $this->render_column_cta_link( $index ) : ''
+		);
 
 		return sprintf(
 			'<header class="b-comparison-table__card-header">%s<h3 class="b-comparison-table__card-title t-display-x-small">%s</h3>%s%s</header>',
 			$this->render_column_badge_markup( $index ),
-			esc_html( $this->get_column_label( $index ) ),
+			esc_html( $this->columns[ $index ]['label'] ?? '' ),
 			$subtitle_markup,
 			$cta_markup
 		);
@@ -208,16 +172,16 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 			return '';
 		}
 
-		$target_attrs = $this->get_column_cta_opens_in_new_tab( $index )
+		$target_attrs = ! empty( $this->columns[ $index ]['ctaOpensInNewTab'] )
 			? ' target="_blank" rel="noopener noreferrer"'
 			: '';
 
 		return sprintf(
 			'<a href="%s" class="%s"%s>%s</a>',
-			esc_url( $this->get_column_cta_url( $index ) ),
-			esc_attr( 'a-btn-' . $this->get_column_cta_style( $index ) ),
+			esc_url( $this->columns[ $index ]['ctaUrl'] ?? '' ),
+			esc_attr( 'a-btn-' . ( $this->columns[ $index ]['ctaStyle'] ?? 'outlined' ) ),
 			$target_attrs,
-			esc_html( $this->get_column_cta_label( $index ) )
+			esc_html( $this->columns[ $index ]['ctaLabel'] ?? '' )
 		);
 	}
 
@@ -240,28 +204,24 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 	}
 
 	/**
-	 * @return array<int, array<string, mixed>>
-	 */
-	public function get_rows(): array {
-		return $this->rows;
-	}
-
-	/**
 	 * @return array<int, \Tribe\Plugin\Components\Blocks\Comparison_Row_Block_Controller>
 	 */
 	public function get_row_controllers(): array {
-		$columns     = $this->columns;
-		$controllers = [];
+		if ( null === $this->row_controllers ) {
+			$controllers = [];
 
-		foreach ( $this->rows as $row ) {
-			$controllers[] = Comparison_Row_Block_Controller::factory( [
-				'attributes'    => $row,
-				'columns'       => $columns,
-				'block_classes' => 'wp-block-tribe-comparison-row',
-			] );
+			foreach ( $this->rows as $row ) {
+				$controllers[] = Comparison_Row_Block_Controller::factory( [
+					'attributes'    => $row,
+					'columns'       => $this->columns,
+					'block_classes' => 'wp-block-tribe-comparison-row',
+				] );
+			}
+
+			$this->row_controllers = $controllers;
 		}
 
-		return $controllers;
+		return $this->row_controllers;
 	}
 
 	/**
@@ -288,6 +248,19 @@ class Comparison_Table_Block_Controller extends Abstract_Block_Controller {
 		}
 
 		return $row_controllers;
+	}
+
+	protected function render_optional_column_markup( string $tag, string $class, string $content ): string {
+		if ( '' === $content ) {
+			return '';
+		}
+
+		return sprintf(
+			'<%1$s class="%2$s">%3$s</%1$s>',
+			esc_attr( $tag ),
+			esc_attr( $class ),
+			$content
+		);
 	}
 
 	/**
