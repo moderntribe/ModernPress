@@ -99,52 +99,54 @@ class Block_Animation_Attributes {
 			return '';
 		}
 
-		$classes = "tribe-animation-type-{$this->animation_type}";
+		$classes = [];
 
 		if ( $this->is_scroll_animation ) {
-			$classes = "is-animated-on-scroll-{$this->animation_position} {$classes}";
+			$classes[] = "is-animated-on-scroll-{$this->animation_position}";
 		}
 
+		$classes[] = "tribe-animation-type-{$this->animation_type}";
+
 		if ( $this->has_animation_direction() ) {
-			$classes .= " tribe-animation-direction-{$this->animation_direction}";
+			$classes[] = "tribe-animation-direction-{$this->animation_direction}";
 		}
 
 		if ( $this->animation_disable_mobile_delay ) {
-			$classes .= ' tribe-animation-mobile-disable-delay';
+			$classes[] = 'tribe-animation-mobile-disable-delay';
 		}
 
 		if ( $this->is_scroll_animation && $this->animation_trigger ) {
-			$classes .= ' tribe-animate-multiple';
+			$classes[] = 'tribe-animate-multiple';
 		}
 
-		return $classes;
+		return implode( ' ', $classes );
 	}
 
 	public function get_styles(): string {
-		$styles = '';
-
 		if ( $this->animation_type === 'none' ) {
-			return $styles;
+			return '';
 		}
 
+		$styles = [];
+
 		if ( $this->animation_duration ) {
-			$styles .= "--tribe-animation-speed: {$this->animation_duration};";
+			$styles[] = "--tribe-animation-speed: {$this->animation_duration};";
 
 			if ( $this->is_scroll_animation ) {
 				$animation_offset = $this->get_animation_offset( $this->animation_duration );
-				$styles          .= "--tribe-animation-offset: {$animation_offset};";
+				$styles[]         = "--tribe-animation-offset: {$animation_offset};";
 			}
 		}
 
 		if ( $this->animation_delay ) {
-			$styles .= "--tribe-animation-delay: {$this->animation_delay};";
+			$styles[] = "--tribe-animation-delay: {$this->animation_delay};";
 		}
 
 		if ( $this->animation_easing ) {
-			$styles .= "--tribe-animation-easing: {$this->animation_easing};";
+			$styles[] = "--tribe-animation-easing: {$this->animation_easing};";
 		}
 
-		return $styles;
+		return implode( '', $styles );
 	}
 
 	protected function get_animation_offset( string $duration ): string {

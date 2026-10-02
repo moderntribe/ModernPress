@@ -67,52 +67,53 @@ const applyAnimationProps = ( props, block, attributes ) => {
 	}
 
 	const usesScroll = isScrollAnimation( animationType );
+	const classes = [];
+	const styles = {};
 
-	props.className = `${
-		props.className !== '' ? props.className + ' ' : ''
-	} ${
-		usesScroll ? `is-animated-on-scroll-${ animationPosition } ` : ''
-	}tribe-animation-type-${ animationType }`;
+	if ( usesScroll ) {
+		classes.push( `is-animated-on-scroll-${ animationPosition }` );
+	}
+
+	classes.push( `tribe-animation-type-${ animationType }` );
 
 	if ( animationSettings.direction[ animationType ]?.length ) {
-		props.className += ` tribe-animation-direction-${ animationDirection }`;
+		classes.push( `tribe-animation-direction-${ animationDirection }` );
 	}
 
 	if ( animationDuration !== undefined && animationDuration ) {
-		props.style = {
-			...props.style,
-			'--tribe-animation-speed': animationDuration,
-		};
+		styles[ '--tribe-animation-speed' ] = animationDuration;
 
 		if ( usesScroll ) {
-			props.style[ '--tribe-animation-offset' ] =
+			styles[ '--tribe-animation-offset' ] =
 				animationSettings.offset[ animationDuration ];
 		}
 	}
 
 	if ( animationDelay !== undefined && animationDelay ) {
-		props.style = {
-			...props.style,
-			'--tribe-animation-delay': animationDelay,
-		};
+		styles[ '--tribe-animation-delay' ] = animationDelay;
 	}
 
 	if (
 		animationMobileDisableDelay !== undefined &&
 		animationMobileDisableDelay
 	) {
-		props.className = `${ props.className } tribe-animation-mobile-disable-delay`;
+		classes.push( 'tribe-animation-mobile-disable-delay' );
 	}
 
 	if ( animationEasing !== undefined && animationEasing ) {
-		props.style = {
-			...props.style,
-			'--tribe-animation-easing': animationEasing,
-		};
+		styles[ '--tribe-animation-easing' ] = animationEasing;
 	}
 
 	if ( usesScroll && animationTrigger !== undefined && animationTrigger ) {
-		props.className = `${ props.className } tribe-animate-multiple`;
+		classes.push( 'tribe-animate-multiple' );
+	}
+
+	props.className = `${
+		props.className !== '' ? props.className + ' ' : ''
+	} ${ classes.join( ' ' ) }`;
+
+	if ( Object.keys( styles ).length ) {
+		props.style = { ...props.style, ...styles };
 	}
 
 	return props;
