@@ -17,6 +17,8 @@ import themeJson from '../../../../../theme.json';
 const type = themeJson?.settings?.animationType ?? [
 	{ label: __( 'None', 'tribe' ), value: 'none' },
 	{ label: __( 'Fade In', 'tribe' ), value: 'fade-in' },
+	{ label: __( 'Scale on Hover', 'tribe' ), value: 'scale-on-hover' },
+	{ label: __( 'Pulse', 'tribe' ), value: 'pulse' },
 ];
 
 export default type;

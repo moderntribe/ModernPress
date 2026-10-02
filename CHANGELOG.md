@@ -6,6 +6,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.10]
 
+- Added: Two new block animations (Scale on Hover and Pulse). Pulse remains a scroll animation, but Scale on Hover adds new functionality to the block animation code that allows non-scroll animations.
 - Chore: WordPress Core update to 7.1.2, plugin (incl. Gravity Forms 3.1), composer & npm package updates; applied Prettier formatting fixes.
 - Changed: Major npm updates: `@wordpress/scripts` 36, `@wordpress/icons` 17, `cssnano` 9. Removed unneeded `minimatch` and `webpack-dev-server` npm overrides. Replaced deprecated CSS (`grid-gap`, `page-break-*`) flagged by the newer stylelint.
 

@@ -17,6 +17,8 @@ import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 import animationSettings from './settings';
 
+const isScrollAnimation = ( type ) => type !== 'scale-on-hover';
+
 /**
  * @function applyAnimationProps
  *
@@ -64,42 +66,54 @@ const applyAnimationProps = ( props, block, attributes ) => {
 		props.className = '';
 	}
 
-	props.className = `${
-		props.className !== '' ? props.className + ' ' : ''
-	} is-animated-on-scroll-${ animationPosition } tribe-animation-type-${ animationType } tribe-animation-direction-${ animationDirection }`;
+	const usesScroll = isScrollAnimation( animationType );
+	const classes = [];
+	const styles = {};
+
+	if ( usesScroll ) {
+		classes.push( `is-animated-on-scroll-${ animationPosition }` );
+	}
+
+	classes.push( `tribe-animation-type-${ animationType }` );
+
+	if ( animationSettings.direction[ animationType ]?.length ) {
+		classes.push( `tribe-animation-direction-${ animationDirection }` );
+	}
 
 	if ( animationDuration !== undefined && animationDuration ) {
-		props.style = {
-			...props.style,
-			'--tribe-animation-speed': animationDuration,
-			'--tribe-animation-offset':
-				animationSettings.offset[ animationDuration ],
-		};
+		styles[ '--tribe-animation-speed' ] = animationDuration;
+
+		if ( usesScroll ) {
+			styles[ '--tribe-animation-offset' ] =
+				animationSettings.offset[ animationDuration ];
+		}
 	}
 
 	if ( animationDelay !== undefined && animationDelay ) {
-		props.style = {
-			...props.style,
-			'--tribe-animation-delay': animationDelay,
-		};
+		styles[ '--tribe-animation-delay' ] = animationDelay;
 	}
 
 	if (
 		animationMobileDisableDelay !== undefined &&
 		animationMobileDisableDelay
 	) {
-		props.className = `${ props.className } tribe-animation-mobile-disable-delay`;
+		classes.push( 'tribe-animation-mobile-disable-delay' );
 	}
 
 	if ( animationEasing !== undefined && animationEasing ) {
-		props.style = {
-			...props.style,
-			'--tribe-animation-easing': animationEasing,
-		};
+		styles[ '--tribe-animation-easing' ] = animationEasing;
 	}
 
-	if ( animationTrigger !== undefined && animationTrigger ) {
-		props.className = `${ props.className } tribe-animate-multiple`;
+	if ( usesScroll && animationTrigger !== undefined && animationTrigger ) {
+		classes.push( 'tribe-animate-multiple' );
+	}
+
+	props.className = `${
+		props.className !== '' ? props.className + ' ' : ''
+	} ${ classes.join( ' ' ) }`;
+
+	if ( Object.keys( styles ).length ) {
+		props.style = { ...props.style, ...styles };
 	}
 
 	return props;
@@ -142,6 +156,8 @@ const animationControls = createHigherOrderComponent( ( BlockEdit ) => {
 			animationPosition,
 		} = attributes;
 
+		const usesScroll = isScrollAnimation( animationType );
+		const directionOptions = animationSettings.direction[ animationType ];
 		const blockStyles = { ...props.style };
 
 		if ( animationType !== undefined && animationType !== 'none' ) {
@@ -149,8 +165,10 @@ const animationControls = createHigherOrderComponent( ( BlockEdit ) => {
 			if ( animationDuration !== undefined && animationDuration ) {
 				blockStyles[ '--tribe-animation-speed' ] = animationDuration;
 
-				blockStyles[ '--tribe-animation-offset' ] =
-					animationSettings.offset[ animationDuration ];
+				if ( usesScroll ) {
+					blockStyles[ '--tribe-animation-offset' ] =
+						animationSettings.offset[ animationDuration ];
+				}
 			}
 
 			// set block styles for animation delay
@@ -197,30 +215,28 @@ const animationControls = createHigherOrderComponent( ( BlockEdit ) => {
 							{ animationType === undefined ||
 								( animationType !== 'none' && (
 									<>
-										<SelectControl
-											__next40pxDefaultSize
-											__nextHasNoMarginBottom
-											label={ __(
-												'Animation Direction',
-												'tribe'
-											) }
-											value={ animationDirection }
-											help={ __(
-												'Animation direction is the direction you want the animation to run in.',
-												'tribe'
-											) }
-											onChange={ ( newValue ) => {
-												setAttributes( {
-													animationDirection:
-														newValue,
-												} );
-											} }
-											options={
-												animationSettings.direction[
-													animationType
-												]
-											}
-										/>
+										{ !! directionOptions?.length && (
+											<SelectControl
+												__next40pxDefaultSize
+												__nextHasNoMarginBottom
+												label={ __(
+													'Animation Direction',
+													'tribe'
+												) }
+												value={ animationDirection }
+												help={ __(
+													'Animation direction is the direction you want the animation to run in.',
+													'tribe'
+												) }
+												onChange={ ( newValue ) => {
+													setAttributes( {
+														animationDirection:
+															newValue,
+													} );
+												} }
+												options={ directionOptions }
+											/>
+										) }
 										<Button
 											__next40pxDefaultSize
 											text={
@@ -337,48 +353,58 @@ const animationControls = createHigherOrderComponent( ( BlockEdit ) => {
 														animationSettings.easing
 													}
 												/>
-												<ToggleControl
-													__nextHasNoMarginBottom
-													label={ __(
-														'Animation should trigger every time the element is in the viewport',
-														'tribe'
-													) }
-													help={ __(
-														'Default functionality is to trigger the animation once.',
-														'tribe'
-													) }
-													checked={
-														!! animationTrigger
-													}
-													onChange={ ( newValue ) =>
-														setAttributes( {
-															animationTrigger:
-																newValue,
-														} )
-													}
-												/>
-												<SelectControl
-													__next40pxDefaultSize
-													__nextHasNoMarginBottom
-													label={ __(
-														'Animation Trigger Position',
-														'tribe'
-													) }
-													value={ animationPosition }
-													help={ __(
-														'Animation trigger position determines how much of the element should be in the viewport before the animation triggers.',
-														'tribe'
-													) }
-													onChange={ ( newValue ) =>
-														setAttributes( {
-															animationPosition:
-																newValue,
-														} )
-													}
-													options={
-														animationSettings.position
-													}
-												/>
+												{ usesScroll && (
+													<>
+														<ToggleControl
+															__nextHasNoMarginBottom
+															label={ __(
+																'Animation should trigger every time the element is in the viewport',
+																'tribe'
+															) }
+															help={ __(
+																'Default functionality is to trigger the animation once.',
+																'tribe'
+															) }
+															checked={
+																!! animationTrigger
+															}
+															onChange={ (
+																newValue
+															) =>
+																setAttributes( {
+																	animationTrigger:
+																		newValue,
+																} )
+															}
+														/>
+														<SelectControl
+															__next40pxDefaultSize
+															__nextHasNoMarginBottom
+															label={ __(
+																'Animation Trigger Position',
+																'tribe'
+															) }
+															value={
+																animationPosition
+															}
+															help={ __(
+																'Animation trigger position determines how much of the element should be in the viewport before the animation triggers.',
+																'tribe'
+															) }
+															onChange={ (
+																newValue
+															) =>
+																setAttributes( {
+																	animationPosition:
+																		newValue,
+																} )
+															}
+															options={
+																animationSettings.position
+															}
+														/>
+													</>
+												) }
 											</div>
 										) }
 									</>

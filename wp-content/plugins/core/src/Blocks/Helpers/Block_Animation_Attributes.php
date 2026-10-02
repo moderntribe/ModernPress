@@ -12,6 +12,7 @@ class Block_Animation_Attributes {
 	protected string $animation_easing             = 'cubic-bezier(0.390, 0.575, 0.565, 1.000)';
 	protected bool $animation_trigger              = false;
 	protected string $animation_position           = '25';
+	protected bool $is_scroll_animation            = true;
 
 	public function __construct( array $attributes = [] ) {
 		$this->animation_type = $attributes['animationType'] ?? 'none';
@@ -20,13 +21,21 @@ class Block_Animation_Attributes {
 			return;
 		}
 
-		$this->animation_direction            = $attributes['animationDirection'];
+		$this->is_scroll_animation = $this->animation_type !== 'scale-on-hover';
+
+		if ( $this->has_animation_direction() ) {
+			$this->animation_direction = $attributes['animationDirection'];
+		}
+
+		if ( $this->is_scroll_animation ) {
+			$this->animation_trigger  = $attributes['animationTrigger'];
+			$this->animation_position = $attributes['animationPosition'];
+		}
+
 		$this->animation_duration             = $attributes['animationDuration'];
 		$this->animation_delay                = $attributes['animationDelay'];
 		$this->animation_disable_mobile_delay = $attributes['animationMobileDisableDelay'];
 		$this->animation_easing               = $attributes['animationEasing'];
-		$this->animation_trigger              = $attributes['animationTrigger'];
-		$this->animation_position             = $attributes['animationPosition'];
 	}
 
 	public function register_animation_attributes(): void {
@@ -90,42 +99,54 @@ class Block_Animation_Attributes {
 			return '';
 		}
 
-		$classes = "is-animated-on-scroll-{$this->animation_position} tribe-animation-type-{$this->animation_type} tribe-animation-direction-{$this->animation_direction}";
+		$classes = [];
+
+		if ( $this->is_scroll_animation ) {
+			$classes[] = "is-animated-on-scroll-{$this->animation_position}";
+		}
+
+		$classes[] = "tribe-animation-type-{$this->animation_type}";
+
+		if ( $this->has_animation_direction() ) {
+			$classes[] = "tribe-animation-direction-{$this->animation_direction}";
+		}
 
 		if ( $this->animation_disable_mobile_delay ) {
-			$classes .= ' tribe-animation-mobile-disable-delay';
+			$classes[] = 'tribe-animation-mobile-disable-delay';
 		}
 
-		if ( $this->animation_trigger ) {
-			$classes .= ' tribe-animate-multiple';
+		if ( $this->is_scroll_animation && $this->animation_trigger ) {
+			$classes[] = 'tribe-animate-multiple';
 		}
 
-		return $classes;
+		return implode( ' ', $classes );
 	}
 
 	public function get_styles(): string {
-		$styles = '';
-
 		if ( $this->animation_type === 'none' ) {
-			return $styles;
+			return '';
 		}
 
-		if ( $this->animation_duration ) {
-			$styles .= "--tribe-animation-speed: {$this->animation_duration};";
+		$styles = [];
 
-			$animation_offset = $this->get_animation_offset( $this->animation_duration );
-			$styles          .= "--tribe-animation-offset: {$animation_offset};";
+		if ( $this->animation_duration ) {
+			$styles[] = "--tribe-animation-speed: {$this->animation_duration};";
+
+			if ( $this->is_scroll_animation ) {
+				$animation_offset = $this->get_animation_offset( $this->animation_duration );
+				$styles[]         = "--tribe-animation-offset: {$animation_offset};";
+			}
 		}
 
 		if ( $this->animation_delay ) {
-			$styles .= "--tribe-animation-delay: {$this->animation_delay};";
+			$styles[] = "--tribe-animation-delay: {$this->animation_delay};";
 		}
 
 		if ( $this->animation_easing ) {
-			$styles .= "--tribe-animation-easing: {$this->animation_easing};";
+			$styles[] = "--tribe-animation-easing: {$this->animation_easing};";
 		}
 
-		return $styles;
+		return implode( '', $styles );
 	}
 
 	protected function get_animation_offset( string $duration ): string {
@@ -146,6 +167,10 @@ class Block_Animation_Attributes {
 		 */
 
 		return $default_values[ $duration ];
+	}
+
+	protected function has_animation_direction(): bool {
+		return ! in_array( $this->animation_type, [ 'pulse', 'scale-on-hover' ], true );
 	}
 
 }
