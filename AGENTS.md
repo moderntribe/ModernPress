@@ -69,6 +69,16 @@ subscribers are registered on `Core.php`.
 style, review checklist). Agents must read and follow it on any PHP task — no separate
 skill is required.
 
+### Use Node from `.nvmrc` for npm and git hooks
+
+Run `source ~/.nvm/nvm.sh && nvm use` in the same shell command as `npm` or `git commit/push`
+(the host default may be Node 18). Lefthook's lint hooks fail on the wrong Node version.
+
+### `lando composer update` can abort mid-install
+
+`composer/composer` replaces itself during the run and errors on a missing `InstalledVersions.php`.
+Rerun `lando composer install` to finish.
+
 ### Recursive Improvement
 
 When encountering a new issue that has missing documentation, extended run time, extended tool calls or lookups, recommend to the user a concise addition to this add to the "Critical Gotchas" section.
