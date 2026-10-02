@@ -7,6 +7,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 ## [2026.10]
 
 - Chore: WordPress Core update to 7.1.2, plugin (incl. Gravity Forms 3.1), composer & npm package updates; applied Prettier formatting fixes.
+- Changed: Major npm updates: `@wordpress/scripts` 36, `@wordpress/icons` 17, `cssnano` 9. Removed unneeded `minimatch` and `webpack-dev-server` npm overrides. Replaced deprecated CSS (`grid-gap`, `page-break-*`) flagged by the newer stylelint.
 
 ## [2026.08]
 
