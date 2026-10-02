@@ -1,0 +1,49 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Comparison Table - Variables
+ *
+ * Desktop layout uses container queries on `.b-comparison-table`
+ * (`container: comparison-table / inline-size`) at 48rem, matching the table
+ * min-width in `style.pcss`.
+ *
+ * ------------------------------------------------------------------------- */
+
+:root,
+:--light-themes {
+	--comparison-table-border-color: var(--color-neutral-30);
+	--comparison-table-feature-row-alt-background: var(--color-neutral-10);
+	--comparison-table-icon-color: var(--color-blue);
+	--comparison-table-check-icon-color: var(--comparison-table-icon-color);
+	--comparison-table-dash-icon-color: var(--color-text-secondary);
+	--comparison-table-carousel-pagination-color: var(--color-black);
+	--comparison-table-carousel-pagination-inactive-color: var(--color-black);
+	--comparison-table-carousel-pagination-bullet-size: 10px;
+	--comparison-table-carousel-pagination-bullet-gap: 6px;
+	--comparison-table-carousel-pagination-inactive-opacity: 0.3;
+}
+
+:--dark-themes {
+	--comparison-table-border-color: var(--color-neutral-70);
+	--comparison-table-feature-row-alt-background: var(--color-neutral-80);
+	--comparison-table-icon-color: var(--color-white);
+	--comparison-table-check-icon-color: var(--comparison-table-icon-color);
+	--comparison-table-dash-icon-color: var(--color-text-secondary);
+	--comparison-table-carousel-pagination-color: var(--color-white);
+	--comparison-table-carousel-pagination-inactive-color: var(--color-white);
+}
+
+:--brand-theme {
+	--comparison-table-border-color: var(--color-dark-blue);
+	--comparison-table-feature-row-alt-background: color-mix(
+		in srgb,
+		var(--color-white) 8%,
+		transparent
+	);
+	--comparison-table-icon-color: var(--color-white);
+	--comparison-table-check-icon-color: var(--comparison-table-icon-color);
+	--comparison-table-dash-icon-color: color-mix(
+		in srgb,
+		var(--color-white) 45%,
+		transparent
+	);
+}

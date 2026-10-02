@@ -19,6 +19,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - Fixed: `create-wp-controls.js` was duplicating classes in `getBaseClassName` when `propsClassName` already included `attributeClassName`/`attributeClasses`. Tokens are now deduped across all three sources. [MOOSE-408](https://moderntribe.atlassian.net/browse/MOOSE-408)
 - Fixed: Horizontal/Vertical Tabs — render child tab panels via `render.php` so fragile ARIA/`tabindex` markup is not saved into post content (avoids kses stripping and block validation errors). Wait for child `blockId` before setting the default active tab in the editor.
 - Changed: Extracted shared tab parent block controller into `Components/Blocks/Tabs` (`Base_Tabs_Block_Controller` + horizontal/vertical subclasses).
+- Added: Comparison Table block
 
 ## [2026.06]
 
