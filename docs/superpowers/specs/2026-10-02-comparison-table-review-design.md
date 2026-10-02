@@ -10,9 +10,9 @@ not enabled and making the relevant CSS easier to read.
 
 - Remove the comparison table's automatic `viewScript` registration from
   `block.json`.
-- Enqueue its generated `view.js` and `view.asset.php` only when the rendered
-  block has mobile carousel enabled. Keep the existing script and Swiper
-  initialization unchanged.
+- Enqueue its generated `view.js` and `view.asset.php` only on the public
+  frontend when the rendered block has mobile carousel enabled. Keep the
+  existing script and Swiper initialization unchanged.
 - Flatten nested CSS at-rules/selectors in the reviewed layout and carousel
   rules without changing their matching elements, specificity, or behavior.
   Keep mode-qualified selectors where they are required to scope styles to an
