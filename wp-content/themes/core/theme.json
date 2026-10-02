@@ -572,6 +572,13 @@
 					}
 				}
 			},
+			"core/tab-panels": {
+				"spacing": {
+					"margin": {
+						"top": "0"
+					}
+				}
+			},
 			"core/video": {
 				"elements": {
 					"caption": {
