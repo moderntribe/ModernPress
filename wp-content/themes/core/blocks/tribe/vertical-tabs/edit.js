@@ -195,15 +195,24 @@ export default function Edit( { attributes, clientId, setAttributes } ) {
 
 	/**
 	 * First tab is active when the block loads in the editor (once per mount).
+	 * Wait until the first tab has persisted its blockId before locking this in,
+	 * otherwise we can capture an empty id and never retry.
 	 */
 	const hasSetInitialTab = useRef( false );
 	useEffect( () => {
-		if ( innerBlocks.length > 0 && ! hasSetInitialTab.current ) {
-			setAttributes( {
-				currentActiveTabInstanceId: innerBlocks[ 0 ].attributes.blockId,
-			} );
-			hasSetInitialTab.current = true;
+		if (
+			hasSetInitialTab.current ||
+			innerBlocks.length === 0 ||
+			innerBlocks[ 0 ].attributes.blockId === ''
+		) {
+			return;
 		}
+
+		setAttributes( {
+			currentActiveTabInstanceId: innerBlocks[ 0 ].attributes.blockId,
+		} );
+
+		hasSetInitialTab.current = true;
 	}, [ innerBlocks, setAttributes ] );
 
 	const updateTabTitle = ( title, tabClientId ) => {
