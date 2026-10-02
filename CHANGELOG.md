@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.10]
+
+- Added: Two new block animations (Scale on Hover and Pulse). Pulse remains a scroll animation, but Scale on Hover adds new functionality to the block animation code that allows non-scroll animations.
+
 ## [2026.08]
 
 - Chore WordPress Core update to 7.0.3, plugin, composer & npm package updates.
