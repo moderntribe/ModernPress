@@ -23,7 +23,7 @@ class Block_Animation_Attributes {
 
 		$this->is_scroll_animation = $this->animation_type !== 'scale-on-hover';
 
-		if ( $this->has_animation_direction ) {
+		if ( $this->has_animation_direction() ) {
 			$this->animation_direction = $attributes['animationDirection'];
 		}
 
