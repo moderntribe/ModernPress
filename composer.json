@@ -118,7 +118,7 @@
 		"ext-json": "*",
 		"block-editor-custom-alignments/block-editor-custom-alignments": "^1.0",
 		"composer/installers": "^2.2",
-		"gravity/gravityforms": "^2.10",
+		"gravity/gravityforms": "^3.1",
 		"johnbillion/extended-cpts": "^5.0",
 		"moderntribe/tribe-glomar": "dev-main",
 		"moderntribe/tribe_embed": "^1.1",

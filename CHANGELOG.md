@@ -6,7 +6,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.10]
 
-- Chore: WordPress Core update to 7.1.2, plugin, composer & npm package updates; applied Prettier formatting fixes.
+- Chore: WordPress Core update to 7.1.2, plugin (incl. Gravity Forms 3.1), composer & npm package updates; applied Prettier formatting fixes.
 
 ## [2026.08]
 
