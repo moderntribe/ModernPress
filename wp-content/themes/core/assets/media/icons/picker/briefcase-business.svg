@@ -1,0 +1,6 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+<path d="M21 14 L21 3 L43 3 L43 14 L43 15 L41 15 L41 14 L41 4 L42 4 L42 5 L22 5 L22 4 L23 4 L23 15 L21 15 Z" fill="currentColor" fill-rule="nonzero"/>
+<path d="M62 13 L63 13 L63 47 L1 47 L1 13 L62 13 Z M62 15 L2 15 L2 14 L3 14 L3 46 L2 46 L2 45 L62 45 L62 46 L61 46 L61 14 L62 14 L62 15 Z" fill="currentColor" fill-rule="nonzero"/>
+<path d="M61 52 L61 61 L3 61 L3 52 L3 51 L5 51 L5 52 L5 60 L4 60 L4 59 L60 59 L60 60 L59 60 L59 51 L61 51 Z" fill="currentColor" fill-rule="nonzero"/>
+<path d="M44 23 L45 23 L45 37 L19 37 L19 23 L44 23 Z M44 25 L20 25 L20 24 L21 24 L21 36 L20 36 L20 35 L44 35 L44 36 L43 36 L43 24 L44 24 L44 25 Z" fill="currentColor" fill-rule="nonzero"/>
+</svg>

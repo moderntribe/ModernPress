@@ -1,0 +1,49 @@
+/* -------------------------------------------------------------------------
+ *
+ * Shared Icon Picker - Editor Styles
+ *
+ * ------------------------------------------------------------------------- */
+
+.controls-tribe-icon-picker {
+
+	/* Core has no public grid primitive, so the scrolling icon list stays custom. */
+	.icon-grid {
+		display: grid;
+		grid-template-columns: repeat( auto-fit, minmax( 41px, 1fr ) );
+		gap: 6px;
+		padding: 10px;
+		max-height: 300px;
+		overflow-y: auto;
+		border: 1px solid #ddd;
+	}
+
+	/* Registered icons are authored at 64px, so scale them down to the button. */
+	.icon-item {
+		width: 100%;
+
+		svg {
+			width: 24px;
+			height: 24px;
+			fill: currentcolor;
+		}
+	}
+
+	.icon-image {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100px;
+		height: 100px;
+		padding: 24px;
+
+		svg {
+			width: 100%;
+			height: 100%;
+			fill: currentcolor;
+		}
+	}
+
+	.icon-name {
+		font-size: 11px;
+	}
+}
