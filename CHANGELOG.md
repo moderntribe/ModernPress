@@ -11,8 +11,18 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - Added: Support for core Icon block; Modern Tribe custom icon collection.
 - Updated: Icon Card & Inline Notice blocks now pull icons from icon collections (no public editor UI available for Icon picking currently).
 
+## [2026.07]
+
+- Fixed: `create-wp-controls.js` was duplicating classes in `getBaseClassName` when `propsClassName` already included `attributeClassName`/`attributeClasses`. Tokens are now deduped across all three sources. [MOOSE-408](https://moderntribe.atlassian.net/browse/MOOSE-408)
+- Fixed: Horizontal/Vertical Tabs — render child tab panels via `render.php` so fragile ARIA/`tabindex` markup is not saved into post content (avoids kses stripping and block validation errors). Wait for child `blockId` before setting the default active tab in the editor.
+- Changed: Extracted shared tab parent block controller into `Components/Blocks/Tabs` (`Base_Tabs_Block_Controller` + horizontal/vertical subclasses).
+
 ## [2026.06]
 
+- Chore: WordPress Core update to 7.0.3, plugin, composer & npm package updates.
+- Added: Agent instructions for ModernPress
+- Fix: Animation classes accumulating in block "Additional CSS Class(es)" field.
+- Fix: Search card excerpt visibility now correctly checks `has_post_excerpt()` instead of `has_post_date()`.
 - Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
 
 ## [2026.05]

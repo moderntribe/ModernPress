@@ -17,5 +17,6 @@
 	"certPath": "",
 	"certName": "",
 	"host": "localhost",
-	"protocol": "https"
+	"protocol": "https",
+	"user_role": ""
 }
