@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.10]
+
+- Chore: WordPress Core update to 7.1.2, plugin, composer & npm package updates; applied Prettier formatting fixes.
+
 ## [2026.08]
 
 - Chore WordPress Core update to 7.0.3, plugin, composer & npm package updates.

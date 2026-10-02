@@ -7,9 +7,7 @@
 	"category": "theme",
 	"description": "A child block of the Horizontal Tabs block",
 	"icon": "text-page",
-	"parent": [
-		"tribe/horizontal-tabs"
-	],
+	"parent": [ "tribe/horizontal-tabs" ],
 	"supports": {
 		"html": false,
 		"spacing": {
@@ -27,9 +25,7 @@
 			"default": ""
 		}
 	},
-	"usesContext": [
-		"tribe/horizontal-tabs/currentActiveTabInstanceId"
-	],
+	"usesContext": [ "tribe/horizontal-tabs/currentActiveTabInstanceId" ],
 	"textdomain": "tribe",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",

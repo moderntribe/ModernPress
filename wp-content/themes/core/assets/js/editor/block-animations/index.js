@@ -228,11 +228,11 @@ const animationControls = createHigherOrderComponent( ( BlockEdit ) => {
 													? __(
 															'Hide Advanced Controls',
 															'tribe'
-													  )
+														)
 													: __(
 															'Show Advanced Controls',
 															'tribe'
-													  )
+														)
 											}
 											variant="secondary"
 											icon={
