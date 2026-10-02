@@ -13,7 +13,9 @@ class Settings_Definer implements Definer_Interface {
 		return [
 			// add the settings screens to the global array
 			self::PAGES => DI\add( [
+				DI\get( Tribe_Settings::class ),
 				DI\get( Login_Settings::class ),
+				DI\get( Facets_Settings::class ),
 			] ),
 		];
 	}
