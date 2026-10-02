@@ -23,6 +23,23 @@ $wrapper_attrs   = get_block_wrapper_attributes(
 $row_controllers = $c->has_columns()
 	? $c->prepare_row_controllers_for_render( $c->get_row_controllers() )
 	: [];
+
+/**
+ * Enqueue the mobile card carousel script (view.js) if the mobile card carousel
+ * is enabled. WordPress tracks scripts enqueued while a dynamic block renders
+ * and prints the scripts into the footer.
+ */
+if ( ! is_admin() && $c->mobile_card_carousel() ) {
+	$asset = require get_theme_file_path( 'dist/blocks/tribe/comparison-table/view.asset.php' );
+
+	wp_enqueue_script(
+		'tribe-comparison-table-view',
+		get_theme_file_uri( 'dist/blocks/tribe/comparison-table/view.js' ),
+		$asset['dependencies'] ?? [],
+		$asset['version'] ?? false,
+		true
+	);
+}
 ?>
 <figure <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 	<div class="b-comparison-table__desktop">
