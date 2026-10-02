@@ -7,6 +7,13 @@
 				"ignoreAtRules": [ "define-mixin", "mixin", "svg-load" ]
 			}
 		],
+		"at-rule-prelude-no-invalid": [
+			true,
+			{
+				"ignoreAtRules": [ "custom-selector" ]
+			}
+		],
+		"nesting-selector-no-missing-scoping-root": null,
 		"selector-class-pattern": null,
 		"no-descending-specificity": null
 	}
