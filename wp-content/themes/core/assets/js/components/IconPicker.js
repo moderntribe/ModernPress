@@ -47,7 +47,7 @@ export function useRegisteredIcon( iconName ) {
 						'root',
 						'icon',
 						name
-				  )
+					)
 				: null,
 		[ name ]
 	);
@@ -113,7 +113,7 @@ export default function IconPicker( {
 					( { name, label } ) =>
 						name.toLowerCase().includes( query ) ||
 						( label || '' ).toLowerCase().includes( query )
-			  )
+				)
 			: icons;
 
 		return [ ...list ].sort( ( a, b ) => a.name.localeCompare( b.name ) );
