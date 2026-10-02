@@ -10,6 +10,14 @@
 
 	.swiper {
 
+		.swiper-wrapper {
+			height: auto;
+		}
+
+		.swiper-slide {
+			height: auto;
+		}
+
 		.swiper-navigation {
 			position: relative;
 			padding: var(--spacer-30) 0;
@@ -57,7 +65,7 @@
 			position: static;
 			margin: 0;
 			background-color: transparent;
-			border: 1px solid var(--swiper-navigation-border-color);
+			border: var(--swiper-navigation-border-size) solid var(--swiper-navigation-border-color);
 			border-radius: 100%;
 			transition: var(--transition);
 			color: var(--swiper-navigation-color);

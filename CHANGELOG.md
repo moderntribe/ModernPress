@@ -4,16 +4,27 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.08]
+
+- Chore WordPress Core update to 7.0.3, plugin, composer & npm package updates.
+- Added: Agent instructions for ModernPress
+
 ## [2026.07]
 
+- Fixed: `create-wp-controls.js` was duplicating classes in `getBaseClassName` when `propsClassName` already included `attributeClassName`/`attributeClasses`. Tokens are now deduped across all three sources. [MOOSE-408](https://moderntribe.atlassian.net/browse/MOOSE-408)
+- Fixed: Horizontal/Vertical Tabs — render child tab panels via `render.php` so fragile ARIA/`tabindex` markup is not saved into post content (avoids kses stripping and block validation errors). Wait for child `blockId` before setting the default active tab in the editor.
+- Changed: Extracted shared tab parent block controller into `Components/Blocks/Tabs` (`Base_Tabs_Block_Controller` + horizontal/vertical subclasses).
 - Added: Comparison Table block
 
 ## [2026.06]
 
+- Fix: Animation classes accumulating in block "Additional CSS Class(es)" field.
+- Fix: Search card excerpt visibility now correctly checks `has_post_excerpt()` instead of `has_post_date()`.
 - Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
 
 ## [2026.05]
 
+- Fixed: Carousel `.swiper-wrapper` and `.swiper-slide` set to `height: auto` to prevent image cropping when slides have mixed aspect ratios. Added `--swiper-navigation-border-size` and `--swiper-navigation-hover-border-size` CSS variables for border-width theming.
 - Updated: Prettier config to support `.pcss` files, ensuring PostCSS files use CSS formatting rules.
 - Fixed: Pagination breaking on mobile
 - Updated: Announcement Renderer block adjusted to not be available in the inserter and attributes updated to actual values
