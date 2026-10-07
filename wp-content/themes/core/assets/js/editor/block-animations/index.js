@@ -19,6 +19,14 @@ import animationSettings from './settings';
 
 const isScrollAnimation = ( type ) => type !== 'scale-on-hover';
 
+// settings applied when an animation type is selected
+const typeDefaults = {
+	pulse: {
+		animationDuration: '0.9s',
+		animationEasing: 'var(--easing--ease-in-out-quad)',
+	},
+};
+
 /**
  * @function applyAnimationProps
  *
@@ -208,6 +216,7 @@ const animationControls = createHigherOrderComponent( ( BlockEdit ) => {
 								onChange={ ( newValue ) => {
 									setAttributes( {
 										animationType: newValue,
+										...typeDefaults[ newValue ],
 									} );
 								} }
 								options={ animationSettings.type }
