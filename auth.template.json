@@ -8,5 +8,8 @@
 			"username": "{{op://${OP_VAULT:-Engineering}/${OP_ITEM:-MT-Composer-Auth}/GF/license}}",
 			"password": "{{op://${OP_VAULT:-Engineering}/${OP_ITEM:-MT-Composer-Auth}/url}}"
 		}
+	},
+	"github-oauth": {
+		"github.com": "{{op://${OP_VAULT:-Engineering}/${OP_ITEM:-MT-Composer-Auth}/GH/oauth}}"
 	}
 }
