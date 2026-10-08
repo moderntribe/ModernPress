@@ -1,0 +1,140 @@
+/* -------------------------------------------------------------------------
+ *
+ * Mixins: Filter Bar
+ *
+ * ------------------------------------------------------------------------- */
+
+@define-mixin filter-bar-flyout-toggle-hover-focus {
+
+	.b-filter-bar__trigger-text {
+
+		@mixin t-animated-underline-hover;
+	}
+}
+
+@define-mixin filter-bar-flyout-close-hover-focus {
+
+	.b-filter-bar__flyout-close-text {
+
+		@mixin t-animated-underline-hover;
+	}
+}
+
+/*
+ * Search field affordances shared by the keyword search facet and the
+ * dropdown's option filter: a masked icon on the right, and a focus state
+ * that lifts the field off its resting fill and darkens the icon.
+ *
+ * The consumer owns --icon-size and its own field metrics. Each wrapper holds
+ * exactly one input, hence the bare `input` selector.
+ */
+@define-mixin facet-search-field {
+	position: relative;
+
+	&::after {
+		content: "";
+		position: absolute;
+		top: 50%;
+		right: var(--spacer-20);
+		width: var(--icon-size);
+		height: var(--icon-size);
+		mask: var(--icon-search) center no-repeat;
+		mask-size: contain;
+		background-color: var(--filter-bar-control-icon-color);
+		transform: translateY(-50%);
+	}
+
+	&:has(input:focus) {
+
+		input {
+			background-color: var(--filter-bar-control-background-color);
+			border-color: var(--color-border);
+		}
+
+		&::after {
+			background-color: var(--color-border);
+		}
+	}
+}
+
+@define-mixin facet-checkbox-hover-focus {
+
+	&::before {
+		border-color: var(--filter-bar-checkbox-hover-border-color);
+	}
+
+	.tribe-facet__label-text {
+
+		@mixin t-transparent-underline-hover;
+	}
+}
+
+/*
+ * A checkbox row: indicator, gap, label text. The checkbox facet renders it as
+ * a <label> wrapping a real checkbox and the dropdown as a <button
+ * role="option">, so the only thing the two cannot share is how they express
+ * "selected" — each supplies its own selector and calls the -checked mixin
+ * inside it.
+ *
+ * --facet-checkbox-inset is the control's own padding. The tick is positioned
+ * against the control rather than the box, so it has to clear that padding to
+ * land on the box. Set it before calling this mixin.
+ */
+@define-mixin facet-checkbox-control {
+	position: relative;
+	display: flex;
+	align-items: flex-start;
+	gap: var(--spacer-20);
+	width: 100%;
+	padding: var(--facet-checkbox-inset, 0px);
+	border: 0;
+	background: transparent;
+	color: var(--color-text);
+	text-align: left;
+	cursor: pointer;
+
+	&::before {
+		content: "";
+		flex-shrink: 0;
+		width: 24px;
+		height: 24px;
+		border: 1px solid var(--filter-bar-checkbox-border-color);
+		border-radius: 0;
+	}
+
+	@media (--has-hover) {
+
+		&:hover {
+
+			@mixin facet-checkbox-hover-focus;
+		}
+	}
+}
+
+@define-mixin facet-checkbox-control-checked {
+
+	&::before {
+		border-color: var(--filter-bar-checkbox-hover-border-color);
+	}
+
+	/*
+	 * The tick sits on a second pseudo laid over the box, since masking the box
+	 * itself would take the border with it. Masked rather than a background
+	 * image so it follows the theme. 4px and 5px centre it in the 24px box.
+	 */
+	&::after {
+		content: "";
+		position: absolute;
+		top: calc(var(--facet-checkbox-inset, 0px) + 5px);
+		left: calc(var(--facet-checkbox-inset, 0px) + 4px);
+		width: 16px;
+		height: 14px;
+		mask: var(--icon-list-check) center no-repeat;
+		mask-size: contain;
+		background-color: var(--filter-bar-checkbox-check-color);
+	}
+
+	.tribe-facet__label-text {
+		font-weight: var(--font-weight-bold);
+	}
+}

@@ -55,6 +55,14 @@ trait Post_Data {
 	}
 
 	public function get_media( string $image_size = 'large' ): string {
+		if ( ! $this->has_media() ) {
+			return sprintf(
+				'<img src="%s" alt="%s">',
+				esc_url( get_theme_file_uri( 'assets/media/post-card-placeholder.webp' ) ),
+				esc_attr__( 'Post card placeholder image', 'tribe' )
+			);
+		}
+
 		return wp_get_attachment_image( $this->image_id, $image_size );
 	}
 
