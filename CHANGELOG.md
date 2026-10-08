@@ -12,8 +12,9 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.08]
 
-- Chore WordPress Core update to 7.0.3, plugin, composer & npm package updates.
-- Added: Agent instructions for ModernPress
+- Chore: WordPress Core update to 7.0.3, plugin, composer & npm package updates.
+- Removed: Tribe Horizontal Tabs / Tribe Horizontal Tab block
+- Added: Support core Tabs block
 
 ## [2026.07]
 
@@ -23,6 +24,8 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.06]
 
+- Chore: WordPress Core update to 7.0.3, plugin, composer & npm package updates.
+- Added: Agent instructions for ModernPress
 - Fix: Animation classes accumulating in block "Additional CSS Class(es)" field.
 - Fix: Search card excerpt visibility now correctly checks `has_post_excerpt()` instead of `has_post_date()`.
 - Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.
