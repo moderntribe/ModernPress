@@ -3,7 +3,7 @@
 /**
  * Title: Styleguide
  * Slug: patterns/styleguide
- * Categories: templates
+ * Categories: pages
  * Description: The styleguide pattern combines elements of the styleguide for quick testing
  * Keywords: styleguide, text, buttons, quote, image, table
  */
