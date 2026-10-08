@@ -3,7 +3,7 @@
 /**
  * Title: Post - Left Aligned
  * Slug: patterns/post-left-aligned
- * Categories: templates
+ * Categories: pages
  * Description: A left aligned pattern for a single post page
  * Keywords: post, placeholder, left, aligned
  * Block Types: core/post-content
