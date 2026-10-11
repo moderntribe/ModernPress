@@ -47,6 +47,8 @@ class Blocks_Definer implements Definer_Interface {
 				'tribe/announcements',
 				'tribe/carousel',
 				'tribe/carousel-slide',
+				'tribe/comparison-row',
+				'tribe/comparison-table',
 				'tribe/copyright',
 				'tribe/horizontal-tab',
 				'tribe/horizontal-tabs',
