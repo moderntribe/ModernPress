@@ -44,9 +44,8 @@ class Filter_Bar_Controller extends Abstract_Block_Controller {
 
 		$position                  = (string) $this->get_context_value( Faceted_Directory_Controller::FILTER_BAR_POSITION_CONTEXT, 'top' );
 		$this->filter_bar_position = 'sidebar' === $position ? 'sidebar' : 'top';
-		$this->post_types          = $this->registry->filter_public_post_types(
-			$this->get_context_value( Faceted_Directory_Controller::POST_TYPES_CONTEXT, [ 'post' ] )
-		);
+		$post_types                = $this->get_context_value( Faceted_Directory_Controller::POST_TYPES_CONTEXT, [ 'post' ] );
+		$this->post_types          = $this->registry->filter_public_post_types( $post_types );
 		$this->id_prefix           = wp_unique_id( 'facet-' );
 		$this->request             = $args['request'] ?? $this->get_request_params();
 		$this->facets              = $this->resolve_facets( $this->attributes['facets'] ?? [] );

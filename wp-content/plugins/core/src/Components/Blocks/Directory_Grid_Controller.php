@@ -44,9 +44,12 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 
 		$this->block_classes .= ' b-directory-grid__template';
 
-		$this->post_types = $this->registry->filter_public_post_types(
-			$this->get_context_value( Faceted_Directory_Controller::POST_TYPES_CONTEXT, $this->attributes['postTypes'] ?? [ 'post' ] )
-		);
+		// Inside the directory block the parent supplies the post types; the
+		// REST endpoint has no parent and passes them as attributes.
+		$attribute_post_types = $this->attributes['postTypes'] ?? [ 'post' ];
+		$post_types           = $this->get_context_value( Faceted_Directory_Controller::POST_TYPES_CONTEXT, $attribute_post_types );
+
+		$this->post_types = $this->registry->filter_public_post_types( $post_types );
 
 		// A zero or missing page size means "use the default", not "one post".
 		$per_page              = absint( $this->attributes['postsPerPage'] ?? 0 ) ?: self::DEFAULT_POSTS_PER_PAGE;
