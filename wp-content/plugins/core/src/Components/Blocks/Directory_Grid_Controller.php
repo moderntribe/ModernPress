@@ -15,8 +15,6 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 	public const int MAX_POSTS_PER_PAGE     = 100;
 	public const int DEFAULT_POSTS_PER_PAGE = 12;
 
-	private const string POST_TYPES_CONTEXT = 'tribe/faceted-directory/postTypes';
-
 	protected \WP_Query $query;
 	protected int $found_posts;
 	protected int $max_num_pages;
@@ -35,20 +33,23 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 	 */
 	protected array $request;
 
-	public function __construct( array $args = [] ) {
+	public function __construct(
+		array $args,
+		private Directory_Query $directory_query,
+		private Facet_Registry $registry,
+	) {
 		parent::__construct( $args );
 
 		$this->pagination_base = (string) ( $args['pagination_base'] ?? '' );
 
 		$this->block_classes .= ' b-directory-grid__template';
 
-		$from_context = $this->get_context_value( self::POST_TYPES_CONTEXT );
-		$from_attrs   = $this->attributes['postTypes'] ?? [ 'post' ];
-		$post_types   = is_array( $from_context ) ? $from_context : $from_attrs;
+		// Inside the directory block the parent supplies the post types; the
+		// REST endpoint has no parent and passes them as attributes.
+		$attribute_post_types = $this->attributes['postTypes'] ?? [ 'post' ];
+		$post_types           = $this->get_context_value( Faceted_Directory_Controller::POST_TYPES_CONTEXT, $attribute_post_types );
 
-		$this->post_types = Facet_Registry::filter_public_post_types(
-			is_array( $post_types ) ? array_values( $post_types ) : []
-		);
+		$this->post_types = $this->registry->filter_public_post_types( $post_types );
 
 		// A zero or missing page size means "use the default", not "one post".
 		$per_page              = absint( $this->attributes['postsPerPage'] ?? 0 ) ?: self::DEFAULT_POSTS_PER_PAGE;
@@ -106,8 +107,7 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 		$links = paginate_links( [
 			'base'      => $base . '%_%',
 			'format'    => '?' . Facet_Registry::PAGE_PARAM . '=%#%',
-			'add_args'  => tribe_project()->container()->get( Directory_Query::class )
-				->get_active_query_args( $this->request ),
+			'add_args'  => $this->directory_query->get_active_query_args( $this->request, $this->post_types ),
 			'total'     => $this->max_num_pages,
 			'current'   => $this->paged,
 			'type'      => 'list',
@@ -127,12 +127,7 @@ class Directory_Grid_Controller extends Abstract_Block_Controller {
 		$this->request = is_array( $request ) ? $request : [];
 		$this->paged   = max( 1, absint( $this->request[ Facet_Registry::PAGE_PARAM ] ?? get_query_var( 'paged' ) ?: 1 ) );
 
-		$built = tribe_project()->container()->get( Directory_Query::class )->build(
-			$this->post_types,
-			$this->posts_per_page,
-			$this->request,
-			$this->paged
-		);
+		$built = $this->directory_query->build( $this->post_types, $this->posts_per_page, $this->request, $this->paged );
 
 		$this->query = new \WP_Query( $built['args'] );
 

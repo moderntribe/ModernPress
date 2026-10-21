@@ -29,7 +29,6 @@ class Facet_Registry {
 	 *   label: string,
 	 *   taxonomy: string,
 	 *   post_types: list<string>,
-	 *   type: string,
 	 *   top_type: string,
 	 *   sidebar_type: string,
 	 *   mobile_type: string,
@@ -82,39 +81,50 @@ class Facet_Registry {
 	 * @return list<array<string, mixed>>
 	 */
 	public function get_for_post_types( array $post_types ): array {
-		$post_types = array_values( array_filter( array_map( 'strval', $post_types ) ) );
-
-		$matching = array_values( array_filter(
-			$this->get_all(),
-			static function ( array $facet ) use ( $post_types ): bool {
-				if ( [] === $post_types ) {
-					return true;
-				}
-
-				return [] !== array_intersect( $facet['post_types'], $post_types );
-			}
-		) );
-
-		return array_merge( $this->get_system_facets(), $matching );
+		return array_merge( $this->get_system_facets(), $this->get_taxonomy_facets( $post_types ) );
 	}
 
 	/**
-	 * @return array<string, mixed>|null
+	 * Taxonomy facets that apply to any of the given post types (all when none given).
+	 *
+	 * @param list<string> $post_types
+	 *
+	 * @return list<array<string, mixed>>
 	 */
-	public function get_by_slug( string $slug ): ?array {
+	public function get_taxonomy_facets( array $post_types = [] ): array {
+		if ( [] === $post_types ) {
+			return $this->get_all();
+		}
+
+		return array_values( array_filter(
+			$this->get_all(),
+			static fn ( array $facet ): bool => [] !== array_intersect( $facet['post_types'], $post_types )
+		) );
+	}
+
+	/**
+	 * Post types that at least one facet applies to.
+	 *
+	 * @return list<string>
+	 */
+	public function get_facet_post_types(): array {
+		$post_types = [];
+
 		foreach ( $this->get_all() as $facet ) {
-			if ( $facet['slug'] === $slug ) {
-				return $facet;
+			$post_types = array_merge( $post_types, $facet['post_types'] );
+		}
+
+		return array_values( array_unique( $post_types ) );
+	}
+
+	public function uses_taxonomy( string $taxonomy ): bool {
+		foreach ( $this->get_all() as $facet ) {
+			if ( $facet['taxonomy'] === $taxonomy ) {
+				return true;
 			}
 		}
 
-		foreach ( $this->get_system_facets() as $facet ) {
-			if ( $facet['slug'] === $slug ) {
-				return $facet;
-			}
-		}
-
-		return null;
+		return false;
 	}
 
 	/**
@@ -136,7 +146,7 @@ class Facet_Registry {
 	 *
 	 * @return array<string, \WP_Post_Type>
 	 */
-	public static function public_post_types(): array {
+	public function public_post_types(): array {
 		$post_types = get_post_types( [ 'public' => true ], 'objects' );
 
 		unset( $post_types['attachment'] );
@@ -151,15 +161,17 @@ class Facet_Registry {
 	 * Block attributes and REST params are both untrusted, so every entry point
 	 * runs through here rather than trusting what it was handed.
 	 *
-	 * @param list<mixed> $post_types
-	 *
 	 * @return list<string>
 	 */
-	public static function filter_public_post_types( array $post_types ): array {
-		$sanitized = array_values( array_intersect(
-			array_map( 'sanitize_key', array_map( 'strval', $post_types ) ),
-			array_keys( self::public_post_types() )
-		) );
+	public function filter_public_post_types( mixed $post_types ): array {
+		if ( ! is_array( $post_types ) ) {
+			return [ 'post' ];
+		}
+
+		$sanitized = array_values( array_unique( array_intersect(
+			array_map( 'sanitize_key', array_filter( $post_types, 'is_string' ) ),
+			array_keys( $this->public_post_types() )
+		) ) );
 
 		return [] === $sanitized ? [ 'post' ] : $sanitized;
 	}
@@ -174,7 +186,6 @@ class Facet_Registry {
 				'label'        => __( 'Search', 'tribe' ),
 				'taxonomy'     => '',
 				'post_types'   => [],
-				'type'         => Facet_Types::SEARCH,
 				'top_type'     => Facet_Types::SEARCH,
 				'sidebar_type' => Facet_Types::SEARCH,
 				'mobile_type'  => Facet_Types::SEARCH,
@@ -185,7 +196,6 @@ class Facet_Registry {
 				'label'        => __( 'Clear all', 'tribe' ),
 				'taxonomy'     => '',
 				'post_types'   => [],
-				'type'         => Facet_Types::RESET,
 				'top_type'     => Facet_Types::RESET,
 				'sidebar_type' => Facet_Types::RESET,
 				'mobile_type'  => Facet_Types::RESET,
@@ -202,7 +212,6 @@ class Facet_Registry {
 	 *   label: string,
 	 *   taxonomy: string,
 	 *   post_types: list<string>,
-	 *   type: string,
 	 *   top_type: string,
 	 *   sidebar_type: string,
 	 *   mobile_type: string,
@@ -251,8 +260,6 @@ class Facet_Registry {
 			'label'        => $label,
 			'taxonomy'     => $taxonomy,
 			'post_types'   => $post_types,
-			// `type` remains an editor-catalog alias for existing block code.
-			'type'         => $layout_types['top_type'],
 			'top_type'     => $layout_types['top_type'],
 			'sidebar_type' => $layout_types['sidebar_type'],
 			'mobile_type'  => $layout_types['mobile_type'],

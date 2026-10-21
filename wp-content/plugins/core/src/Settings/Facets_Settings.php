@@ -8,6 +8,7 @@ use Extended\ACF\Fields\Select;
 use Extended\ACF\Fields\Tab;
 use Extended\ACF\Fields\Text;
 use Extended\ACF\Fields\TrueFalse;
+use Tribe\Plugin\Facets\Facet_Registry;
 use Tribe\Plugin\Facets\Facet_Types;
 use WP_Post_Type;
 use WP_Taxonomy;
@@ -43,6 +44,12 @@ class Facets_Settings extends Settings_Sub_Page {
 	public const string TAB_FACET   = 'tab_facet';
 	public const string TAB_DISPLAY = 'tab_display';
 	public const string TAB_LAYOUT  = 'tab_layout';
+
+	public function __construct(
+		private Facet_Registry $registry,
+	) {
+		parent::__construct();
+	}
 
 	public function get_title(): string {
 		return esc_html__( 'Facets', 'tribe' );
@@ -239,23 +246,9 @@ class Facets_Settings extends Settings_Sub_Page {
 	 * @return array<string, string>
 	 */
 	private function get_post_type_choices(): array {
-		$post_types = get_post_types(
-			[
-				'public' => true,
-			],
-			'objects'
-		);
-
-		unset( $post_types['attachment'] );
-
-		return array_reduce(
-			$post_types,
-			static function ( array $choices, WP_Post_Type $post_type ): array {
-				$choices[ $post_type->name ] = $post_type->labels->singular_name ?: $post_type->label;
-
-				return $choices;
-			},
-			[]
+		return array_map(
+			static fn ( WP_Post_Type $post_type ): string => $post_type->labels->singular_name ?: $post_type->label,
+			$this->registry->public_post_types()
 		);
 	}
 

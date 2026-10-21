@@ -7,7 +7,7 @@ class Facet_Renderer {
 	public function __construct(
 		private Facet_Registry $registry,
 		private Directory_Query $directory_query,
-		private Facet_Index $index,
+		private Facet_Terms $terms,
 	) {
 	}
 
@@ -17,7 +17,7 @@ class Facet_Renderer {
 	 * @param string               $layout    top, sidebar, or mobile.
 	 */
 	public function render( array $facet, array $request = [], string $layout = 'top' ): string {
-		$type = (string) ( $facet[ $layout . '_type' ] ?? $facet['type'] ?? Facet_Types::CHECKBOXES );
+		$type = (string) ( $facet[ $layout . '_type' ] ?? Facet_Types::CHECKBOXES );
 
 		return match ( $type ) {
 			Facet_Types::SEARCH   => $this->render_search( $facet, $request, $layout ),
@@ -25,6 +25,23 @@ class Facet_Renderer {
 			Facet_Types::DROPDOWN => $this->render_dropdown( $facet, $request, $layout ),
 			default               => $this->render_checkboxes( $facet, $request, $layout ),
 		};
+	}
+
+	/**
+	 * Control id for a facet in a layout.
+	 *
+	 * The prefix comes from the filter bar so two directories on one page do
+	 * not both emit `facet-topic-top`, which would point every label at the
+	 * first one. Filter_Bar_Controller reuses this for the label's `for`.
+	 *
+	 * @param array<string, mixed> $facet
+	 */
+	public function get_control_id( array $facet, string $layout ): string {
+		$prefix = (string) ( $facet['id_prefix'] ?? 'facet' );
+
+		return sanitize_html_class( $prefix )
+			. '-' . sanitize_html_class( (string) ( $facet['slug'] ?? '' ) )
+			. '-' . sanitize_html_class( $layout );
 	}
 
 	/**
@@ -80,7 +97,7 @@ class Facet_Renderer {
 		$slug     = (string) $facet['slug'];
 		$param    = $this->registry->get_query_param( $slug );
 		$selected = $this->directory_query->get_selected_terms( $slug, $request );
-		$terms    = $this->get_terms( $facet );
+		$terms    = $this->terms->get_options( $facet );
 		$id_base  = $this->get_control_id( $facet, $layout );
 
 		ob_start();
@@ -125,7 +142,7 @@ class Facet_Renderer {
 		$slug       = (string) $facet['slug'];
 		$param      = $this->registry->get_query_param( $slug );
 		$selected   = $this->directory_query->get_selected_terms( $slug, $request );
-		$terms      = $this->get_terms( $facet );
+		$terms      = $this->terms->get_options( $facet );
 		$id         = $this->get_control_id( $facet, $layout );
 		$label      = (string) ( $facet['display_label'] ?? $facet['label'] ?? '' );
 		$searchable = ! empty( $facet['searchable'] );
@@ -312,177 +329,6 @@ class Facet_Renderer {
 		<?php
 
 		return (string) ob_get_clean();
-	}
-
-	/**
-	 * Terms for a facet, each tagged with its display depth.
-	 *
-	 * Depth is always 0 unless the facet opts into hierarchy and the taxonomy
-	 * is actually hierarchical.
-	 *
-	 * @param array<string, mixed> $facet
-	 *
-	 * @return list<array{term: \WP_Term, depth: int}>
-	 */
-	private function get_terms( array $facet ): array {
-		$taxonomy = (string) ( $facet['taxonomy'] ?? '' );
-
-		if ( '' === $taxonomy || ! taxonomy_exists( $taxonomy ) ) {
-			return [];
-		}
-
-		$terms = get_terms( [
-			'taxonomy'   => $taxonomy,
-			'hide_empty' => true,
-		] );
-
-		if ( is_wp_error( $terms ) || ! is_array( $terms ) ) {
-			return [];
-		}
-
-		$hierarchical = ! empty( $facet['hierarchical'] ) && is_taxonomy_hierarchical( $taxonomy );
-		$terms        = $this->limit_to_available( array_values( $terms ), $facet, $hierarchical );
-
-		if ( ! $hierarchical ) {
-			return array_map(
-				static fn ( \WP_Term $term ): array => [
-					'term'  => $term,
-					'depth' => 0,
-				],
-				$terms
-			);
-		}
-
-		return self::nest( $terms );
-	}
-
-	/**
-	 * Drop terms that have no results in this directory.
-	 *
-	 * hide_empty already removed terms with no posts at all, but it counts
-	 * every post type sharing the taxonomy. The index knows which terms carry
-	 * posts of the types this directory actually shows. Without the index
-	 * built there is nothing better to go on, so every term stays.
-	 *
-	 * @param list<\WP_Term>       $terms
-	 * @param array<string, mixed> $facet
-	 *
-	 * @return list<\WP_Term>
-	 */
-	private function limit_to_available( array $terms, array $facet, bool $hierarchical ): array {
-		$post_types = $facet['directory_post_types'] ?? [];
-
-		if ( ! is_array( $post_types ) || [] === $post_types ) {
-			return $terms;
-		}
-
-		$available = $this->index->get_available_term_slugs(
-			(string) ( $facet['slug'] ?? '' ),
-			array_values( array_map( 'strval', $post_types ) )
-		);
-
-		if ( null === $available ) {
-			return $terms;
-		}
-
-		$keep = array_fill_keys( $available, true );
-
-		if ( $hierarchical ) {
-			$keep = self::add_ancestors( $keep, $terms );
-		}
-
-		return array_values( array_filter(
-			$terms,
-			static fn ( \WP_Term $term ): bool => isset( $keep[ $term->slug ] )
-		) );
-	}
-
-	/**
-	 * Control id for a facet in a layout.
-	 *
-	 * The prefix comes from the filter bar so two directories on one page do
-	 * not both emit `facet-topic-top`, which would point every label at the
-	 * first one. Filter_Bar_Controller::get_control_id() must stay in step:
-	 * it produces the `for` half of the same pair.
-	 *
-	 * @param array<string, mixed> $facet
-	 */
-	private function get_control_id( array $facet, string $layout ): string {
-		$prefix = (string) ( $facet['id_prefix'] ?? 'facet' );
-
-		return sanitize_html_class( $prefix )
-			. '-' . sanitize_html_class( (string) ( $facet['slug'] ?? '' ) )
-			. '-' . sanitize_html_class( $layout );
-	}
-
-	/**
-	 * Mark the ancestors of every kept term, so a container parent that holds
-	 * no posts of its own cannot orphan the children underneath it.
-	 *
-	 * @param array<string, bool> $keep
-	 * @param list<\WP_Term>      $terms
-	 *
-	 * @return array<string, bool>
-	 */
-	private static function add_ancestors( array $keep, array $terms ): array {
-		$by_id = [];
-
-		foreach ( $terms as $term ) {
-			$by_id[ (int) $term->term_id ] = $term;
-		}
-
-		foreach ( $terms as $term ) {
-			if ( ! isset( $keep[ $term->slug ] ) ) {
-				continue;
-			}
-
-			$parent = (int) $term->parent;
-
-			// Stopping on an already-kept ancestor also breaks any parent cycle.
-			while ( isset( $by_id[ $parent ] ) && ! isset( $keep[ $by_id[ $parent ]->slug ] ) ) {
-				$keep[ $by_id[ $parent ]->slug ] = true;
-				$parent                          = (int) $by_id[ $parent ]->parent;
-			}
-		}
-
-		return $keep;
-	}
-
-	/**
-	 * Flatten terms into parent-first order, each tagged with its depth.
-	 *
-	 * A term whose parent was filtered out by hide_empty is treated as a root
-	 * so it can't disappear from the list.
-	 *
-	 * @param list<\WP_Term> $terms
-	 *
-	 * @return list<array{term: \WP_Term, depth: int}>
-	 */
-	private static function nest( array $terms ): array {
-		$ids      = array_map( static fn ( \WP_Term $term ): int => $term->term_id, $terms );
-		$children = [];
-
-		foreach ( $terms as $term ) {
-			$parent                = in_array( (int) $term->parent, $ids, true ) ? (int) $term->parent : 0;
-			$children[ $parent ][] = $term;
-		}
-
-		$flat = [];
-
-		$walk = static function ( int $parent, int $depth ) use ( &$walk, &$flat, $children ): void {
-			foreach ( $children[ $parent ] ?? [] as $term ) {
-				$flat[] = [
-					'term'  => $term,
-					'depth' => $depth,
-				];
-
-				$walk( (int) $term->term_id, $depth + 1 );
-			}
-		};
-
-		$walk( 0, 0 );
-
-		return $flat;
 	}
 
 }

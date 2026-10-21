@@ -15,6 +15,7 @@ class Directory_Query {
 	public function __construct(
 		private Facet_Registry $registry,
 		private Facet_Index $index,
+		private Facet_Terms $terms,
 	) {
 	}
 
@@ -32,11 +33,7 @@ class Directory_Query {
 	 * @return array{args: array<string, mixed>, total: int|null}
 	 */
 	public function build( array $post_types, int $posts_per_page, array $request = [], int $paged = 1 ): array {
-		$post_types = array_values( array_filter( array_map( 'sanitize_key', $post_types ) ) );
-
-		if ( [] === $post_types ) {
-			$post_types = [ 'post' ];
-		}
+		$post_types = $this->registry->filter_public_post_types( $post_types );
 
 		$args = [
 			'post_type'      => count( $post_types ) === 1 ? $post_types[0] : $post_types,
@@ -51,11 +48,11 @@ class Directory_Query {
 			$args['s'] = $search;
 		}
 
-		$selections = $this->expand_hierarchy( $this->get_selections( $request ) );
+		$selections = $this->expand_hierarchy( $this->get_selections( $request, $post_types ) );
 
 		// The index paginates before WP_Query runs, so `s` would only search
 		// that page and totals would ignore search. Use tax_query instead.
-		$page = ( '' === $search && $this->index->is_built() )
+		$page = '' === $search
 			? $this->index->get_page( $selections, $post_types, $args['posts_per_page'], $args['paged'] )
 			: null;
 
@@ -75,7 +72,7 @@ class Directory_Query {
 			];
 		}
 
-		$tax_query = self::build_tax_clauses( $this->registry->get_all(), $selections );
+		$tax_query = $this->build_tax_clauses( $this->registry->get_all(), $selections );
 
 		if ( [] !== $tax_query ) {
 			$args['tax_query'] = $tax_query; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
@@ -88,16 +85,18 @@ class Directory_Query {
 	}
 
 	/**
-	 * Selected term slugs for every configured facet.
+	 * Selected term slugs for every facet that applies to the given post types.
+	 * A param for a facet the directory does not use is ignored.
 	 *
 	 * @param array<string, mixed> $request
+	 * @param list<string>         $post_types
 	 *
 	 * @return array<string, list<string>>
 	 */
-	public function get_selections( array $request = [] ): array {
+	public function get_selections( array $request = [], array $post_types = [] ): array {
 		$selections = [];
 
-		foreach ( $this->registry->get_all() as $facet ) {
+		foreach ( $this->registry->get_taxonomy_facets( $post_types ) as $facet ) {
 			$selections[ $facet['slug'] ] = $this->get_selected_terms( $facet['slug'], $request );
 		}
 
@@ -108,13 +107,14 @@ class Directory_Query {
 	 * Active facet params, for pagination links and history URLs.
 	 *
 	 * @param array<string, mixed> $request
+	 * @param list<string>         $post_types
 	 *
 	 * @return array<string, mixed>
 	 */
-	public function get_active_query_args( array $request = [] ): array {
+	public function get_active_query_args( array $request = [], array $post_types = [] ): array {
 		$args = [];
 
-		foreach ( $this->get_selections( $request ) as $slug => $terms ) {
+		foreach ( $this->get_selections( $request, $post_types ) as $slug => $terms ) {
 			if ( [] === $terms ) {
 				continue;
 			}
@@ -171,21 +171,20 @@ class Directory_Query {
 	 * @param array<string, mixed> $request
 	 */
 	public function get_search_query( array $request = [] ): string {
-		return isset( $request[ Facet_Registry::SEARCH_PARAM ] )
-			? sanitize_text_field( (string) $request[ Facet_Registry::SEARCH_PARAM ] )
-			: '';
+		$search = $request[ Facet_Registry::SEARCH_PARAM ] ?? '';
+
+		return is_string( $search ) ? sanitize_text_field( $search ) : '';
 	}
 
 	/**
 	 * Build tax_query clauses from facet definitions + selected term slugs.
-	 * Pure helper so indexing can swap in later without changing callers.
 	 *
 	 * @param list<array{slug: string, taxonomy: string}> $facets
 	 * @param array<string, list<string>>                 $selected_by_slug
 	 *
 	 * @return array<int|string, mixed>
 	 */
-	public static function build_tax_clauses( array $facets, array $selected_by_slug ): array {
+	private function build_tax_clauses( array $facets, array $selected_by_slug ): array {
 		$clauses = [];
 
 		foreach ( $facets as $facet ) {
@@ -243,32 +242,7 @@ class Directory_Query {
 				continue;
 			}
 
-			$expanded = $terms;
-
-			foreach ( $terms as $term_slug ) {
-				$term = get_term_by( 'slug', $term_slug, $taxonomy );
-
-				if ( ! $term instanceof \WP_Term ) {
-					continue;
-				}
-
-				// child_of is recursive, and hide_empty must stay off so a
-				// container term between a selection and its posts is included.
-				$descendants = get_terms( [
-					'taxonomy'   => $taxonomy,
-					'child_of'   => $term->term_id,
-					'fields'     => 'slugs',
-					'hide_empty' => false,
-				] );
-
-				if ( ! is_array( $descendants ) ) {
-					continue;
-				}
-
-				$expanded = array_merge( $expanded, array_map( 'strval', $descendants ) );
-			}
-
-			$selections[ $slug ] = array_values( array_unique( $expanded ) );
+			$selections[ $slug ] = $this->terms->expand_with_descendants( $taxonomy, $terms );
 		}
 
 		return $selections;
