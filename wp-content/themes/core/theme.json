@@ -74,6 +74,11 @@
 					"background": false,
 					"text": false
 				}
+			},
+			"core/tab-list": {
+				"spacing": {
+					"blockGap": false
+				}
 			}
 		},
 		"color": {
