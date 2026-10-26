@@ -74,6 +74,11 @@
 					"background": false,
 					"text": false
 				}
+			},
+			"core/tab-list": {
+				"spacing": {
+					"blockGap": false
+				}
 			}
 		},
 		"color": {
@@ -569,6 +574,13 @@
 							"fontWeight": "var(--wp--custom--font-weight--regular)",
 							"lineHeight": "1.65"
 						}
+					}
+				}
+			},
+			"core/tab-panels": {
+				"spacing": {
+					"margin": {
+						"top": "0"
 					}
 				}
 			},
