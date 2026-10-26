@@ -23,8 +23,8 @@ class Pattern_Category {
 				'name' => __( 'Media', 'tribe' ),
 			],
 			[
-				'slug' => 'templates',
-				'name' => __( 'Templates', 'tribe' ),
+				'slug' => 'pages',
+				'name' => __( 'Pages', 'tribe' ),
 			],
 		];
 	}

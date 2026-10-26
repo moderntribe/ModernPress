@@ -50,7 +50,6 @@ class Blocks_Definer implements Definer_Interface {
 				'tribe/carousel-slide',
 				'tribe/copyright',
 				'tribe/icon-card',
-				'tribe/icon-picker',
 				'tribe/image-card',
 				'tribe/image-overlay-card',
 				'tribe/inline-notice',
