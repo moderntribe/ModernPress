@@ -53,7 +53,7 @@ if ( ! is_admin() && $c->mobile_card_carousel() ) {
 				<?php if ( $c->has_columns() ) : ?>
 					<thead class="b-comparison-table__head">
 						<tr class="b-comparison-table__row b-comparison-table__row--header">
-							<th scope="col" class="b-comparison-table__feature-header"></th>
+							<td scope="col" class="b-comparison-table__feature-header"></td>
 							<?php foreach ( $c->get_columns() as $index => $column ) : ?>
 								<?php echo $c->render_table_column_header( $index ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 							<?php endforeach; ?>

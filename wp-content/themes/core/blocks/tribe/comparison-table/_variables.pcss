@@ -27,7 +27,11 @@
 	--comparison-table-feature-row-alt-background: var(--color-neutral-80);
 	--comparison-table-icon-color: var(--color-white);
 	--comparison-table-check-icon-color: var(--comparison-table-icon-color);
-	--comparison-table-dash-icon-color: var(--color-text-secondary);
+	--comparison-table-dash-icon-color: color-mix(
+		in srgb,
+		var(--color-white) 45%,
+		transparent
+	);
 	--comparison-table-carousel-pagination-color: var(--color-white);
 	--comparison-table-carousel-pagination-inactive-color: var(--color-white);
 }

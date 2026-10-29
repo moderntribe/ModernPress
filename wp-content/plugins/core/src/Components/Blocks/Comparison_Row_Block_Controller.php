@@ -169,14 +169,14 @@ class Comparison_Row_Block_Controller extends Abstract_Block_Controller {
 
 	public function get_check_icon_markup(): string {
 		return sprintf(
-			'<span class="b-comparison-table__cell-icon b-comparison-table__cell-icon--check" aria-label="%s"></span>',
+			'<span class="b-comparison-table__cell-icon b-comparison-table__cell-icon--check" aria-label="%s" role="img"></span>',
 			esc_attr__( 'Included', 'tribe' )
 		);
 	}
 
 	public function get_dash_icon_markup(): string {
 		return sprintf(
-			'<span class="b-comparison-table__cell-icon b-comparison-table__cell-icon--dash" aria-label="%s"></span>',
+			'<span class="b-comparison-table__cell-icon b-comparison-table__cell-icon--dash" aria-label="%s" role="img"></span>',
 			esc_attr__( 'Not included', 'tribe' )
 		);
 	}
