@@ -27,7 +27,7 @@ function Edit( { props, taxonomies } ) {
 					label: taxonomy.name,
 					value: taxonomy.slug,
 				};
-		  } )
+			} )
 		: [];
 
 	return (

@@ -38,23 +38,38 @@ class Icon_Picker {
 	}
 
 	public function get_svg(): string {
-		$icon_path = get_template_directory() . '/blocks/tribe/icon-picker/icons/svg/' . $this->icon_key . '.svg';
-		$svg       = '';
+		$name = $this->normalize_icon_name( $this->icon_key );
 
-		if ( file_exists( $icon_path ) ) {
-			$svg = file_get_contents( $icon_path );
-
-			if ( $this->icon_label ) {
-				$svg = preg_replace(
-					'/<svg\b([^>]*)>/',
-					'<svg$1 aria-label="' . esc_attr( $this->icon_label ) . '" role="img">',
-					$svg,
-					1
-				);
-			}
+		if ( $name === '' ) {
+			return '';
 		}
 
-		return $svg;
+		$args = [
+			'size' => null,
+		];
+
+		if ( $this->icon_label !== '' ) {
+			$args['label'] = $this->icon_label;
+		}
+
+		return wp_get_icon( $name, $args );
+	}
+
+	/**
+	 * Map saved `icon-ai-sparkle` keys to registered `tribe/ai-sparkle` names.
+	 */
+	private function normalize_icon_name( string $icon_key ): string {
+		if ( $icon_key === '' ) {
+			return '';
+		}
+
+		if ( str_contains( $icon_key, '/' ) ) {
+			return $icon_key;
+		}
+
+		$slug = str_starts_with( $icon_key, 'icon-' ) ? substr( $icon_key, strlen( 'icon-' ) ) : $icon_key;
+
+		return 'tribe/' . $slug;
 	}
 
 }

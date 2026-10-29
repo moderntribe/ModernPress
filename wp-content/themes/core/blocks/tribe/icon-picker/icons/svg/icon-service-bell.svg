@@ -1,7 +1,0 @@
-<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M32 14V6" stroke="currentColor" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
-<path d="M60 42C60 34.5739 57.05 27.452 51.799 22.201C46.548 16.95 39.4261 14 32 14C24.5739 14 17.452 16.95 12.201 22.201C6.94999 27.452 4 34.5739 4 42V50H60V42Z" stroke="currentColor" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
-<path d="M4 58H60" stroke="currentColor" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
-<path d="M42 6H22" stroke="currentColor" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
-<path d="M12 42C12 36.6957 14.1071 31.6086 17.8579 27.8579C21.6086 24.1071 26.6957 22 32 22" stroke="currentColor" stroke-width="2" stroke-miterlimit="10" stroke-linecap="square"/>
-</svg>

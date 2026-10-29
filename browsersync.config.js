@@ -37,7 +37,7 @@ const localConfig = moduleExists( './local-config.json' )
 			certName: '',
 			host: 'localhost',
 			protocol: 'http',
-	  };
+		};
 
 /**
  * Set up the browser sync to proxy the webpack dev server using our custom local-config.

@@ -46,6 +46,12 @@ class Theme_Config_Subscriber extends Abstract_Subscriber {
 			$this->container->get( Comment_Support::class )->remove_admin_bar_comments();
 		});
 
+		// Add Icons
+		add_action( 'init', function (): void {
+			$this->container->get( Icons::class )->register_icon_collection();
+			$this->container->get( Icons::class )->register_icons();
+		});
+
 		/**
 		 * Disable XML-RPC authentication support.
 		 *
