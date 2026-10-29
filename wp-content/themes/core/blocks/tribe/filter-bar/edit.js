@@ -336,11 +336,11 @@ export default function Edit( {
 									? __(
 											'This filter bar uses the sidebar layout. On smaller screens it opens as a flyout.',
 											'tribe'
-									  )
+										)
 									: __(
 											'This filter bar appears above the directory results.',
 											'tribe'
-									  ) }
+										) }
 							</p>
 							<p style={ { marginBottom: '0' } }>
 								{ __(

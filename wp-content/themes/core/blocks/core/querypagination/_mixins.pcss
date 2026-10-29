@@ -19,12 +19,18 @@
 
 	/* Reduce spacing on narrow screens */
 	@media (max-width: 420px) {
-		gap: 0;
-		justify-content: space-between;
+
+		& {
+			gap: 0;
+			justify-content: space-between;
+		}
 	}
 
 	@media (--mq-tablet) {
-		gap: var(--wp--preset--spacing--40);
+
+		& {
+			gap: var(--wp--preset--spacing--40);
+		}
 	}
 }
 
@@ -52,12 +58,18 @@
 
 	/* Reduce spacing on narrow screens */
 	@media (max-width: 420px) {
-		gap: 0;
-		width: 100%;
+
+		& {
+			gap: 0;
+			width: 100%;
+		}
 	}
 
 	@media (--mq-tablet) {
-		gap: var(--spacer-40);
+
+		& {
+			gap: var(--spacer-40);
+		}
 	}
 }
 
@@ -97,11 +109,17 @@
 
 	/* Reduce spacing on narrow screens */
 	@media (max-width: 380px) {
-		gap: 10px;
+
+		& {
+			gap: 10px;
+		}
 	}
 
 	@media (--mq-tablet) {
-		font-size: inherit;
+
+		& {
+			font-size: inherit;
+		}
 	}
 }
 
