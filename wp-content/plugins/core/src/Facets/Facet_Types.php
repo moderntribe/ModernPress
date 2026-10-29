@@ -21,16 +21,6 @@ class Facet_Types {
 		];
 	}
 
-	/**
-	 * @return list<string>
-	 */
-	public static function taxonomy_types(): array {
-		return [
-			self::CHECKBOXES,
-			self::DROPDOWN,
-		];
-	}
-
 	public static function is_taxonomy_type( string $type ): bool {
 		return in_array( $type, self::taxonomy_types(), true );
 	}
@@ -65,6 +55,16 @@ class Facet_Types {
 			'top_type'     => $top,
 			'sidebar_type' => $sidebar,
 			'mobile_type'  => $mobile,
+		];
+	}
+
+	/**
+	 * @return list<string>
+	 */
+	private static function taxonomy_types(): array {
+		return [
+			self::CHECKBOXES,
+			self::DROPDOWN,
 		];
 	}
 

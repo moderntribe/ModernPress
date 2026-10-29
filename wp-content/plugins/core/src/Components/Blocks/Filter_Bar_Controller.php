@@ -9,12 +9,9 @@ use Tribe\Plugin\Facets\Facet_Types;
 
 class Filter_Bar_Controller extends Abstract_Block_Controller {
 
-	private const ACCORDION_EXCLUDED_TYPES = [ Facet_Types::SEARCH, Facet_Types::RESET ];
+	private const array ACCORDION_EXCLUDED_TYPES = [ Facet_Types::SEARCH, Facet_Types::RESET ];
 
-	private const NO_LABEL_TYPES = [ Facet_Types::RESET ];
-
-	private const string FILTER_BAR_POSITION_CONTEXT = 'tribe/faceted-directory/filterBarPosition';
-	private const string POST_TYPES_CONTEXT          = 'tribe/faceted-directory/postTypes';
+	private const array NO_LABEL_TYPES = [ Facet_Types::RESET ];
 
 	/**
 	 * @var list<array<string, mixed>>
@@ -38,15 +35,17 @@ class Filter_Bar_Controller extends Abstract_Block_Controller {
 	 */
 	protected string $id_prefix;
 
-	public function __construct( array $args = [] ) {
+	public function __construct(
+		array $args,
+		private Facet_Registry $registry,
+		private Facet_Renderer $renderer,
+	) {
 		parent::__construct( $args );
 
-		$position                  = (string) $this->get_context_value( self::FILTER_BAR_POSITION_CONTEXT, 'top' );
+		$position                  = (string) $this->get_context_value( Faceted_Directory_Controller::FILTER_BAR_POSITION_CONTEXT, 'top' );
 		$this->filter_bar_position = 'sidebar' === $position ? 'sidebar' : 'top';
-		$post_types                = $this->get_context_value( self::POST_TYPES_CONTEXT, [ 'post' ] );
-		$this->post_types          = Facet_Registry::filter_public_post_types(
-			is_array( $post_types ) ? array_values( $post_types ) : []
-		);
+		$post_types                = $this->get_context_value( Faceted_Directory_Controller::POST_TYPES_CONTEXT, [ 'post' ] );
+		$this->post_types          = $this->registry->filter_public_post_types( $post_types );
 		$this->id_prefix           = wp_unique_id( 'facet-' );
 		$this->request             = $args['request'] ?? $this->get_request_params();
 		$this->facets              = $this->resolve_facets( $this->attributes['facets'] ?? [] );
@@ -155,28 +154,23 @@ class Filter_Bar_Controller extends Abstract_Block_Controller {
 	 * @param array<string, mixed> $facet
 	 */
 	public function render_facet( array $facet, string $layout = 'top' ): string {
-		return tribe_project()->container()->get( Facet_Renderer::class )->render( $facet, $this->request, $layout );
+		return $this->renderer->render( $facet, $this->request, $layout );
 	}
 
 	/**
-	 * ID of the primary control rendered for labels.
-	 *
-	 * Produces the `for` half of the pair that Facet_Renderer::get_control_id()
-	 * puts on the control itself; the two must agree.
+	 * ID of the primary control, used as the label's `for`.
 	 *
 	 * @param array<string, mixed> $facet
 	 */
 	public function get_control_id( array $facet, string $layout = 'top' ): string {
-		return sanitize_html_class( $this->id_prefix )
-			. '-' . sanitize_html_class( (string) $facet['slug'] )
-			. '-' . sanitize_html_class( $layout );
+		return $this->renderer->get_control_id( $facet, $layout );
 	}
 
 	/**
 	 * @param array<string, mixed> $facet
 	 */
 	private function get_facet_type( array $facet, string $layout ): string {
-		return strtolower( (string) ( $facet[ $layout . '_type' ] ?? $facet['type'] ?? '' ) );
+		return strtolower( (string) ( $facet[ $layout . '_type' ] ?? '' ) );
 	}
 
 	/**
@@ -185,9 +179,8 @@ class Filter_Bar_Controller extends Abstract_Block_Controller {
 	 * @return list<array<string, mixed>>
 	 */
 	private function resolve_facets( array $selected ): array {
-		$registry = tribe_project()->container()->get( Facet_Registry::class );
-		$allowed  = $registry->get_for_post_types( $this->post_types );
-		$by_slug  = [];
+		$allowed = $this->registry->get_for_post_types( $this->post_types );
+		$by_slug = [];
 
 		foreach ( $allowed as $facet ) {
 			$by_slug[ $facet['slug'] ] = $facet;
@@ -213,15 +206,7 @@ class Filter_Bar_Controller extends Abstract_Block_Controller {
 			// types this directory shows, and which bar owns the control ids.
 			$facet['directory_post_types'] = $this->post_types;
 			$facet['id_prefix']            = $this->id_prefix;
-
-			// Ignore overrides that merely repeat the settings label (legacy stamp).
-			if ( '' === $override || $override === (string) $facet['label'] ) {
-				$facet['displayLabel']  = null;
-				$facet['display_label'] = (string) $facet['label'];
-			} else {
-				$facet['displayLabel']  = $override;
-				$facet['display_label'] = $override;
-			}
+			$facet['display_label']        = '' !== $override ? $override : (string) $facet['label'];
 
 			$resolved[] = $facet;
 		}

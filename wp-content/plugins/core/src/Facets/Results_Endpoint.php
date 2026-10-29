@@ -37,11 +37,12 @@ class Results_Endpoint {
 			'methods'             => \WP_REST_Server::READABLE,
 			'permission_callback' => '__return_true',
 			'callback'            => [ $this, 'handle' ],
+			'args'                => $this->get_args(),
 		] );
 	}
 
 	public function handle( \WP_REST_Request $request ): \WP_REST_Response {
-		$post_types = Facet_Registry::filter_public_post_types( array_values( (array) $request->get_param( 'post_types' ) ) );
+		$post_types = $this->registry->filter_public_post_types( $request->get_param( 'post_types' ) );
 		$paged      = max( 1, absint( $request->get_param( Facet_Registry::PAGE_PARAM ) ) );
 		$path       = $this->sanitize_path( (string) $request->get_param( 'path' ) );
 
@@ -91,6 +92,50 @@ class Results_Endpoint {
 		$response->header( 'Cache-Control', 'public, max-age=' . self::CACHE_MAX_AGE );
 
 		return $response;
+	}
+
+	/**
+	 * Param schema. Malformed shapes (nested arrays, wrong types) are rejected
+	 * by core with a 400 before the handler runs.
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	private function get_args(): array {
+		$args = [
+			'post_types'                 => [
+				'type'    => 'array',
+				'items'   => [ 'type' => 'string' ],
+				'default' => [ 'post' ],
+			],
+			'posts_per_page'             => [
+				'type'              => 'integer',
+				'default'           => 0,
+				'sanitize_callback' => 'absint',
+			],
+			'show_pagination'            => [
+				'type'    => 'boolean',
+				'default' => false,
+			],
+			'path'                       => [
+				'type'    => 'string',
+				'default' => '/',
+			],
+			Facet_Registry::PAGE_PARAM   => [
+				'type'              => 'integer',
+				'default'           => 1,
+				'sanitize_callback' => 'absint',
+			],
+			Facet_Registry::SEARCH_PARAM => [ 'type' => 'string' ],
+		];
+
+		foreach ( $this->registry->get_all() as $facet ) {
+			$args[ $this->registry->get_query_param( $facet['slug'] ) ] = [
+				'type'  => [ 'string', 'array' ],
+				'items' => [ 'type' => 'string' ],
+			];
+		}
+
+		return $args;
 	}
 
 	/**
