@@ -26,11 +26,10 @@ $c = Post_Card_Controller::factory( [
 ?>
 <article class="<?php echo esc_attr( $c->get_block_classes() ); ?>"<?php echo ( '' !== $c->get_block_styles() ) ? sprintf( 'style="%s"', $c->get_block_styles() ) : ''; ?>>
 	<div class="c-post-card__inner">
-		<?php if ( $c->has_media() ) : ?>
-			<div class="c-post-card__image aspect-ratio-cover aspect-ratio-3-2">
-				<?php echo $c->get_media(); ?>
-			</div>
-		<?php endif; ?>
+		<div class="c-post-card__image aspect-ratio-cover aspect-ratio-3-2">
+			<?php // post cards will always return a media image (placeholder if none)
+			echo $c->get_media(); ?>
+		</div>
 		<div class="c-post-card__content">
 			<?php if ( $c->has_display_term() ) : ?>
 				<p class="c-post-card__primary-category t-category"><?php echo esc_html( $c->get_display_term_name() ); ?></p>
@@ -60,5 +59,5 @@ $c = Post_Card_Controller::factory( [
 			<?php endif; ?>
 		</div>
 	</div>
-	<a href="<?php echo esc_url( $c->get_post_permalink() ); ?>" class="c-post-card__link-overlay" aria-label="<?php echo sprintf( '%s %s', esc_html__( 'Read more about', 'tribe' ), $c->get_post_title() ); ?>"></a>
+	<a href="<?php echo esc_url( $c->get_post_permalink() ); ?>" class="c-post-card__link-overlay" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: post title. */ __( 'Read more about %s', 'tribe' ), $c->get_post_title() ) ); ?>"></a>
 </article>

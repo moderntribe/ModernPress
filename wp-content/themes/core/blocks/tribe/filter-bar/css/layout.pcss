@@ -1,0 +1,88 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Filter Bar - Layout
+ *
+ * ------------------------------------------------------------------------- */
+
+.b-filter-bar {
+	--filter-bar-flyout-shadow: 0 -16px 24px 0 var(--filter-bar-flyout-shadow-color);
+	container: filter-bar / inline-size;
+}
+
+.b-filter-bar__grid {
+
+	.b-faceted-directory--filter-bar-top & {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacer-20);
+
+		@container filter-bar (min-width: 992px) {
+			display: grid;
+			grid-template-areas:
+				"facet-1 facet-2 facet-3 search"
+				"reset reset reset reset";
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: var(--spacer-30) var(--grid-gutter);
+
+			.b-filter-bar__facet[data-grid-slot="facet-1"] {
+				grid-area: facet-1;
+			}
+
+			.b-filter-bar__facet[data-grid-slot="facet-2"] {
+				grid-area: facet-2;
+			}
+
+			.b-filter-bar__facet[data-grid-slot="facet-3"] {
+				grid-area: facet-3;
+			}
+
+			.b-filter-bar__facet[data-grid-slot="search"] {
+				grid-area: search;
+			}
+
+			.b-filter-bar__facet[data-grid-slot="reset"] {
+				grid-area: reset;
+			}
+
+			/* An empty reset row still contributes its row gap, padding the
+			   bar while "Clear all" is hidden. */
+			&:not(:has(.b-filter-bar__facet[data-grid-slot="reset"]:not([hidden]))) {
+				grid-template-areas: "facet-1 facet-2 facet-3 search";
+			}
+		}
+	}
+}
+
+.b-faceted-directory--filter-bar-sidebar .b-filter-bar__facet,
+.b-filter-bar__flyout .b-filter-bar__facet {
+	padding: var(--spacer-40) var(--grid-margin);
+	border-top: 1px solid var(--color-border-secondary);
+
+	&:first-child {
+		border-top: 0;
+	}
+
+	@container faceted-directory (min-width: 992px) {
+		padding: var(--spacer-40) 0;
+
+		&:first-child {
+			padding-top: 0;
+			border-top: 0;
+		}
+	}
+}
+
+.b-filter-bar__responsive-facets {
+	min-inline-size: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.b-filter-bar__responsive-facets--desktop {
+	display: none;
+
+	@container faceted-directory (min-width: 992px) {
+		display: block;
+	}
+}
