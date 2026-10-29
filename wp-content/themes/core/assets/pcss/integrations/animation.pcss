@@ -15,6 +15,21 @@
 	--tribe-animation-offset: 50px;
 }
 
+@keyframes pulse {
+
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
 /* -------------------------------------------------------------------------
  * Animated Element / Block
  *
@@ -207,6 +222,58 @@
 				opacity: 1;
 				transform: scale(1);
 			}
+		}
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Animation Type - Scale on Hover
+ * ------------------------------------------------------------------------- */
+
+.tribe-animation-type-scale-on-hover {
+
+	/**
+	 * Only run animations if the users has no preference on reduced motion and
+	 * the browser supports hover.
+	 */
+	@media ((prefers-reduced-motion: no-preference) and (hover: hover)) {
+		transition: transform var(--tribe-animation-speed) var(--tribe-animation-delay) var(--tribe-animation-easing);
+
+		/* turn off delay for mobile if setting is set */
+		@media (--mq-wp-mobile-max) {
+
+			&.tribe-animation-mobile-disable-delay {
+				transition-delay: 0s !important;
+			}
+		}
+
+		&:hover {
+			transform: scale(1.05);
+		}
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Animation Type - Pulse
+ * ------------------------------------------------------------------------- */
+
+.tribe-animation-type-pulse {
+
+	/* Only run animations if the users has no preference on reduced motion */
+	@media (prefers-reduced-motion: no-preference) {
+
+		/* turn off delay for mobile if setting is set */
+		@media (--mq-wp-mobile-max) {
+
+			&.tribe-animation-mobile-disable-delay {
+				animation-delay: 0s !important;
+			}
+		}
+
+		&.is-scrolled-into-view,
+		&:not(.tribe-animate-multiple).is-scrolled-into-view-first-time {
+			animation: pulse var(--tribe-animation-speed) var(--tribe-animation-easing);
+			animation-delay: var(--tribe-animation-delay);
 		}
 	}
 }

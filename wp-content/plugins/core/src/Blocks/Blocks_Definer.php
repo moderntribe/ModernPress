@@ -29,6 +29,7 @@ use Tribe\Theme\blocks\core\quote\Quote;
 use Tribe\Theme\blocks\core\search\Search;
 use Tribe\Theme\blocks\core\separator\Separator;
 use Tribe\Theme\blocks\core\table\Table;
+use Tribe\Theme\blocks\core\tabs\Tabs;
 use Tribe\Theme\blocks\core\video\Video;
 use Tribe\Theme\blocks\outermost\socialsharing\Social_Sharing;
 
@@ -50,10 +51,7 @@ class Blocks_Definer implements Definer_Interface {
 				'tribe/comparison-row',
 				'tribe/comparison-table',
 				'tribe/copyright',
-				'tribe/horizontal-tab',
-				'tribe/horizontal-tabs',
 				'tribe/icon-card',
-				'tribe/icon-picker',
 				'tribe/image-card',
 				'tribe/image-overlay-card',
 				'tribe/inline-notice',
@@ -96,6 +94,7 @@ class Blocks_Definer implements Definer_Interface {
 				DI\get( Search::class ),
 				DI\get( Separator::class ),
 				DI\get( Table::class ),
+				DI\get( Tabs::class ),
 				DI\get( Video::class ),
 				DI\get( Social_Sharing::class ),
 			] ),

@@ -6,13 +6,19 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.10]
 
+- Added: Two new block animations (Scale on Hover and Pulse). Pulse remains a scroll animation, but Scale on Hover adds new functionality to the block animation code that allows non-scroll animations.
 - Chore: WordPress Core update to 7.1.2, plugin (incl. Gravity Forms 3.1), composer & npm package updates; applied Prettier formatting fixes.
 - Changed: Major npm updates: `@wordpress/scripts` 36, `@wordpress/icons` 17, `cssnano` 9. Removed unneeded `minimatch` and `webpack-dev-server` npm overrides. Replaced deprecated CSS (`grid-gap`, `page-break-*`) flagged by the newer stylelint.
+- Updated: "Templates" pattern category renamed to "Pages".
 
 ## [2026.08]
 
-- Chore WordPress Core update to 7.0.3, plugin, composer & npm package updates.
-- Added: Agent instructions for ModernPress
+- Chore: WordPress Core update to 7.0.3, plugin, composer & npm package updates.
+- Removed: Tribe Horizontal Tabs / Tribe Horizontal Tab block
+- Added: Support core Tabs block
+- Removed: Tribe Icon Picker block
+- Added: Support for core Icon block; Modern Tribe custom icon collection.
+- Updated: Icon Card & Inline Notice blocks now pull icons from icon collections (no public editor UI available for Icon picking currently).
 
 ## [2026.07]
 
@@ -23,6 +29,8 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
 ## [2026.06]
 
+- Chore: WordPress Core update to 7.0.3, plugin, composer & npm package updates.
+- Added: Agent instructions for ModernPress
 - Fix: Animation classes accumulating in block "Additional CSS Class(es)" field.
 - Fix: Search card excerpt visibility now correctly checks `has_post_excerpt()` instead of `has_post_date()`.
 - Chore: WordPress Core update to v7.0, plugins, Composer & NPM deps updates. update ESLint config file format.

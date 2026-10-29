@@ -3,7 +3,7 @@
 /**
  * Title: Post
  * Slug: patterns/post
- * Categories: templates
+ * Categories: pages
  * Description: A simple pattern for a single post page - added automatically to new posts
  * Keywords: post, placeholder
  * Block Types: core/post-content
