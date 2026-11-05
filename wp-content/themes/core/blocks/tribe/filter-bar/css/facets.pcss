@@ -1,0 +1,284 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Filter Bar - Facet Styles
+ *
+ * ------------------------------------------------------------------------- */
+
+.tribe-facet__list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacer-20);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	.b-filter-bar__flyout & {
+		gap: var(--spacer-40);
+	}
+}
+
+/*
+ * Hierarchical facets set --facet-depth per item; flat ones leave it at 0.
+ * The option filter hides items outright, hence the explicit display rule.
+ */
+.tribe-facet__item {
+	padding-inline-start: calc(var(--facet-depth, 0) * var(--filter-bar-facet-indent));
+
+	&[hidden] {
+		display: none;
+	}
+}
+
+/*
+ * Every clear affordance in the feature: per-facet, the reset facet, and the
+ * mobile trigger's. Design wants plain body text with an underline rather than
+ * any of the a-btn-* styles, so the markup carries t-body and the button chrome
+ * comes off here.
+ *
+ * The transparent-underline mixin is only here for the theme's thickness,
+ * offset and transition tokens — these rest underlined and drop it on hover,
+ * the inverse of everywhere else that mixin is used.
+ */
+.tribe-facet__reset-button,
+.tribe-facet__clear,
+.b-filter-bar__clear-wrap button[type="reset"] {
+
+	@mixin t-transparent-underline;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: inherit;
+	text-decoration-color: currentcolor;
+	cursor: pointer;
+
+	@media (--has-hover) {
+
+		&:hover {
+			text-decoration-color: transparent;
+		}
+	}
+
+	/* a-btn-link brought its own focus ring; match the rest of the bar. */
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+}
+
+.tribe-facet__clear {
+	margin-top: var(--spacer-20);
+}
+
+/* -------------------------------------------------------------------------
+ * Filter Bar - Checkbox Facets
+ * ------------------------------------------------------------------------- */
+
+/* The checkbox itself is screen-reader-only, so :focus-within is the label's
+ * only route to a focus state. */
+.tribe-facet--checkboxes .tribe-facet__label {
+
+	@mixin facet-checkbox-control;
+
+	&:focus-within {
+
+		@mixin facet-checkbox-hover-focus;
+	}
+
+	&:has(input[type="checkbox"]:checked) {
+
+		@mixin facet-checkbox-control-checked;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Filter Bar - Search Facet
+ * ------------------------------------------------------------------------- */
+
+.tribe-facet--search {
+
+	@mixin facet-search-field;
+	--icon-size: 24px;
+
+	.tribe-facet__search-input {
+		width: 100%;
+		height: 50px;
+		padding: 0 calc(var(--spacer-20) * 2 + var(--icon-size)) 0 var(--spacer-20);
+		border: 1px solid transparent;
+		border-radius: var(--border-radius-s);
+		background-color: var(--filter-bar-field-background-color);
+		color: var(--color-text);
+
+		&:focus,
+		&:focus-visible {
+			outline: 0;
+			border-color: var(--filter-bar-checkbox-hover-border-color);
+		}
+
+		/* Hide default "X" icon in webkit browsers for search inputs */
+		&::-webkit-search-cancel-button {
+			display: none;
+		}
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Filter Bar - Dropdown Facet
+ *
+ * A custom trigger and listbox over a screen-reader-only <select multiple>
+ * that carries the form state.
+ * ------------------------------------------------------------------------- */
+
+.tribe-facet--dropdown .tribe-facet__dropdown {
+	position: relative;
+}
+
+.tribe-facet--dropdown .tribe-facet__dropdown-trigger {
+	--icon-size: 15px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--spacer-10);
+	width: 100%;
+	height: 50px;
+	padding: 0 calc(var(--spacer-20) * 2 + var(--icon-size)) 0 var(--spacer-20);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-s);
+	background: var(--filter-bar-control-background-color);
+	color: var(--color-text);
+	cursor: pointer;
+	text-align: left;
+
+	&::after {
+		content: '';
+		display: block;
+		width: var(--icon-size);
+		height: var(--icon-size);
+		position: absolute;
+		top: 50%;
+		right: var(--spacer-20);
+		transform: translateY(-50%);
+		mask: var(--icon-select-chevron) center no-repeat;
+		mask-size: var(--icon-size);
+		background-color: var(--color-border);
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+}
+
+.tribe-facet--dropdown .tribe-facet__dropdown-trigger-label {
+	min-width: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+/*
+ * Column layout so the search box and footer stay put while only the option
+ * list scrolls. display is set here, so [hidden] needs saying explicitly.
+ */
+.tribe-facet--dropdown .tribe-facet__dropdown-popup {
+	position: absolute;
+	z-index: 20;
+	top: calc(100% + var(--spacer-10));
+	left: 0;
+	right: 0;
+	display: flex;
+	flex-direction: column;
+	max-height: 320px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-s);
+	background: var(--filter-bar-control-background-color);
+
+	&[hidden] {
+		display: none;
+	}
+}
+
+/* Full-bleed across the popup, so the field squares off and the wrapper's
+ * bottom border does the separating. */
+.tribe-facet--dropdown .tribe-facet__dropdown-search {
+
+	@mixin facet-search-field;
+	--icon-size: 20px;
+	flex-shrink: 0;
+	z-index: 2;
+	border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.tribe-facet--dropdown .tribe-facet__dropdown-search-input {
+	width: 100%;
+	height: 40px;
+	padding: 0 calc(var(--spacer-20) * 2 + var(--icon-size)) 0 var(--spacer-20);
+	border: 1px solid transparent;
+	background-color: var(--filter-bar-field-background-color);
+	color: var(--color-text);
+
+	&:focus,
+	&:focus-visible {
+		outline: 0;
+		border-color: var(--filter-bar-checkbox-hover-border-color);
+	}
+
+	&::-webkit-search-cancel-button {
+		display: none;
+	}
+}
+
+.tribe-facet--dropdown .tribe-facet__dropdown-list {
+	flex: 1;
+	margin: 0;
+	padding: var(--spacer-10);
+	list-style: none;
+	overflow: auto;
+	scrollbar-color: var(--filter-bar-scrollbar-thumb-color) var(--filter-bar-scrollbar-track-color);
+	scrollbar-width: thin;
+}
+
+/* Always present for the live region; takes no space until it has text. */
+.tribe-facet--dropdown .tribe-facet__dropdown-empty {
+	margin: 0;
+	padding: var(--spacer-10) var(--spacer-20) var(--spacer-20);
+	color: var(--color-text-secondary);
+
+	&:empty {
+		display: none;
+	}
+}
+
+.tribe-facet--dropdown .tribe-facet__dropdown-option {
+	--facet-checkbox-inset: var(--spacer-10);
+
+	@mixin facet-checkbox-control;
+
+	&:focus-visible {
+
+		@mixin facet-checkbox-hover-focus;
+		@mixin focus-visible;
+	}
+
+	&[aria-selected="true"] {
+
+		@mixin facet-checkbox-control-checked;
+	}
+}
+
+.tribe-facet--dropdown .tribe-facet__dropdown-footer {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	gap: var(--spacer-20);
+	padding: var(--spacer-10) var(--spacer-20);
+	border-top: 1px solid var(--color-border-secondary);
+}
+
+.tribe-facet--dropdown .tribe-facet__dropdown-footer .tribe-facet__clear {
+	margin-top: 0;
+}
+
+.tribe-facet--dropdown .tribe-facet__apply {
+	margin-left: auto;
+}

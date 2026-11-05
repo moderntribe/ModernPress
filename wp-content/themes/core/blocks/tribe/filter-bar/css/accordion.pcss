@@ -1,0 +1,93 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Filter Bar - Facet Accordion / Labels
+ *
+ * ------------------------------------------------------------------------- */
+
+.b-filter-bar__facet-label {
+
+	@mixin t-body;
+	display: block;
+	margin-bottom: var(--spacer-10);
+	font-weight: var(--font-weight-bold);
+}
+
+/*
+ * Top layout: pull the clear button up onto the label row. The label and the
+ * button aren't siblings (the button comes from the facet renderer), so this is
+ * absolute rather than a flex row.
+ */
+.b-faceted-directory--filter-bar-top .b-filter-bar__responsive-facets--desktop .b-filter-bar__facet {
+	position: relative;
+}
+
+.b-faceted-directory--filter-bar-top .b-filter-bar__responsive-facets--desktop .b-filter-bar__facet-label {
+	padding-right: var(--spacer-60);
+}
+
+.b-faceted-directory--filter-bar-top .b-filter-bar__responsive-facets--desktop .tribe-facet:not(.tribe-facet--dropdown) .tribe-facet__clear {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin-top: 0;
+}
+
+.b-filter-bar__facet-summary {
+
+	@mixin t-transparent-underline;
+	@mixin t-display-xx-small;
+	--accordion-icon-size: 16px;
+	width: 100%;
+	position: relative;
+	padding: 0 calc(var(--spacer-20) + var(--accordion-icon-size)) 0 0;
+	margin: 0;
+	list-style: none;
+	cursor: pointer;
+	user-select: none;
+
+	@media (--has-hover) {
+
+		&:hover {
+
+			@mixin t-transparent-underline-hover;
+		}
+	}
+
+	&:focus:not(:focus-visible) {
+
+		@mixin t-transparent-underline-hover;
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+}
+
+.b-filter-bar__facet-summary::-webkit-details-marker,
+.b-filter-bar__facet-summary::marker {
+	display: none;
+}
+
+.b-filter-bar__facet-summary::after {
+	content: "";
+	display: block;
+	width: var(--accordion-icon-size);
+	height: var(--accordion-icon-size);
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%) rotate(90deg) !important;
+	mask: var(--icon-chevron-right) center no-repeat;
+	mask-size: contain;
+	background-color: currentcolor;
+	transition: var(--transition);
+}
+
+.b-filter-bar__facet--accordion[open] .b-filter-bar__facet-summary::after {
+	transform: translateY(-50%) rotate(-90deg) !important;
+}
+
+.b-filter-bar__facet-content {
+	padding-top: var(--spacer-40);
+}

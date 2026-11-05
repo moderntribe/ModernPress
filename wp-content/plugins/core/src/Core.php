@@ -15,6 +15,7 @@ class Core {
 	 */
 	private array $definers = [
 		Blocks\Blocks_Definer::class,
+		Facets\Facets_Definer::class,
 		Object_Meta\Meta_Definer::class,
 		Settings\Settings_Definer::class,
 	];
@@ -25,6 +26,7 @@ class Core {
 	private array $subscribers = [
 		Assets\Assets_Subscriber::class,
 		Blocks\Blocks_Subscriber::class,
+		Facets\Facets_Subscriber::class,
 		Integrations\Integrations_Subscriber::class,
 		Menus\Menu_Subscriber::class,
 		Object_Meta\Meta_Subscriber::class,
