@@ -21,6 +21,8 @@
 			"tribe/directory-grid",
 			"tribe/faceted-directory",
 			"tribe/filter-bar",
+			"tribe/comparison-row",
+			"tribe/comparison-table",
 			"tribe/horizontal-tab",
 			"tribe/logo-marquee",
 			"tribe/vertical-tab"
