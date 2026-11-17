@@ -22,7 +22,7 @@
 	],
 	"supports": {
 		"html": false,
-		"align": [ "wide", "grid", "full" ],
+		"align": false,
 		"inserter": false,
 		"spacing": {
 			"margin": false,
