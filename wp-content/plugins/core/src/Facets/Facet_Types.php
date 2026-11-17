@@ -29,7 +29,7 @@ class Facet_Types {
 	 * Types that use a sidebar/mobile accordion (and thus the "starts expanded" setting).
 	 */
 	public static function is_accordion_type( string $type ): bool {
-		return self::CHECKBOXES === $type;
+		return self::is_taxonomy_type( $type );
 	}
 
 	/**

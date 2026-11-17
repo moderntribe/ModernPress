@@ -171,7 +171,7 @@ class Facets_Settings extends Settings_Sub_Page {
 	 * so it is never presented empty.
 	 *
 	 * The type selects need layout customization on; the "starts expanded"
-	 * toggles can also apply with it off, when the Display Type is an accordion.
+	 * toggles can also apply with it off, when the facet type supports accordion behavior.
 	 *
 	 * @return list<\Extended\ACF\ConditionalLogic>
 	 */
@@ -184,7 +184,7 @@ class Facets_Settings extends Settings_Sub_Page {
 	}
 
 	/**
-	 * Show "starts expanded" when the effective layout type is checkboxes.
+	 * Show "starts expanded" for each supported taxonomy facet type.
 	 *
 	 * When layout customization is off, the Display Type is the effective type.
 	 * When on, the layout-specific field is — empty (inherit) falls through to
@@ -193,34 +193,34 @@ class Facets_Settings extends Settings_Sub_Page {
 	 * @return list<\Extended\ACF\ConditionalLogic>
 	 */
 	private function accordion_open_conditionals( string $layout_type_field, bool $is_mobile = false ): array {
-		$type = Facet_Types::CHECKBOXES;
+		$conditionals = [];
 
-		$conditionals = [
-			ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '!=', 1 )
-				->and( self::FACET_TYPE, '==', $type ),
-			ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
-				->and( $layout_type_field, '==', $type ),
-		];
-
-		if ( $is_mobile ) {
-			// Mobile empty → sidebar when sidebar is set.
-			$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
-				->and( self::FACET_MOBILE_TYPE, '==empty' )
-				->and( self::FACET_SIDEBAR_TYPE, '==', $type );
-
-			// Mobile + sidebar empty → Display Type.
-			$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
-				->and( self::FACET_MOBILE_TYPE, '==empty' )
-				->and( self::FACET_SIDEBAR_TYPE, '==empty' )
+		foreach ( array_keys( Facet_Types::choices() ) as $type ) {
+			$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '!=', 1 )
 				->and( self::FACET_TYPE, '==', $type );
+			$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
+				->and( $layout_type_field, '==', $type );
 
-			return $conditionals;
+			if ( $is_mobile ) {
+				// Mobile empty → sidebar when sidebar is set.
+				$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
+					->and( self::FACET_MOBILE_TYPE, '==empty' )
+					->and( self::FACET_SIDEBAR_TYPE, '==', $type );
+
+				// Mobile + sidebar empty → Display Type.
+				$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
+					->and( self::FACET_MOBILE_TYPE, '==empty' )
+					->and( self::FACET_SIDEBAR_TYPE, '==empty' )
+					->and( self::FACET_TYPE, '==', $type );
+
+				continue;
+			}
+
+			// Sidebar empty → Display Type.
+			$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
+				->and( $layout_type_field, '==empty' )
+				->and( self::FACET_TYPE, '==', $type );
 		}
-
-		// Sidebar empty → Display Type.
-		$conditionals[] = ConditionalLogic::where( self::FACET_CUSTOMIZE_LAYOUT, '==', 1 )
-			->and( $layout_type_field, '==empty' )
-			->and( self::FACET_TYPE, '==', $type );
 
 		return $conditionals;
 	}
