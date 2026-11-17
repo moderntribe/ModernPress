@@ -188,6 +188,14 @@ const enhanceSelect = ( select ) => {
 		trigger.setAttribute( 'aria-expanded', 'false' );
 	};
 
+	popup.addEventListener( 'focusout', ( event ) => {
+		const nextTarget = event.relatedTarget;
+
+		if ( ! nextTarget?.nodeType || ! popup.contains( nextTarget ) ) {
+			close();
+		}
+	} );
+
 	// Selections already filter on change, so this only dismisses the popup.
 	const apply = wrap.querySelector( SELECTORS.facetApply );
 
