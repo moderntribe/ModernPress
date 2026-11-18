@@ -188,10 +188,10 @@ const enhanceSelect = ( select ) => {
 		trigger.setAttribute( 'aria-expanded', 'false' );
 	};
 
-	popup.addEventListener( 'focusout', ( event ) => {
+	wrap.addEventListener( 'focusout', ( event ) => {
 		const nextTarget = event.relatedTarget;
 
-		if ( ! nextTarget?.nodeType || ! popup.contains( nextTarget ) ) {
+		if ( ! nextTarget?.nodeType || ! wrap.contains( nextTarget ) ) {
 			close();
 		}
 	} );
