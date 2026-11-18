@@ -16,16 +16,20 @@ if ( ! $post_id ) {
 // get template part args
 $attributes = $args['attributes'] ?? [];
 
-$c = Search_Card_Controller::factory( [
+$c            = Search_Card_Controller::factory( [
 	'post_id'       => $post_id,
 	'attributes'    => $attributes,
 	'block_classes' => 'c-search-card',
 ] );
+$aspect_ratio = $c->get_image_aspect_ratio();
 ?>
 <article class="<?php echo esc_attr( $c->get_block_classes() ); ?>"<?php echo ( '' !== $c->get_block_styles() ) ? sprintf( 'style="%s"', $c->get_block_styles() ) : ''; ?>>
 	<div class="c-search-card__inner">
 		<?php if ( $c->has_media() ) : ?>
-			<div class="c-search-card__image aspect-ratio-cover aspect-ratio-4-3">
+			<div class="c-search-card__image aspect-ratio-cover <?php echo '' === $aspect_ratio ? 'aspect-ratio-4-3' : 'aspect-ratio-cover--custom'; ?>"
+				<?php if ( '' !== $aspect_ratio ) : ?>
+					style="aspect-ratio: <?php echo esc_attr( $aspect_ratio ); ?>"
+				<?php endif; ?>>
 				<?php echo $c->get_media(); ?>
 			</div>
 		<?php endif; ?>

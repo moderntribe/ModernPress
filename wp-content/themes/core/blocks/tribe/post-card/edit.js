@@ -1,7 +1,9 @@
 import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
-import { PanelBody, SelectControl } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
 import { ServerSideRender } from '@wordpress/server-side-render';
+import { SelectControl, Stack } from '@wordpress/ui';
+import ImageAspectRatioControl from 'components/ImageAspectRatioControl';
 import metadata from './block.json';
 
 export default function Edit( {
@@ -13,6 +15,14 @@ export default function Edit( {
 	const blockProps = useBlockProps();
 
 	const { headingLevel, layout } = attributes;
+	const headingItems = [
+		{ label: __( 'H2', 'tribe' ), value: 'h2' },
+		{ label: __( 'H3', 'tribe' ), value: 'h3' },
+	];
+	const layoutItems = [
+		{ label: __( 'Vertical', 'tribe' ), value: 'vertical' },
+		{ label: __( 'Horizontal', 'tribe' ), value: 'horizontal' },
+	];
 
 	/**
 	 * Set up a query string to pass the post id to the server side render.
@@ -31,46 +41,52 @@ export default function Edit( {
 			{ isSelected && (
 				<InspectorControls>
 					<PanelBody title={ __( 'Block Settings', 'tribe' ) }>
-						<SelectControl
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-							label={ __( 'Heading Level', 'tribe' ) }
-							value={ headingLevel }
-							help={ __(
-								'The heading level for the post title.',
-								'tribe'
-							) }
-							options={ [
-								{ label: __( 'H2', 'tribe' ), value: 'h2' },
-								{ label: __( 'H3', 'tribe' ), value: 'h3' },
-							] }
-							onChange={ ( value ) =>
-								setAttributes( { headingLevel: value } )
-							}
-						/>
-						<SelectControl
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-							label={ __( 'Card Layout', 'tribe' ) }
-							value={ layout }
-							help={ __(
-								'The layout for the post card.',
-								'tribe'
-							) }
-							options={ [
-								{
-									label: __( 'Vertical', 'tribe' ),
-									value: 'vertical',
-								},
-								{
-									label: __( 'Horizontal', 'tribe' ),
-									value: 'horizontal',
-								},
-							] }
-							onChange={ ( value ) =>
-								setAttributes( { layout: value } )
-							}
-						/>
+						<Stack direction="column" gap="md">
+							<SelectControl
+								label={ __( 'Heading Level', 'tribe' ) }
+								items={ headingItems }
+								value={
+									headingItems.find(
+										( item ) => item.value === headingLevel
+									) ?? null
+								}
+								description={ __(
+									'The heading level for the post title.',
+									'tribe'
+								) }
+								onValueChange={ ( item ) => {
+									if ( item ) {
+										setAttributes( {
+											headingLevel: item.value,
+										} );
+									}
+								} }
+							/>
+							<SelectControl
+								label={ __( 'Card Layout', 'tribe' ) }
+								items={ layoutItems }
+								value={
+									layoutItems.find(
+										( item ) => item.value === layout
+									) ?? null
+								}
+								description={ __(
+									'The layout for the post card.',
+									'tribe'
+								) }
+								onValueChange={ ( item ) => {
+									if ( item ) {
+										setAttributes( { layout: item.value } );
+									}
+								} }
+							/>
+							<ImageAspectRatioControl
+								value={ attributes.imageAspectRatio }
+								onChange={ ( value ) =>
+									setAttributes( { imageAspectRatio: value } )
+								}
+							/>
+						</Stack>
 					</PanelBody>
 				</InspectorControls>
 			) }

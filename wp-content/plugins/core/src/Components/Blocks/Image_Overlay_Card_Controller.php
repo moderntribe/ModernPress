@@ -22,6 +22,13 @@ class Image_Overlay_Card_Controller extends Abstract_Card_Controller {
 			$this->overlay_hover_color
 		);
 
+		$aspect_ratio = $this->get_image_aspect_ratio();
+
+		if ( '' !== $aspect_ratio && $this->has_media() ) {
+			$this->block_classes .= ' b-image-overlay-card--custom-aspect-ratio';
+			$this->block_styles  .= "--card-image-aspect-ratio: {$aspect_ratio};";
+		}
+
 		if ( ! $this->card_uses_dark_theme ) {
 			return;
 		}

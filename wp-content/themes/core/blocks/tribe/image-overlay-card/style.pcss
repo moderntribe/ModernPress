@@ -87,6 +87,25 @@
 	padding: clamp(15rem, 14.25rem + 3.75vw, 18.75rem) var(--spacer-40) var(--spacer-40);
 }
 
+.b-image-overlay-card--custom-aspect-ratio {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	height: auto;
+
+	&::after {
+		content: '';
+		grid-area: 1 / 1;
+		align-self: start;
+		width: 100%;
+		aspect-ratio: var(--card-image-aspect-ratio);
+	}
+
+	.b-image-overlay-card__content {
+		grid-area: 1 / 1;
+		padding-top: var(--spacer-40);
+	}
+}
+
 /* -------------------------------------------------------------------------
  * Image Overlay Card - Title
  * ------------------------------------------------------------------------- */

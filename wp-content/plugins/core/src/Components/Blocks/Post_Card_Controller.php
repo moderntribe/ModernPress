@@ -3,11 +3,13 @@
 namespace Tribe\Plugin\Components\Blocks;
 
 use Tribe\Plugin\Components\Abstracts\Abstract_Block_Controller;
+use Tribe\Plugin\Components\Traits\Card_Image_Aspect_Ratio;
 use Tribe\Plugin\Components\Traits\Post_Data;
 use Tribe\Plugin\Taxonomies\Category\Category;
 
 class Post_Card_Controller extends Abstract_Block_Controller {
 
+	use Card_Image_Aspect_Ratio;
 	use Post_Data;
 
 	protected string $layout;

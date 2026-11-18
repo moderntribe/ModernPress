@@ -17,17 +17,21 @@ if ( ! $post_id ) {
 // get template part args
 $attributes = $args['attributes'] ?? [];
 
-$c = Post_Card_Controller::factory( [
+$c            = Post_Card_Controller::factory( [
 	'post_id'       => $post_id,
 	'taxonomy_slug' => $taxonomy_slug,
 	'attributes'    => $attributes,
 	'block_classes' => 'c-post-card',
 ] );
+$aspect_ratio = $c->get_image_aspect_ratio();
 ?>
 <article class="<?php echo esc_attr( $c->get_block_classes() ); ?>"<?php echo ( '' !== $c->get_block_styles() ) ? sprintf( 'style="%s"', $c->get_block_styles() ) : ''; ?>>
 	<div class="c-post-card__inner">
 		<?php if ( $c->has_media() ) : ?>
-			<div class="c-post-card__image aspect-ratio-cover aspect-ratio-3-2">
+			<div class="c-post-card__image aspect-ratio-cover <?php echo '' === $aspect_ratio ? 'aspect-ratio-3-2' : 'aspect-ratio-cover--custom'; ?>"
+				<?php if ( '' !== $aspect_ratio ) : ?>
+					style="aspect-ratio: <?php echo esc_attr( $aspect_ratio ); ?>"
+				<?php endif; ?>>
 				<?php echo $c->get_media(); ?>
 			</div>
 		<?php endif; ?>

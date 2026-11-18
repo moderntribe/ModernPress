@@ -8,6 +8,10 @@
 	"icon": "text-page",
 	"description": "Displays post data related to posts via a PHP template part.",
 	"attributes": {
+		"imageAspectRatio": {
+			"type": "string",
+			"default": ""
+		},
 		"headingLevel": {
 			"type": "string",
 			"default": "h3"
