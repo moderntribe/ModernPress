@@ -8,7 +8,7 @@ class Announcement_Block_Controller extends Abstract_Block_Controller {
 
 	protected const array DARK_THEMES = [ 'brand', 'black', 'error' ];
 
-	protected int|false $announcement_id;
+	protected string $announcement_id;
 	protected string $heading;
 	protected string $body;
 	protected string $cta_label;
@@ -22,11 +22,11 @@ class Announcement_Block_Controller extends Abstract_Block_Controller {
 	public function __construct( array $args = [] ) {
 		parent::__construct( $args );
 
-		$this->announcement_id = absint( $this->attributes['announcementId'] ) ?? get_the_ID();
 		$this->heading         = $this->attributes['heading'] ?? '';
 		$this->body            = $this->attributes['body'] ?? '';
 		$this->cta_label       = $this->attributes['ctaLabel'] ?? '';
 		$this->cta_link        = $this->attributes['ctaLink'] ?? '';
+		$this->announcement_id = $this->resolve_announcement_id( absint( $this->attributes['announcementId'] ?? 0 ) );
 		$this->cta_style       = $this->attributes['ctaStyle'] ?? 'outlined';
 		$this->text_alignment  = $this->attributes['textAlignment'] ?? 'center';
 		$this->orientation     = $this->attributes['orientation'] ?? 'horizontal';
@@ -48,7 +48,7 @@ class Announcement_Block_Controller extends Abstract_Block_Controller {
 		$this->block_classes .= ' is-style-dark';
 	}
 
-	public function get_announcement_id(): int|false {
+	public function get_announcement_id(): string {
 		return $this->announcement_id;
 	}
 
@@ -86,6 +86,21 @@ class Announcement_Block_Controller extends Abstract_Block_Controller {
 
 	public function is_dismissible(): bool {
 		return filter_var( $this->dismissible, FILTER_VALIDATE_BOOLEAN );
+	}
+
+	/**
+	 * CPT announcements use their post ID. Inline blocks get the current post ID plus a hash of their content.
+	 */
+	private function resolve_announcement_id( int $announcement_id ): string {
+		if ( $announcement_id > 0 ) {
+			return (string) $announcement_id;
+		}
+
+		return sprintf(
+			'%d-%s',
+			(int) get_the_ID(),
+			substr( md5( implode( '|', [ $this->heading, $this->body, $this->cta_label, $this->cta_link ] ) ), 0, 8 )
+		);
 	}
 
 }

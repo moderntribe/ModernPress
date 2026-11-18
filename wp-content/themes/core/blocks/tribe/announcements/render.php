@@ -15,7 +15,7 @@ $c = Announcement_Block_Controller::factory( [
 	'class'                => $c->get_block_classes(),
 	'role'                 => 'region',
 	'aria-label'           => esc_attr__( 'Site announcement', 'tribe' ),
-	'data-announcement-id' => esc_attr( (string) $c->get_announcement_id() ),
+	'data-announcement-id' => esc_attr( $c->get_announcement_id() ),
 	'style'                => $c->get_block_styles(),
 ] ) ); ?>>
 	<div class="b-announcement__inner">
