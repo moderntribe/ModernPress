@@ -86,7 +86,7 @@
 				"type": "wordpress-plugin",
 				"dist": {
 					"type": "zip",
-					"url": "https://github.com/moderntribe/tribe-embeds/releases/download/v1.2/tribe-embed.2.0.0.zip"
+					"url": "https://github.com/moderntribe/tribe-embeds/releases/download/v2.0/tribe-embed.2.0.0.zip"
 				},
 				"require": {
 					"ffraenz/private-composer-installer": "^5.0"
