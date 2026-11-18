@@ -1824,12 +1824,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/moderntribe/tribe-glomar.git",
-                "reference": "71ab0d46b24ca9e5a96afc34f18a54279ede64e6"
+                "reference": "ded016e4f0c4db7183ee7c9480f431a1c9c7a246"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moderntribe/tribe-glomar/zipball/71ab0d46b24ca9e5a96afc34f18a54279ede64e6",
-                "reference": "71ab0d46b24ca9e5a96afc34f18a54279ede64e6",
+                "url": "https://api.github.com/repos/moderntribe/tribe-glomar/zipball/ded016e4f0c4db7183ee7c9480f431a1c9c7a246",
+                "reference": "ded016e4f0c4db7183ee7c9480f431a1c9c7a246",
                 "shasum": ""
             },
             "require": {
@@ -1845,7 +1845,7 @@
                 "source": "https://github.com/moderntribe/tribe-glomar/tree/main",
                 "issues": "https://github.com/moderntribe/tribe-glomar/issues"
             },
-            "time": "2022-09-19T02:39:23+00:00"
+            "time": "2026-10-29T19:32:48+00:00"
         },
         {
             "name": "moderntribe/tribe-site-reporter",
