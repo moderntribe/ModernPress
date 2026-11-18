@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3a56b0be0001a4835f0528640bc4ce15",
+    "content-hash": "ab33b3160fd071c2c47d763e59356bf2",
     "packages": [
         {
             "name": "block-editor-custom-alignments/block-editor-custom-alignments",
