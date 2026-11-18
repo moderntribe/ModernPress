@@ -1,6 +1,7 @@
 import { useSettings } from '@wordpress/block-editor';
-import { BaseControl, ColorPalette } from '@wordpress/components';
+import { ColorPalette } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { Fieldset } from '@wordpress/ui';
 
 export default function DynamicColorPicker( {
 	colorAttribute,
@@ -46,8 +47,8 @@ export default function DynamicColorPicker( {
 	};
 
 	return (
-		<BaseControl __nextHasNoMarginBottom>
-			<BaseControl.VisualLabel>{ controlLabel }</BaseControl.VisualLabel>
+		<Fieldset.Root>
+			<Fieldset.Legend>{ controlLabel }</Fieldset.Legend>
 			<ColorPalette
 				__experimentalIsRenderedInSidebar={ true }
 				colors={
@@ -63,6 +64,6 @@ export default function DynamicColorPicker( {
 					} )
 				}
 			/>
-		</BaseControl>
+		</Fieldset.Root>
 	);
 }

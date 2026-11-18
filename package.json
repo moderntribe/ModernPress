@@ -30,6 +30,7 @@
 		"@dnd-kit/sortable": "^10.0.0",
 		"@dnd-kit/utilities": "^3.2.2",
 		"@wordpress/icons": "^17.0.0",
+		"@wordpress/ui": "^0.26.0",
 		"delegate": "^3.2.0",
 		"imagesloaded": "^5.0.0",
 		"swiper": "^14.0"
