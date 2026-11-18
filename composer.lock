@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c9c2a5e121b91b00d4a511d5a17d710",
+    "content-hash": "3a56b0be0001a4835f0528640bc4ce15",
     "packages": [
         {
             "name": "block-editor-custom-alignments/block-editor-custom-alignments",
@@ -11357,5 +11357,5 @@
     "platform-overrides": {
         "php": "8.4"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }
