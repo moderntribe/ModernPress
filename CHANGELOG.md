@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.11]
+
+- Fixed: Inline Announcements blocks all rendered `data-announcement-id="0"`, so dismissing one hid every other inline Announcement. Inline blocks now get an ID built from the post ID and a hash of their content (editing the content makes the Announcement show again); Announcements from the CPT keep their post ID. [MOOSE-450](https://moderntribe.atlassian.net/browse/MOOSE-450)
+
 ## [2026.10]
 
 - Added: Two new block animations (Scale on Hover and Pulse). Pulse remains a scroll animation, but Scale on Hover adds new functionality to the block animation code that allows non-scroll animations.
@@ -25,6 +29,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 - Fixed: `create-wp-controls.js` was duplicating classes in `getBaseClassName` when `propsClassName` already included `attributeClassName`/`attributeClasses`. Tokens are now deduped across all three sources. [MOOSE-408](https://moderntribe.atlassian.net/browse/MOOSE-408)
 - Fixed: Horizontal/Vertical Tabs — render child tab panels via `render.php` so fragile ARIA/`tabindex` markup is not saved into post content (avoids kses stripping and block validation errors). Wait for child `blockId` before setting the default active tab in the editor.
 - Changed: Extracted shared tab parent block controller into `Components/Blocks/Tabs` (`Base_Tabs_Block_Controller` + horizontal/vertical subclasses).
+- Added: Comparison Table block
 
 ## [2026.06]
 
