@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a7cc149683c469cffdcf8d5c1f2bf6b",
+    "content-hash": "cd1fd6642d0f36cd61cd98f2b9889399",
     "packages": [
         {
             "name": "block-editor-custom-alignments/block-editor-custom-alignments",
@@ -1868,7 +1868,7 @@
             "version": "2.0.0",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/moderntribe/tribe-embeds/releases/download/v1.2/tribe-embed.2.0.0.zip"
+                "url": "https://github.com/moderntribe/tribe-embeds/releases/download/v2.0/tribe-embed.2.0.0.zip"
             },
             "require": {
                 "ffraenz/private-composer-installer": "^5.0"
@@ -11353,9 +11353,9 @@
         "ext-intl": "*",
         "ext-json": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.4"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.3.0"
 }
