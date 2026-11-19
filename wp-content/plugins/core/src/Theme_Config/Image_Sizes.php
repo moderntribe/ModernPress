@@ -85,8 +85,6 @@ class Image_Sizes {
 			);
 		}
 
-		var_dump($sizes);
-
 		return $sizes;
 	}
 
