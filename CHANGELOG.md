@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file. The format 
 on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). Each changelog entry gets prefixed with the category of the
 item (Added, Changed, Depreciated, Removed, Fixed, Security).
 
+## [2026.11]
+
+- Fixed: Inline Announcements blocks all rendered `data-announcement-id="0"`, so dismissing one hid every other inline Announcement. Inline blocks now get an ID built from the post ID and a hash of their content (editing the content makes the Announcement show again); Announcements from the CPT keep their post ID. [MOOSE-450](https://moderntribe.atlassian.net/browse/MOOSE-450)
+
 ## [2026.10]
 
 - Added: Two new block animations (Scale on Hover and Pulse). Pulse remains a scroll animation, but Scale on Hover adds new functionality to the block animation code that allows non-scroll animations.
