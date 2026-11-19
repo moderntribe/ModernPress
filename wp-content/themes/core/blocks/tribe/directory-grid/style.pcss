@@ -1,0 +1,102 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Directory Grid - Styles - FE / Editor
+ *
+ * ------------------------------------------------------------------------- */
+
+/*
+ * Pagination tokens. Imported because the Query Pagination block's CSS only
+ * loads on pages containing that block.
+ */
+@import '../../core/querypagination/_variables.pcss';
+
+.b-directory-grid {
+	container: directory-grid / inline-size;
+	transition: opacity var(--transition);
+
+	&[aria-busy="true"] {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+}
+
+.b-directory-grid__grid {
+	--post-template-grid-template-columns: 1fr;
+	display: grid;
+	gap: var(--spacer-50) var(--grid-gutter);
+	grid-template-columns: var(--post-template-grid-template-columns);
+
+	@container directory-grid (min-width: 768px) {
+		--post-template-grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	@container directory-grid (min-width: 992px) {
+		--post-template-grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	@container directory-grid (min-width: 1275px) {
+		--post-template-grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Pagination
+ *
+ * paginate_links() markup, styled to match the core Query Pagination block.
+ * Shared rules live in blocks/core/querypagination/_mixins.pcss.
+ * ------------------------------------------------------------------------- */
+
+.b-directory-grid__pagination {
+
+	@mixin pagination-row;
+	@mixin pagination-links;
+
+	/* paginate_links() wraps items in a list that also carries .page-numbers. */
+	ul.page-numbers {
+
+		@mixin pagination-numbers-row;
+		padding: 0;
+		list-style: none;
+	}
+
+	li {
+		margin: 0;
+	}
+
+	li .page-numbers:not(.prev, .next) {
+
+		@mixin pagination-number;
+	}
+
+	/* Prev/next render as text links, so the chevron comes from a pseudo. */
+	li .prev,
+	li .next {
+
+		@mixin pagination-prev-next;
+
+		&:hover,
+		&:focus:not(:focus-visible) {
+			color: var(--pagination-prev-next-hover-color);
+
+			&::before,
+			&::after {
+				background-color: var(--pagination-prev-next-icon-hover-color);
+			}
+		}
+	}
+
+	li .prev::before {
+
+		@mixin pagination-arrow-icon;
+	}
+
+	li .next::after {
+
+		@mixin pagination-arrow-icon;
+		mask-image: var(--icon-chevron-right);
+	}
+}
+
+.b-directory-grid__empty {
+	margin: 0;
+}
