@@ -139,6 +139,81 @@
 				"grid-margin": "round(down, clamp(1rem, -0.3rem + 6.5vw, 7.5rem), 2px)"
 			}
 		},
+		"dimensions": {
+			"defaultAspectRatios": false,
+			"aspectRatios": [
+				{
+					"name": "Square (1:1)",
+					"slug": "1-1",
+					"ratio": "1/1"
+				},
+				{
+					"name": "Near-square landscape (5:4)",
+					"slug": "5-4",
+					"ratio": "5/4"
+				},
+				{
+					"name": "Standard (4:3)",
+					"slug": "4-3",
+					"ratio": "4/3"
+				},
+				{
+					"name": "Classic (3:2)",
+					"slug": "3-2",
+					"ratio": "3/2"
+				},
+				{
+					"name": "Widescreen (16:10)",
+					"slug": "16-10",
+					"ratio": "16/10"
+				},
+				{
+					"name": "Wide (16:9)",
+					"slug": "16-9",
+					"ratio": "16/9"
+				},
+				{
+					"name": "Panorama (2:1)",
+					"slug": "2-1",
+					"ratio": "2/1"
+				},
+				{
+					"name": "Ultra-wide (21:9)",
+					"slug": "21-9",
+					"ratio": "21/9"
+				},
+				{
+					"name": "Banner (3:1)",
+					"slug": "3-1",
+					"ratio": "3/1"
+				},
+				{
+					"name": "Social portrait (4:5)",
+					"slug": "4-5",
+					"ratio": "4/5"
+				},
+				{
+					"name": "Standard portrait (3:4)",
+					"slug": "3-4",
+					"ratio": "3/4"
+				},
+				{
+					"name": "Classic portrait (2:3)",
+					"slug": "2-3",
+					"ratio": "2/3"
+				},
+				{
+					"name": "Tall (9:16)",
+					"slug": "9-16",
+					"ratio": "9/16"
+				},
+				{
+					"name": "Extra-tall (1:2)",
+					"slug": "1-2",
+					"ratio": "1/2"
+				}
+			]
+		},
 		"layout": {
 			"contentSize": "840px",
 			"wideSize": "1136px"

@@ -8,15 +8,15 @@ import {
 import {
 	PanelBody,
 	Popover,
-	TextControl,
-	ToggleControl,
 	ToolbarButton,
 	ToolbarGroup,
 } from '@wordpress/components';
 import { ServerSideRender } from '@wordpress/server-side-render';
 import { useMemo, useState } from '@wordpress/element';
+import { InputControl, Stack, SwitchControl } from '@wordpress/ui';
 import DynamicColorPicker from 'components/DynamicColorPicker';
 import MediaImageControl from 'components/MediaImageControl';
+import ImageAspectRatioControl from 'components/ImageAspectRatioControl';
 import blockSettings from './block.json';
 
 import './editor.pcss';
@@ -145,92 +145,98 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 			{ isSelected && (
 				<InspectorControls>
 					<PanelBody title={ __( 'Block Settings', 'tribe' ) }>
-						<MediaImageControl
-							mediaId={ mediaId }
-							onSelect={ onSelectMedia }
-							onRemove={ removeMedia }
-						/>
-						<DynamicColorPicker
-							controlLabel={ __(
-								'Default Overlay Color',
-								'tribe'
-							) }
-							colorAttribute={ 'overlayColor' }
-							colorValue={ overlayColor }
-							useOpacity={ true }
-							onChange={ ( changed ) =>
-								setAttributes( { ...changed } )
-							}
-						/>
-						<DynamicColorPicker
-							controlLabel={ __(
-								'Hover Overlay Color',
-								'tribe'
-							) }
-							colorAttribute={ 'overlayHoverColor' }
-							colorValue={ overlayHoverColor }
-							useOpacity={ true }
-							onChange={ ( changed ) =>
-								setAttributes( { ...changed } )
-							}
-						/>
-						<ToggleControl
-							__nextHasNoMarginBottom
-							label={ __( 'Use Dark Theme', 'tribe' ) }
-							checked={ cardUsesDarkTheme }
-							help={ __(
-								'If enabled, the card will use a dark theme (light text). If disabled, the card will use a light theme (dark text).',
-								'tribe'
-							) }
-							onChange={ ( value ) =>
-								setAttributes( { cardUsesDarkTheme: value } )
-							}
-						/>
-						<TextControl
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-							label={ __( 'Title', 'tribe' ) }
-							value={ title }
-							help={ __(
-								'The title of the card. It should be descriptive, but relatively short.',
-								'tribe'
-							) }
-							placeholder={ __(
-								'Card title that is a little longer and fits on a few lines',
-								'tribe'
-							) }
-							onChange={ ( value ) =>
-								setAttributes( { title: value } )
-							}
-						/>
-						<TextControl
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-							label={ __( 'Link Text', 'tribe' ) }
-							value={ linkText }
-							help={ __(
-								'The visual text of the button component in the card.',
-								'tribe'
-							) }
-							placeholder={ __( 'Link Label', 'tribe' ) }
-							onChange={ ( value ) =>
-								setAttributes( { linkText: value } )
-							}
-						/>
-						<TextControl
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-							label={ __( 'Link A11y Text', 'tribe' ) }
-							value={ linkA11yLabel }
-							help={ __(
-								'The hidden description of the card link. This is used for screen readers and should be descriptive of the link target.',
-								'tribe'
-							) }
-							placeholder={ __( 'Link to Card Title', 'tribe' ) }
-							onChange={ ( value ) =>
-								setAttributes( { linkA11yLabel: value } )
-							}
-						/>
+						<Stack direction="column" gap="md">
+							<MediaImageControl
+								mediaId={ mediaId }
+								onSelect={ onSelectMedia }
+								onRemove={ removeMedia }
+							/>
+							<ImageAspectRatioControl
+								value={ attributes.imageAspectRatio }
+								onChange={ ( value ) =>
+									setAttributes( { imageAspectRatio: value } )
+								}
+							/>
+							<DynamicColorPicker
+								controlLabel={ __(
+									'Default Overlay Color',
+									'tribe'
+								) }
+								colorAttribute={ 'overlayColor' }
+								colorValue={ overlayColor }
+								useOpacity={ true }
+								onChange={ ( changed ) =>
+									setAttributes( { ...changed } )
+								}
+							/>
+							<DynamicColorPicker
+								controlLabel={ __(
+									'Hover Overlay Color',
+									'tribe'
+								) }
+								colorAttribute={ 'overlayHoverColor' }
+								colorValue={ overlayHoverColor }
+								useOpacity={ true }
+								onChange={ ( changed ) =>
+									setAttributes( { ...changed } )
+								}
+							/>
+							<SwitchControl
+								label={ __( 'Use Dark Theme', 'tribe' ) }
+								checked={ cardUsesDarkTheme }
+								description={ __(
+									'If enabled, the card will use a dark theme (light text). If disabled, the card will use a light theme (dark text).',
+									'tribe'
+								) }
+								onCheckedChange={ ( value ) =>
+									setAttributes( {
+										cardUsesDarkTheme: value,
+									} )
+								}
+							/>
+							<InputControl
+								label={ __( 'Title', 'tribe' ) }
+								value={ title }
+								description={ __(
+									'The title of the card. It should be descriptive, but relatively short.',
+									'tribe'
+								) }
+								placeholder={ __(
+									'Card title that is a little longer and fits on a few lines',
+									'tribe'
+								) }
+								onValueChange={ ( value ) =>
+									setAttributes( { title: value } )
+								}
+							/>
+							<InputControl
+								label={ __( 'Link Text', 'tribe' ) }
+								value={ linkText }
+								description={ __(
+									'The visual text of the button component in the card.',
+									'tribe'
+								) }
+								placeholder={ __( 'Link Label', 'tribe' ) }
+								onValueChange={ ( value ) =>
+									setAttributes( { linkText: value } )
+								}
+							/>
+							<InputControl
+								label={ __( 'Link A11y Text', 'tribe' ) }
+								value={ linkA11yLabel }
+								description={ __(
+									'The hidden description of the card link. This is used for screen readers and should be descriptive of the link target.',
+									'tribe'
+								) }
+								placeholder={ __(
+									'Link to Card Title',
+									'tribe'
+								) }
+								onValueChange={ ( value ) =>
+									setAttributes( { linkA11yLabel: value } )
+								}
+							/>
+						</Stack>
 					</PanelBody>
 				</InspectorControls>
 			) }
