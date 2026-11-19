@@ -1,12 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
-import {
-	Button,
-	Fieldset,
-	Spinner,
-	Stack,
-	VisuallyHidden,
-} from '@wordpress/ui';
+import { Button } from '@wordpress/components';
+import { Fieldset, Spinner, Stack, VisuallyHidden } from '@wordpress/ui';
 import { useBlockMedia } from 'hooks/useBlockMedia';
 
 const previewTriggerStyle = {
@@ -14,6 +9,7 @@ const previewTriggerStyle = {
 	alignItems: 'center',
 	justifyContent: 'center',
 	width: '100%',
+	height: 'auto',
 	minHeight: '120px',
 	boxSizing: 'border-box',
 };
@@ -74,8 +70,7 @@ export default function MediaImageControl( {
 					render={ ( { open } ) => (
 						<>
 							<Button
-								variant={ hasMedia ? 'unstyled' : 'outline' }
-								tone="neutral"
+								variant={ hasMedia ? undefined : 'secondary' }
 								style={ previewTriggerStyle }
 								onClick={ open }
 								aria-busy={ isLoading }
@@ -113,15 +108,14 @@ export default function MediaImageControl( {
 							{ hasMedia && (
 								<Stack direction="row" gap="sm" wrap="wrap">
 									<Button
-										variant="outline"
-										tone="neutral"
+										variant="secondary"
 										onClick={ open }
 									>
 										{ replaceLabel }
 									</Button>
 									<Button
-										variant="minimal"
-										tone="neutral"
+										variant="link"
+										isDestructive
 										onClick={ onRemove }
 									>
 										{ removeLabel }
