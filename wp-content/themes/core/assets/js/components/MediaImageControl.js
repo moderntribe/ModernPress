@@ -106,7 +106,11 @@ export default function MediaImageControl( {
 									) ) }
 							</Button>
 							{ hasMedia && (
-								<Stack direction="row" gap="sm" wrap="wrap">
+								<Stack
+									direction="row"
+									gap="sm"
+									justify="space-between"
+								>
 									<Button
 										variant="secondary"
 										onClick={ open }
