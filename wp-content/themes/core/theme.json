@@ -91,22 +91,22 @@
 			"radiusSizes": [
 				{
 					"name": "Small",
-					"slug": "s",
+					"slug": "10",
 					"size": "round(down, clamp(0.125rem, 0.0947rem + 0.1294vw, 0.25rem), 2px)"
 				},
 				{
 					"name": "Medium",
-					"slug": "m",
+					"slug": "20",
 					"size": "round(down, clamp(0.25rem, 0.1893rem + 0.2589vw, 0.5rem), 2px)"
 				},
 				{
 					"name": "Large",
-					"slug": "l",
+					"slug": "30",
 					"size": "round(down, clamp(0.5rem, 0.3786rem + 0.5178vw, 1rem), 2px)"
 				},
 				{
 					"name": "XL",
-					"slug": "xl",
+					"slug": "40",
 					"size": "round(down, clamp(1rem, 0.7573rem + 1.0356vw, 2rem), 2px)"
 				},
 				{
