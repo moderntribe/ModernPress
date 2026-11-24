@@ -101,10 +101,7 @@
 		"ctaPlacement": {
 			"type": "string",
 			"default": "footer",
-			"enum": [
-				"footer",
-				"header"
-			]
+			"enum": [ "footer", "header" ]
 		},
 		"mobileCardView": {
 			"type": "boolean",
@@ -124,11 +121,7 @@
 	},
 	"supports": {
 		"html": false,
-		"alignCustom": [
-			"wide",
-			"grid",
-			"full"
-		],
+		"alignCustom": [ "wide", "grid", "full" ],
 		"spacing": {
 			"margin": true,
 			"padding": false
@@ -137,9 +130,6 @@
 	"textdomain": "tribe",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
-	"style": [
-		"file:./style-index.css",
-		"file:./view.css"
-	],
+	"style": [ "file:./style-index.css", "file:./view.css" ],
 	"render": "file:./render.php"
 }
