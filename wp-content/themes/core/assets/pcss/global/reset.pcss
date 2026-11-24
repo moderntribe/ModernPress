@@ -14,10 +14,14 @@
 }
 
 /**
- * Prevent adjustments of font size after orientation changes in iOS.
+ * 1. Prevent adjustments of font size after orientation changes in iOS.
+ * 2. Add scroll padding for anchor navigation
+ * 3. Ensure smooth scroll behavior for anchor navigation
  */
 html {
 	text-size-adjust: 100%;
+	scroll-padding-top: calc(var(--wp-admin--admin-bar--height, 0px) + var(--header-height, 0px) + 100px); /* stylelint-disable-line */
+	scroll-behavior: smooth;
 }
 
 /**

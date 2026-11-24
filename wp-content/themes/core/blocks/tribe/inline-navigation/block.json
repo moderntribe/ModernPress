@@ -1,0 +1,56 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "tribe/inline-navigation",
+	"version": "0.1.0",
+	"title": "Inline Navigation",
+	"category": "theme",
+	"icon": "list-view",
+	"description": "An in-page navigation block (section menu) placed in page content: a row of links, optional social icons and one button.",
+	"usesContext": [ "postId" ],
+	"attributes": {
+		"mode": {
+			"type": "string",
+			"default": "siblings",
+			"enum": [ "siblings", "children", "manual" ]
+		},
+		"manualItems": {
+			"type": "array",
+			"default": []
+		},
+		"shareServices": {
+			"type": "array",
+			"default": []
+		},
+		"buttonLabel": {
+			"type": "string",
+			"default": ""
+		},
+		"buttonUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"buttonOpensInNewTab": {
+			"type": "boolean",
+			"default": false
+		},
+		"mobileMenuToggleLabel": {
+			"type": "string",
+			"default": "Show Menu"
+		}
+	},
+	"supports": {
+		"html": false,
+		"alignCustom": [ "wide", "grid", "full" ],
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"textdomain": "tribe",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScript": "file:./view.js"
+}

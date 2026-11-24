@@ -12,7 +12,7 @@ module.exports = {
 		dashicon: 'block-default',
 		supports: {
 			html: false,
-			align: [ 'wide', 'grid', 'full' ],
+			alignCustom: [ 'wide', 'grid', 'full' ],
 			spacing: {
 				margin: true,
 				padding: true,

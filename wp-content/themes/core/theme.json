@@ -618,14 +618,6 @@
 					"fontSize": "var(--wp--preset--font-size--10)",
 					"fontWeight": "var(--wp--custom--font-weight--regular)"
 				}
-			},
-			"tribe/horizontal-tab": {
-				"spacing": {
-					"padding": {
-						"top": "var(--wp--preset--spacing--60)",
-						"bottom": "var(--wp--preset--spacing--60)"
-					}
-				}
 			}
 		},
 		"elements": {

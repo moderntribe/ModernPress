@@ -9,7 +9,7 @@ import globalState from 'config/state.js';
 import { triggerCustomEvent } from 'utils/events.js';
 
 const el = {
-	body: document.body,
+	root: document.documentElement,
 	header: document.querySelector( '.site-header' ),
 	navigation: document.querySelector( '.site-header__navigation' ),
 };
@@ -131,7 +131,7 @@ const bindEvents = () => {
  */
 const getHeaderHeight = () => {
 	globalState.headerHeight = el.header.offsetHeight;
-	el.body.style.setProperty(
+	el.root.style.setProperty(
 		'--header-height',
 		globalState.headerHeight + 'px'
 	);
