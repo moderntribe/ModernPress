@@ -6,12 +6,10 @@
 			{
 				"name": "Grid",
 				"slug": "grid",
-				"icon": "M5 9v6h14V9H5zm11-4.8H8v1.5h8V4.2zM8 19.8h8v-1.5H8v1.5z",
-				"width": "1680px",
-				"textdomain": "tribe"
+				"icon": "grid",
+				"width": "1680px"
 			}
 		],
-		"_experimentalLayoutSorting": true,
 		"animationExcludes": [
 			"core/accordion",
 			"core/accordion-heading",

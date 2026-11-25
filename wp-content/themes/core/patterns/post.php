@@ -74,7 +74,7 @@
 	<!-- /wp:group --></div>
 <!-- /wp:group -->
 
-<!-- wp:group {"metadata":{"name":"Related Posts"},"className":"aligngrid","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|50"}}},"layout":{"type":"default"}} -->
+<!-- wp:group {"metadata":{"name":"Related Posts"},"align":"grid","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|50"}}},"layout":{"type":"default"}} -->
 <div class="wp-block-group aligngrid" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--50)"><!-- wp:heading {"className":"is-style-small","style":{"spacing":{"margin":{"top":"0","bottom":"var:preset|spacing|40"}}}} -->
 	<h2 class="wp-block-heading is-style-small" style="margin-top:0;margin-bottom:var(--wp--preset--spacing--40)">Related Posts</h2>
 	<!-- /wp:heading -->

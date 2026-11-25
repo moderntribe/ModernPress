@@ -6,6 +6,7 @@
 
 import blockAnimations from './block-animations';
 import colorPicker from './color-picker';
+import customAlignments from './custom-alignments';
 
 /**
  * @function init
@@ -16,6 +17,7 @@ const init = () => {
 	// initialize block animation controls in editor
 	blockAnimations();
 	colorPicker();
+	customAlignments();
 
 	console.info(
 		'Editor: Initialized all javascript that targeted document ready.'

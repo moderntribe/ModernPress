@@ -11,7 +11,7 @@
  */
 ?>
 <!-- wp:group {"metadata":{"name":"Post Hero"},"align":"full","className":"alignfull","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60"}}},"backgroundColor":"neutral-10","layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull has-neutral-10-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)"><!-- wp:columns {"verticalAlignment":"center","className":"aligngrid"} -->
+<div class="wp-block-group alignfull has-neutral-10-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60)"><!-- wp:columns {"verticalAlignment":"center","align":"grid"} -->
 	<div class="wp-block-columns are-vertically-aligned-center aligngrid"><!-- wp:column {"verticalAlignment":"center"} -->
 		<div class="wp-block-column is-vertically-aligned-center"><!-- wp:tribe/terms {"taxonomyToUse":"category","onlyPrimaryTerm":true,"hasLinks":true} /-->
 
@@ -35,7 +35,7 @@
 <!-- /wp:group -->
 
 <!-- wp:group {"metadata":{"name":"Post Content"},"align":"full","className":"alignfull","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70"}}},"layout":{"type":"constrained"}} -->
-<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)"><!-- wp:columns {"className":"aligngrid","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|60"}}}} -->
+<div class="wp-block-group alignfull" style="padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)"><!-- wp:columns {"align":"grid","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|60"}}}} -->
 	<div class="wp-block-columns aligngrid"><!-- wp:column {"width":"66.66%","layout":{"type":"constrained","justifyContent":"left"}} -->
 		<div class="wp-block-column" style="flex-basis:66.66%"><!-- wp:paragraph -->
 			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>

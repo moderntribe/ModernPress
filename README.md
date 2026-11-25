@@ -105,6 +105,7 @@ Specific features and functionality may have additional documentation in the [./
 * [Color Picker ACF Field](./docs/color-picker.md)
 * [Create Block Script Templates](./docs/block-templates.md)
 * [Create WP Controls Script](./docs/create-wp-controls-script.md)
+* [Custom Alignments](./docs/custom-alignments.md)
 * [Supported Block Features](./docs/supported-block-features.md)
 
 ## Modern Tribe

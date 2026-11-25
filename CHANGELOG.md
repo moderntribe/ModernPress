@@ -7,6 +7,8 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 ## [2026.11]
 
 - Fixed: Inline Announcements blocks all rendered `data-announcement-id="0"`, so dismissing one hid every other inline Announcement. Inline blocks now get an ID built from the post ID and a hash of their content (editing the content makes the Announcement show again); Announcements from the CPT keep their post ID. [MOOSE-450](https://moderntribe.atlassian.net/browse/MOOSE-450)
+- Removed: Block Editor Custom Alignments plugin dependency
+- Added: Built-in custom alignments support. Custom alignments now use their own toolbar button and now actually trigger off of `align` support on custom blocks. [MOOSE-453](https://moderntribe.atlassian.net/browse/MOOSE-453)
 
 ## [2026.10]
 

@@ -5,6 +5,7 @@ namespace Tribe\Plugin\Blocks;
 use Tribe\Plugin\Blocks\Bindings\Binding_Registrar;
 use Tribe\Plugin\Blocks\Filters\Contracts\Filter_Factory;
 use Tribe\Plugin\Blocks\Helpers\Block_Animation_Attributes;
+use Tribe\Plugin\Blocks\Helpers\Custom_Alignments;
 use Tribe\Plugin\Blocks\Patterns\Pattern_Category;
 use Tribe\Plugin\Blocks\Patterns\Pattern_Registrar;
 use Tribe\Plugin\Core\Abstract_Subscriber;
@@ -13,6 +14,14 @@ use Tribe\Plugin\Theme_Config\Theme_Support;
 class Blocks_Subscriber extends Abstract_Subscriber {
 
 	public function register(): void {
+
+		add_filter( 'register_block_type_args', function ( array $args ): array {
+			return $this->container->get( Custom_Alignments::class )->register_attribute( $args );
+		}, 10, 1 );
+
+		add_action( 'enqueue_block_assets', function (): void {
+			$this->container->get( Custom_Alignments::class )->enqueue_assets();
+		}, 10, 0 );
 
 		add_action( 'init', function (): void {
 			// Register blocks.
