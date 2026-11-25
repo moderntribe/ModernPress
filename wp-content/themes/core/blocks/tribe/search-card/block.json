@@ -7,6 +7,12 @@
 	"category": "theme",
 	"icon": "media-document",
 	"description": "Displays post data related to posts / pages that display in a search query via a PHP template part.",
+	"attributes": {
+		"imageAspectRatio": {
+			"type": "string",
+			"default": ""
+		}
+	},
 	"supports": {
 		"html": false,
 		"align": false,

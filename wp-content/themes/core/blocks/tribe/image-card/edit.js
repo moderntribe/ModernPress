@@ -8,14 +8,14 @@ import {
 import {
 	PanelBody,
 	Popover,
-	TextareaControl,
-	TextControl,
 	ToolbarButton,
 	ToolbarGroup,
 } from '@wordpress/components';
 import { ServerSideRender } from '@wordpress/server-side-render';
 import { useMemo, useState } from '@wordpress/element';
+import { InputControl, Stack, TextareaControl } from '@wordpress/ui';
 import MediaImageControl from 'components/MediaImageControl';
+import ImageAspectRatioControl from 'components/ImageAspectRatioControl';
 import blockSettings from './block.json';
 
 import './editor.pcss';
@@ -142,72 +142,76 @@ export default function Edit( { attributes, setAttributes, isSelected } ) {
 			{ isSelected && (
 				<InspectorControls>
 					<PanelBody title={ __( 'Block Settings', 'tribe' ) }>
-						<MediaImageControl
-							mediaId={ mediaId }
-							onSelect={ onSelectMedia }
-							onRemove={ removeMedia }
-						/>
-						<TextControl
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-							label={ __( 'Title', 'tribe' ) }
-							value={ title }
-							help={ __(
-								'The title of the card. It should be descriptive, but relatively short.',
-								'tribe'
-							) }
-							placeholder={ __(
-								'Card title that is a little longer and fits on a few lines',
-								'tribe'
-							) }
-							onChange={ ( value ) =>
-								setAttributes( { title: value } )
-							}
-						/>
-						<TextareaControl
-							__nextHasNoMarginBottom
-							label={ __( 'Description', 'tribe' ) }
-							value={ description }
-							help={ __(
-								'The description of the card. It should give the viewer an overview of the content the card is linking to.',
-								'tribe'
-							) }
-							placeholder={ __(
-								'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-								'tribe'
-							) }
-							onChange={ ( value ) =>
-								setAttributes( { description: value } )
-							}
-						/>
-						<TextControl
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-							label={ __( 'Link Text', 'tribe' ) }
-							value={ linkText }
-							help={ __(
-								'The visual text of the button component in the card.',
-								'tribe'
-							) }
-							placeholder={ __( 'Link Label', 'tribe' ) }
-							onChange={ ( value ) =>
-								setAttributes( { linkText: value } )
-							}
-						/>
-						<TextControl
-							__next40pxDefaultSize
-							__nextHasNoMarginBottom
-							label={ __( 'Link A11y Text', 'tribe' ) }
-							value={ linkA11yLabel }
-							help={ __(
-								'The hidden description of the card link. This is used for screen readers and should be descriptive of the link target.',
-								'tribe'
-							) }
-							placeholder={ __( 'Link to Card Title', 'tribe' ) }
-							onChange={ ( value ) =>
-								setAttributes( { linkA11yLabel: value } )
-							}
-						/>
+						<Stack direction="column" gap="md">
+							<MediaImageControl
+								mediaId={ mediaId }
+								onSelect={ onSelectMedia }
+								onRemove={ removeMedia }
+							/>
+							<ImageAspectRatioControl
+								value={ attributes.imageAspectRatio }
+								onChange={ ( value ) =>
+									setAttributes( { imageAspectRatio: value } )
+								}
+							/>
+							<InputControl
+								label={ __( 'Title', 'tribe' ) }
+								value={ title }
+								description={ __(
+									'The title of the card. It should be descriptive, but relatively short.',
+									'tribe'
+								) }
+								placeholder={ __(
+									'Card title that is a little longer and fits on a few lines',
+									'tribe'
+								) }
+								onValueChange={ ( value ) =>
+									setAttributes( { title: value } )
+								}
+							/>
+							<TextareaControl
+								label={ __( 'Description', 'tribe' ) }
+								value={ description }
+								description={ __(
+									'The description of the card. It should give the viewer an overview of the content the card is linking to.',
+									'tribe'
+								) }
+								placeholder={ __(
+									'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+									'tribe'
+								) }
+								onValueChange={ ( value ) =>
+									setAttributes( { description: value } )
+								}
+							/>
+							<InputControl
+								label={ __( 'Link Text', 'tribe' ) }
+								value={ linkText }
+								description={ __(
+									'The visual text of the button component in the card.',
+									'tribe'
+								) }
+								placeholder={ __( 'Link Label', 'tribe' ) }
+								onValueChange={ ( value ) =>
+									setAttributes( { linkText: value } )
+								}
+							/>
+							<InputControl
+								label={ __( 'Link A11y Text', 'tribe' ) }
+								value={ linkA11yLabel }
+								description={ __(
+									'The hidden description of the card link. This is used for screen readers and should be descriptive of the link target.',
+									'tribe'
+								) }
+								placeholder={ __(
+									'Link to Card Title',
+									'tribe'
+								) }
+								onValueChange={ ( value ) =>
+									setAttributes( { linkA11yLabel: value } )
+								}
+							/>
+						</Stack>
 					</PanelBody>
 				</InspectorControls>
 			) }

@@ -2,7 +2,11 @@
 
 namespace Tribe\Plugin\Components\Abstracts;
 
+use Tribe\Plugin\Components\Traits\Card_Image_Aspect_Ratio;
+
 abstract class Abstract_Card_Controller extends Abstract_Block_Controller {
+
+	use Card_Image_Aspect_Ratio;
 
 	private int $media_id;
 	private string $media_url;

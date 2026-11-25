@@ -8,6 +8,10 @@
 	"icon": "format-image",
 	"description": "A card with a prominent image element",
 	"attributes": {
+		"imageAspectRatio": {
+			"type": "string",
+			"default": ""
+		},
 		"mediaId": {
 			"type": "number",
 			"default": 0

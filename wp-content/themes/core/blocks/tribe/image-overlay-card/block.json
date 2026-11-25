@@ -8,6 +8,10 @@
 	"icon": "format-gallery",
 	"description": "A card with text that sits on top of an image",
 	"attributes": {
+		"imageAspectRatio": {
+			"type": "string",
+			"default": ""
+		},
 		"mediaId": {
 			"type": "number",
 			"default": 0

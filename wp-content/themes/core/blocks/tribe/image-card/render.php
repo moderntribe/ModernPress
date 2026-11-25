@@ -14,7 +14,11 @@ $c = Image_Card_Controller::factory( [
 <article <?php echo get_block_wrapper_attributes( [ 'class' => esc_attr( $c->get_block_classes() ), 'style' => $c->get_block_styles() ] ); ?>>
 	<div class="b-image-card__inner">
 		<?php if ( $c->has_media() ) : ?>
-			<div class="aspect-ratio-cover aspect-ratio-3-2 b-image-card__media">
+			<?php $aspect_ratio = $c->get_image_aspect_ratio(); ?>
+			<div class="b-image-card__media aspect-ratio-cover <?php echo '' === $aspect_ratio ? 'aspect-ratio-3-2' : 'aspect-ratio-cover--custom'; ?>"
+				<?php if ( '' !== $aspect_ratio ) : ?>
+					style="aspect-ratio: <?php echo esc_attr( $aspect_ratio ); ?>"
+				<?php endif; ?>>
 				<?php echo wp_kses_post( $c->get_media() ); ?>
 			</div>
 		<?php endif; ?>

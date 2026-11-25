@@ -3,11 +3,13 @@
 namespace Tribe\Plugin\Components\Blocks;
 
 use Tribe\Plugin\Components\Abstracts\Abstract_Block_Controller;
+use Tribe\Plugin\Components\Traits\Card_Image_Aspect_Ratio;
 use Tribe\Plugin\Components\Traits\Post_Data;
 use Tribe\Plugin\Taxonomies\Category\Category;
 
 class Post_Card_Controller extends Abstract_Block_Controller {
 
+	use Card_Image_Aspect_Ratio;
 	use Post_Data;
 
 	protected string $layout;
@@ -19,7 +21,7 @@ class Post_Card_Controller extends Abstract_Block_Controller {
 		$this->set_display_term_taxonomy( $args['taxonomy_slug'] ?? Category::NAME );
 
 		$this->layout         = $this->attributes['layout'] ?? 'vertical';
-		$this->heading_level  = $this->attributes['heading_level'] ?? 'h3';
+		$this->heading_level  = 'h2' === ( $this->attributes['headingLevel'] ?? '' ) ? 'h2' : 'h3';
 		$this->block_classes .= " c-post-card--layout-{$this->layout}";
 	}
 

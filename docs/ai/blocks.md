@@ -1,5 +1,7 @@
 # Gutenberg Blocks – Agent Reference
 
+Last updated: 11/19/2026
+
 ## Block Directories
 
 ```
@@ -86,3 +88,22 @@ For blocks using `render.php`, `save` returns `null`:
 ```js
 registerBlockType( metadata.name, { edit: Edit, save: () => null } );
 ```
+
+## Editor Settings Component (`edit.js`)
+
+The editor settings component file (`edit.js`) is typically used for rendering block based controls for updating block attributes that in turn get picked up by the renderer to display information differently, or visually show the information in a different format. 
+
+To make sure that we're abiding by the most up to date standards, WordPress offers two packages to make sure we can add styled, accessible, and robust fields that editors can interact with. Those packages are `@wordpress/ui`, an external package installed via `npm`, and `@wordpress/components`, a packaged bundled with WordPress that doesn't need to be installed separately. 
+
+Within the [WordPress components Storybook](https://wordpress.github.io/gutenberg/?path=/docs/components-packages-introduction--docs), choosing a component is simple - start with `@wordpress/ui`. If `@wordpress/ui` doesn't contain a suitable *recommended* component, check `@wordpress/components`. Recommendations are made component by component, so it's important to check the _status_ icon / field to ensure the component is recommended for use. Each component page displays this status icon and, if necessary, notes that explain the recommendation. The recommendation key is as follows:
+
+- ✅ Recommended: Preferred for new work.
+- ⚠️ Use with caution: Review the notes before using it.
+- 🚫 Not recommended: Choose the recommended alternative.
+- ❓ Unaudited: The component hasn't been reviewed yet.
+
+As an example, as of writing the [Button component](https://wordpress.github.io/gutenberg/?path=/docs/design-system-components-button--docs) in `@wordpress/ui` is to "⚠️ Use with caution" with added notes:
+
+> Not yet recommended for use alongside components from `@wordpress/components`, pending review of style consistency with `@wordpress/components` and text overflow behavior. See [WordPress/gutenberg#76135](https://github.com/WordPress/gutenberg/issues/76135).
+
+Because we only want to support "✅ Recommended" components, we should fall back to `@wordpress/components` and use the stable / "✅ Recommended" [Button component](https://wordpress.github.io/gutenberg/?path=/docs/components-button--docs) there.

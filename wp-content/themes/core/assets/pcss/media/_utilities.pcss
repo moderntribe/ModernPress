@@ -2,10 +2,7 @@
  *
  * Aspect Ratio Helpers
  *
- * Useful for fixing the height of an element based on it's width.
- * Since the default Image block contains aspect ratio controls,
- * these helpers should only be used if using an aspect ratio that doesn't
- * exist within WP.
+ * Use these helpers where block aspect ratio controls aren't available.
  *
  * Example:
  * <figure class="wp-block-image aspect-ratio-4-5 aspect-ratio-cover">
@@ -26,26 +23,67 @@
 	}
 }
 
-.aspect-ratio-3-2 {
-	aspect-ratio: 3 / 2;
+.aspect-ratio-cover--custom {
+	position: relative;
+
+	> img {
+		position: absolute;
+		inset: 0;
+	}
 }
 
-.aspect-ratio-4-3 {
-	aspect-ratio: 4 / 3;
-}
-
-.aspect-ratio-4-5 {
-	aspect-ratio: 4 / 5;
+.aspect-ratio-1 {
+	aspect-ratio: var(--aspect-ratio-1);
 }
 
 .aspect-ratio-5-4 {
-	aspect-ratio: 5 / 4;
+	aspect-ratio: var(--aspect-ratio-5-4);
+}
+
+.aspect-ratio-4-3 {
+	aspect-ratio: var(--aspect-ratio-4-3);
+}
+
+.aspect-ratio-3-2 {
+	aspect-ratio: var(--aspect-ratio-3-2);
 }
 
 .aspect-ratio-16-10 {
-	aspect-ratio: 16 / 10;
+	aspect-ratio: var(--aspect-ratio-16-10);
 }
 
-.aspect-ratio-10-16 {
-	aspect-ratio: 10 / 16;
+.aspect-ratio-16-9 {
+	aspect-ratio: var(--aspect-ratio-16-9);
+}
+
+.aspect-ratio-2-1 {
+	aspect-ratio: var(--aspect-ratio-2-1);
+}
+
+.aspect-ratio-21-9 {
+	aspect-ratio: var(--aspect-ratio-21-9);
+}
+
+.aspect-ratio-3-1 {
+	aspect-ratio: var(--aspect-ratio-3-1);
+}
+
+.aspect-ratio-4-5 {
+	aspect-ratio: var(--aspect-ratio-4-5);
+}
+
+.aspect-ratio-3-4 {
+	aspect-ratio: var(--aspect-ratio-3-4);
+}
+
+.aspect-ratio-2-3 {
+	aspect-ratio: var(--aspect-ratio-2-3);
+}
+
+.aspect-ratio-9-16 {
+	aspect-ratio: var(--aspect-ratio-9-16);
+}
+
+.aspect-ratio-1-2 {
+	aspect-ratio: var(--aspect-ratio-1-2);
 }
