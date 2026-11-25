@@ -6,7 +6,7 @@
 	"blockTypes": [ "core/image" ],
 	"styles": {
 		"border": {
-			"radius": "var(--border-radius-l)"
+			"radius": "var(--border-radius-30)"
 		}
 	}
 }

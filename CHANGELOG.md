@@ -7,6 +7,7 @@ item (Added, Changed, Depreciated, Removed, Fixed, Security).
 ## [2026.11]
 
 - Fixed: Inline Announcements blocks all rendered `data-announcement-id="0"`, so dismissing one hid every other inline Announcement. Inline blocks now get an ID built from the post ID and a hash of their content (editing the content makes the Announcement show again); Announcements from the CPT keep their post ID. [MOOSE-450](https://moderntribe.atlassian.net/browse/MOOSE-450)
+- Added: Border Radius T-shirt sizing selector for core blocks via `radiusSizes` in `theme.json`. [MOOSE-440](https://moderntribe.atlassian.net/browse/MOOSE-440)
 
 ## [2026.10]
 
