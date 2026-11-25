@@ -18,6 +18,11 @@ class Inline_Navigation_Controller extends Abstract_Block_Controller {
 	 */
 	protected array $share_services;
 
+	/**
+	 * Initializes navigation settings from block attributes and context.
+	 *
+	 * @param array $args Controller arguments, including attributes and context.
+	 */
 	public function __construct( array $args = [] ) {
 		parent::__construct( $args );
 
@@ -29,14 +34,23 @@ class Inline_Navigation_Controller extends Abstract_Block_Controller {
 		$this->mobile_menu_toggle_label = $this->attributes['mobileMenuToggleLabel'] ?? '';
 	}
 
+	/**
+	 * Gets the selected navigation mode.
+	 */
 	public function get_mode(): string {
 		return $this->mode;
 	}
 
+	/**
+	 * Gets the label shown on the mobile menu toggle.
+	 */
 	public function get_mobile_menu_toggle_label(): string {
 		return $this->mobile_menu_toggle_label;
 	}
 
+	/**
+	 * Renders sibling or child pages for the current page.
+	 */
 	public function render_pages(): string {
 		if ( ! in_array( $this->mode, [ 'siblings', 'children' ], true ) ) {
 			return '';
@@ -64,6 +78,9 @@ class Inline_Navigation_Controller extends Abstract_Block_Controller {
 		] );
 	}
 
+	/**
+	 * Renders configured manual links and marks links to the current page.
+	 */
 	public function render_manual_pages(): string {
 		$items = $this->attributes['manualItems'] ?? [];
 		if ( ! is_array( $items ) ) {
@@ -87,12 +104,7 @@ class Inline_Navigation_Controller extends Abstract_Block_Controller {
 			}
 
 			$linked_post_id = url_to_postid( $url );
-			$is_current     = $post_id && (
-				$linked_post_id === $post_id
-				|| ( $current_url && untrailingslashit( $url ) === untrailingslashit( $current_url ) )
-				|| ( $current_url && str_starts_with( $url, '/' ) && ! str_starts_with( $url, '//' )
-					&& untrailingslashit( $url ) === untrailingslashit( wp_make_link_relative( $current_url ) ) )
-			);
+			$is_current     = $post_id && $this->is_current_page_link( $url, $linked_post_id, $post_id, $current_url );
 			$linked_post_id = $is_current ? $post_id : $linked_post_id;
 			$classes        = 'b-inline-navigation__list-item page_item';
 			if ( $linked_post_id ) {
@@ -115,6 +127,9 @@ class Inline_Navigation_Controller extends Abstract_Block_Controller {
 		return $output;
 	}
 
+	/**
+	 * Renders the selected social-sharing services.
+	 */
 	public function render_share_services(): string {
 		if ( ! $this->share_services ) {
 			return '';
@@ -157,6 +172,9 @@ class Inline_Navigation_Controller extends Abstract_Block_Controller {
 		] );
 	}
 
+	/**
+	 * Renders the configured call-to-action button when both fields are set.
+	 */
 	public function render_cta(): string {
 		$label = trim( $this->button_label );
 		$url   = esc_url( $this->button_url );
@@ -190,6 +208,29 @@ class Inline_Navigation_Controller extends Abstract_Block_Controller {
 			'innerHTML'    => '<div class="wp-block-buttons b-inline-navigation__cta"></div>',
 			'innerContent' => [ '<div class="wp-block-buttons b-inline-navigation__cta">', null, '</div>' ],
 		] );
+	}
+
+	/**
+	 * Matches a manual link to the current page by ID or normalized permalink.
+	 *
+	 * Relative links are compared to the current permalink without its host.
+	 */
+	private function is_current_page_link( string $url, int $linked_post_id, int $post_id, string|false $current_url ): bool {
+		if ( $linked_post_id === $post_id ) {
+			return true;
+		}
+
+		if ( ! $current_url ) {
+			return false;
+		}
+
+		if ( untrailingslashit( $url ) === untrailingslashit( $current_url ) ) {
+			return true;
+		}
+
+		return str_starts_with( $url, '/' )
+			&& ! str_starts_with( $url, '//' )
+			&& untrailingslashit( $url ) === untrailingslashit( wp_make_link_relative( $current_url ) );
 	}
 
 }
