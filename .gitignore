@@ -107,5 +107,9 @@ debug.log
 # LocalWP
 /.htaccess
 
+.cursor
+.claude
+CLAUDE.local.md
+
 # Make sure to include the .sql file for tests
 !tests/_data/dump.sql
