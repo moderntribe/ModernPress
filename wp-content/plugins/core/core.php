@@ -6,7 +6,7 @@ Description: Core functionality for this site.
 Author:      Modern Tribe
 Version:     1.0
 Author URI:  http://tri.be
-Requires Plugins: advanced-custom-fields-pro, block-editor-custom-alignments, disable-emojis, safe-svg, social-sharing-block
+Requires Plugins: advanced-custom-fields-pro, disable-emojis, safe-svg, social-sharing-block
 */
 
 // Some hosts do not allow sub-folder WP installs, this check will cover multiple conditions.

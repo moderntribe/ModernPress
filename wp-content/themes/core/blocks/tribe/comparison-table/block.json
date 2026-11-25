@@ -124,7 +124,7 @@
 	},
 	"supports": {
 		"html": false,
-		"alignCustom": [
+		"align": [
 			"wide",
 			"grid",
 			"full"
