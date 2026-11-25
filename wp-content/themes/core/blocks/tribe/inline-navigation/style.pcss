@@ -1,0 +1,310 @@
+/* -------------------------------------------------------------------------
+ *
+ * Block - Inline Navigation - Styles - FE / Editor
+ *
+ * ------------------------------------------------------------------------- */
+
+@import '_variables.pcss';
+
+.b-inline-navigation {
+	container: inline-navigation / inline-size;
+}
+
+/* -------------------------------------------------------------------------
+ * Inline Navigation - Inner
+ * ------------------------------------------------------------------------- */
+
+.b-inline-navigation__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--spacer-40);
+}
+
+/* -------------------------------------------------------------------------
+ * Inline Navigation - Mobile Toggle
+ * ------------------------------------------------------------------------- */
+
+.b-inline-navigation__menu-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--spacer-20);
+	padding: var(--spacer-10) 0;
+	background-color: transparent;
+	border: 0;
+	border-radius: 0;
+	cursor: pointer;
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+
+	@media (--has-hover) {
+
+		&:hover {
+
+			.b-inline-navigation__menu-toggle-label {
+
+				@mixin t-animated-underline-hover;
+			}
+		}
+	}
+
+	@container inline-navigation (min-width: 960px) {
+		display: none;
+	}
+}
+
+.b-inline-navigation__menu-toggle-icon {
+	display: block;
+	width: 24px;
+	height: 24px;
+	mask: var(--icon-hamburger) center no-repeat;
+	mask-size: contain;
+	background-color: var(--color-text);
+}
+
+.b-inline-navigation__menu-toggle-label {
+
+	@mixin t-animated-underline;
+	color: var(--color-text);
+	font-family: var(--font-family-sans-serif);
+	font-size: var(--font-size-20);
+	font-weight: var(--font-weight-bold);
+	line-height: 1.4;
+	letter-spacing: 0.02em;
+}
+
+/* -------------------------------------------------------------------------
+ * Inline Navigation - Desktop Wrapper
+ * ------------------------------------------------------------------------- */
+
+.b-inline-navigation__desktop {
+	display: none;
+	width: 100%;
+
+	@container inline-navigation (min-width: 960px) {
+		display: block;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Inline Navigation - Navigation List (ul)
+ * ------------------------------------------------------------------------- */
+
+.b-inline-navigation__list {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--spacer-20) var(--spacer-40);
+	flex-wrap: wrap;
+	list-style-type: none;
+	margin-block-start: 0;
+	margin-block-end: 0;
+	padding-inline-start: 0;
+
+	@container inline-navigation (min-width: 960px) {
+		flex-direction: row;
+		align-items: center;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Inline Navigation - Navigation Link (a)
+ * ------------------------------------------------------------------------- */
+
+.b-inline-navigation__list-link {
+
+	@mixin t-animated-underline;
+	display: block;
+	padding-block: var(--spacer-10);
+	color: var(--color-text);
+	font-family: var(--font-family-sans-serif);
+	font-size: var(--font-size-30);
+	font-weight: var(--font-weight-regular);
+	line-height: 1.2;
+	transition: var(--transition);
+
+	&[aria-current] {
+		--text-decoration-thickness: 4px;
+
+		@mixin inline-nav-item-hover-focus;
+		@mixin t-animated-underline-hover;
+
+		pointer-events: none;
+	}
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+		@mixin t-animated-underline-hover;
+		@mixin inline-nav-item-hover-focus;
+	}
+
+	@media (--has-hover) {
+
+		&:hover {
+
+			@mixin t-animated-underline-hover;
+			@mixin inline-nav-item-hover-focus;
+		}
+	}
+
+	@container inline-navigation (min-width: 960px) {
+		font-size: var(--font-size-20);
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Inline Navigation - Right Side
+ * ------------------------------------------------------------------------- */
+
+.b-inline-navigation__right {
+	flex-shrink: 0;
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacer-40);
+	max-width: 100%;
+
+	@container inline-navigation (min-width: 960px) {
+		flex-direction: row;
+		align-items: center;
+		gap: var(--spacer-30);
+	}
+
+	/**
+	 * instead of adding a complex PHP conditional let's just hide this using
+	 * CSS if it doesn't contain either of the elements
+	 */
+	&:not(:has(.b-inline-navigation__social, .b-inline-navigation__cta)) {
+		display: none;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Inline Navigation - Social Share Links
+ * ------------------------------------------------------------------------- */
+
+.b-inline-navigation__social {
+	margin-block-start: 0;
+	margin-block-end: 0;
+
+	.outermost-social-sharing-link {
+		color: var(--color-text) !important;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Inline Navigation - Mobile Flyout
+ * ------------------------------------------------------------------------- */
+
+.b-inline-navigation__flyout {
+	position: fixed;
+	inset: calc(var(--spacer-wpadmin) + var(--spacer-40)) 0 0;
+	box-sizing: border-box;
+	width: 100%;
+	height: auto;
+	max-width: none;
+	max-height: none;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background-color: var(--inline-navigation-flyout-background);
+	box-shadow: 0 -16px 24px 0 var(--inline-navigation-flyout-shadow);
+	border-top-left-radius: var(--border-radius-l);
+	border-top-right-radius: var(--border-radius-l);
+	overflow: auto;
+	color: var(--color-text);
+
+	&[open] {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&::backdrop {
+		background: transparent;
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Inline Navigation - Mobile Flyout Header
+ * ------------------------------------------------------------------------- */
+
+.b-inline-navigation__flyout-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--spacer-20);
+	flex-shrink: 0;
+	padding: var(--spacer-30) var(--grid-margin);
+	border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.b-inline-navigation__flyout-title {
+	margin-top: 0;
+	font-weight: var(--font-weight-bold);
+}
+
+.b-inline-navigation__flyout-close {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--spacer-10);
+	padding: 0;
+	border: 0;
+	background: none;
+	cursor: pointer;
+	color: var(--color-text);
+
+	&:focus-visible {
+
+		@mixin focus-visible;
+	}
+
+	@media (--has-hover) {
+
+		&:hover .b-inline-navigation__flyout-close-label {
+
+			@mixin t-animated-underline-hover;
+		}
+	}
+}
+
+.b-inline-navigation__flyout-close-icon {
+	display: block;
+	width: 24px;
+	height: 24px;
+	flex-shrink: 0;
+	background-color: currentcolor;
+	mask: var(--icon-dismiss) center no-repeat;
+	mask-size: contain;
+}
+
+.b-inline-navigation__flyout-close-label {
+
+	@mixin t-animated-underline;
+	@mixin t-body;
+	font-weight: var(--font-weight-bold);
+}
+
+/* -------------------------------------------------------------------------
+ * Inline Navigation - Mobile Flyout Body
+ * This selector has a container query because it's also used in
+ * .b-inline-navigation__desktop so we're not repeating styling for
+ * separate use cases.
+ * ------------------------------------------------------------------------- */
+
+.b-inline-navigation__flyout-body {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--spacer-40);
+	padding: var(--spacer-40) var(--grid-margin);
+
+	@container inline-navigation (min-width: 960px) {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0;
+	}
+}

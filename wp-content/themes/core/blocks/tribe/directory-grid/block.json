@@ -17,9 +17,7 @@
 			"default": false
 		}
 	},
-	"usesContext": [
-		"tribe/faceted-directory/postTypes"
-	],
+	"usesContext": [ "tribe/faceted-directory/postTypes" ],
 	"supports": {
 		"html": false,
 		"align": false,

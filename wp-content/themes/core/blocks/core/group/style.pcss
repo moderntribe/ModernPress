@@ -6,8 +6,30 @@
 
 .wp-block-group {
 
-	/* CASE: Has Transparent Background */
+	/* ---------------------------------------------------------------------
+	 * Has Transparent Background
+	 * Removes background from themed Group block
+	 * --------------------------------------------------------------------- */
+
 	&.has-transparent-background {
 		background-color: transparent !important;
+	}
+
+	/* ---------------------------------------------------------------------
+	 * Sticky
+	 * Uses sticky positioning to keep elements in view while scrolling
+	 * --------------------------------------------------------------------- */
+
+	&.tribe-is-sticky {
+
+		@media (--mq-wp-adminbar) {
+			position: sticky;
+			top: calc(var(--wp-admin--admin-bar--height, 0px) + var(--header-height, 0px)); /* stylelint-disable-line */
+			z-index: 49;
+
+			.editor-styles-wrapper & {
+				top: 0;
+			}
+		}
 	}
 }

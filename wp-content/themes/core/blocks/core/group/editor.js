@@ -6,6 +6,9 @@ const settings = {
 		hasTransparentBackground: {
 			type: 'boolean',
 		},
+		isSticky: {
+			type: 'boolean',
+		},
 	},
 	blocks: [ 'core/group' ],
 	controls: [
@@ -18,6 +21,17 @@ const settings = {
 				'tribe'
 			),
 			label: __( 'Has Transparent Background', 'tribe' ),
+			type: 'toggle',
+		},
+		{
+			applyClass: 'tribe-is-sticky',
+			attribute: 'isSticky',
+			defaultValue: false,
+			helpText: __(
+				'Sticks this Group block below the masthead on scroll.',
+				'tribe'
+			),
+			label: __( 'Stick Group on Scroll', 'tribe' ),
 			type: 'toggle',
 		},
 	],
