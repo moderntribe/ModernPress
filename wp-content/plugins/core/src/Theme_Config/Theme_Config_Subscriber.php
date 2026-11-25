@@ -16,6 +16,10 @@ class Theme_Config_Subscriber extends Abstract_Subscriber {
 			$this->container->get( Image_Sizes::class )->register_sizes();
 		}, 10, 0 );
 
+		add_filter( 'image_size_names_choose', function ( array $sizes ): array {
+			return $this->container->get( Image_Sizes::class )->add_size_names( $sizes );
+		}, 10, 1 );
+
 		add_filter( 'excerpt_more', static function (): string {
 			return '...';
 		});
